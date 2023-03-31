@@ -1,0 +1,127 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+  settings: Settings!
+  bills: [Bill]
+  transactions(page: Int!): [Transaction]
+  currencies: [Currency]
+}
+
+type Mutation {
+  setMainCurrency(setMainCurrencyInput: SetMainCurrencyInput): String!
+  addTag(addTagInput: AddTagInput): String!
+  addBill(addBillInput: AddBillInput!): Bill!
+  deleteBill(deleteBillInput: DeleteBillInput!): String
+
+
+  addTransaction(addTransactionInput: AddTransactionInput!): String
+  deleteTransaction(deleteTransactionInput: DeleteTransactionInput!): String
+}
+
+input SetMainCurrencyInput {
+  id: ID!
+}
+
+input AddTagInput {
+  transactionType: String
+  title: String
+}
+
+input AddBillInput {
+  title: String!
+  host: String!
+  value: Float!
+  currencyId: String!
+  type: BillType!
+}
+
+input DeleteBillInput {
+  id: String!
+}
+
+type Settings {
+  mainCurrency: String!
+  tags: [Tag]
+}
+
+type Bill {
+  id: ID!
+  title: String!
+  host: String!
+  value: Float!
+  valueInMain: Float!
+  currencyId: String!
+  type: BillType!
+}
+
+enum BillType {
+  CARD
+}
+
+enum TransactionType {
+  RECEIVE
+  SEND
+  TRANSFER
+}
+
+type Transaction {
+  type: TransactionType!
+  id: ID!
+
+  from: ID
+  fromValue: String
+  fromCurrency: String
+
+  to: ID
+  toValue: String
+  toCurrency: String
+
+  provider: String
+  fee: String
+  feeInPercents: String
+  tags: [Tag]
+}
+
+input AddTransactionInput {
+  type: TransactionType!
+
+  from: ID
+  fromValue: String
+  fromCurrency: String
+
+  to: ID
+  toValue: String
+  toCurrency: String
+
+  provider: String
+  tags: [TagInput]
+}
+
+input TagInput {
+  transactionName: String!
+  title: String!
+  id: ID!
+}
+
+input DeleteTransactionInput {
+  id: String!
+}
+
+
+type Tag {
+  transactionName: String!
+  title: String!
+  id: ID!
+}
+
+type Currency {
+  id: ID!
+  title: String!
+  shortTitle: String!
+  internationalShortName: String!
+  internationalSimbol: String!
+  valueRelatedMain: String!
+}

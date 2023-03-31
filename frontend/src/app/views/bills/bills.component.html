@@ -1,0 +1,54 @@
+<div class="chart">
+  <canvas
+    baseChart
+    *ngIf="datasets$ | async; let datasets"
+    [type]="'doughnut'"
+    [datasets]="datasets"
+  >
+  </canvas>
+</div>
+
+<table
+  mat-table
+  *ngIf="dataSource$ | async; let dataSource"
+  [dataSource]="dataSource"
+  class="mat-elevation-z8"
+>
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let element">{{ element.title }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="type">
+    <th mat-header-cell *matHeaderCellDef>Type</th>
+    <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="host">
+    <th mat-header-cell *matHeaderCellDef>Host</th>
+    <td mat-cell *matCellDef="let element">{{ element.host }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="value">
+    <th mat-header-cell *matHeaderCellDef>Value</th>
+    <td mat-cell *matCellDef="let element">{{ element.valueWithSuffix }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="valueInMain">
+    <th mat-header-cell *matHeaderCellDef>Value in main</th>
+    <td mat-cell *matCellDef="let element">{{ element.valueInMain }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="delete">
+    <th mat-header-cell *matHeaderCellDef>delete</th>
+    <td mat-cell *matCellDef="let element">
+        
+        <button mat-button (click)="deleteBill(element.id)">Delete bill</button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+
+<button mat-raised-button color="primary" (click)="addBill()">Add bill</button>

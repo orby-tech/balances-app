@@ -1,0 +1,22 @@
+.bill-column {
+  flex: 1;
+
+  flex-direction: column;
+}
+
+.circle-column {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.common-container,
+.column {
+  display: flex;
+}
+
+.column {
+    display: flex;
+    align-items: stretch;
+}
+  
