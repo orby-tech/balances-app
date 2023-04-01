@@ -8,6 +8,7 @@ type Query {
   bills: [Bill]
   transactions(page: Int!): [Transaction]
   currencies: [Currency]
+  currenciesRate: CurrenciesRate
 }
 
 type Mutation {
@@ -65,6 +66,20 @@ enum TransactionType {
   RECEIVE
   SEND
   TRANSFER
+}
+
+type CurrenciesRate {
+  meta: CurrenciesRateMeta!
+  data: [CurrenciesRateData]!
+}
+
+type CurrenciesRateMeta {
+  last_updated_at: String!
+}
+
+type CurrenciesRateData {
+  code: String!
+  value: Float! 
 }
 
 type Transaction {

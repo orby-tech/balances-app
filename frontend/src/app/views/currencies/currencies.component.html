@@ -29,7 +29,10 @@
 
   <ng-container matColumnDef="valueRelatedMain">
     <th mat-header-cell *matHeaderCellDef>Value related main</th>
-    <td mat-cell *matCellDef="let element">{{ element.valueRelatedMain }}</td>
+    <td mat-cell *matCellDef="let element">
+      {{ element.valueRelatedMain | number : "1.1-1" }}
+      {{ element.internationalSimbol }}
+    </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

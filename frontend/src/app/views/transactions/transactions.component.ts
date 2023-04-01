@@ -14,27 +14,7 @@ import { AddTransactionComponent } from '../dialogs/add-transaction/add-transact
 export class TransactionsComponent {
   transactions$ = this.transactionsService.transactions$;
 
-  transactionsToFrom$ = combineLatest([
-    this.transactions$,
-    this.billsService.bills$,
-    this.currenciesService.currencies$,
-  ]).pipe(
-    map(([transactions, bills, currencies]) => {
-      return transactions.map((transaction) => {
-        const tobill = bills.find((bill) => bill?.id === transaction.to);
-        const frombill = bills.find((bill) => bill?.id === transaction.from);
-        return {
-          ...transaction,
-          toTitle: tobill?.title,
-          fromTitle: frombill?.title,
-          toCurrencyTitle: currencies.find((c) => c.id === tobill?.currencyId)
-            ?.title,
-          fromCurrencyTitle: currencies.find((c) => c.id === frombill?.currencyId)
-            ?.title,
-        };
-      });
-    })
-  );
+  transactionsToFrom$ = this.transactionsService.filledTransactions$
 
   displayedColumns: string[] = [
     'provider',

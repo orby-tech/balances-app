@@ -9,7 +9,7 @@ import { CurrenciesService } from 'src/app/graphql/currencies.service';
   styleUrls: ['./currencies.component.scss'],
 })
 export class CurrenciesComponent implements AfterViewInit {
-  correncies$ = this.currenciesService.currencies$;
+  correncies$ = this.currenciesService.currenciesWithValueRelatedMain$;
 
   displayedColumns: string[] = ['title', 'internationalSimbol', 'internationalShortName', 'valueRelatedMain'];
   chart: any | null = null;

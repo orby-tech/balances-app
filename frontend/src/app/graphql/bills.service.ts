@@ -1,13 +1,23 @@
 import { Injectable } from '@angular/core';
-import { AddBillInput, Bill, DeleteBillInput } from '@common/graphql';
+import { AddBillInput, Bill, CurrenciesRateData, Currency, DeleteBillInput } from '@common/graphql';
 import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, first, pipe } from 'rxjs';
+import { getBillsWithValuesInMain } from './common.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BillsService {
   bills$ = new BehaviorSubject<Bill[]>([]);
+  currenciesRateData$ = new BehaviorSubject<CurrenciesRateData[]>([]);
+  currencies$ = new BehaviorSubject<Currency[]>([]);
+  
+
+  billsWithValuesInMain$ = getBillsWithValuesInMain(
+    this.bills$,
+    this.currenciesRateData$,
+    this.currencies$
+  );
 
   constructor(private apollo: Apollo) {}
   load() {
@@ -24,6 +34,19 @@ export class BillsService {
               valueInMain
               currencyId
             }
+            currencies {
+              id
+              shortTitle
+              title
+              internationalSimbol
+              internationalShortName
+            }
+            currenciesRate {
+              data {
+                code
+                value
+              }
+            }
           }
         `,
       })
@@ -31,6 +54,8 @@ export class BillsService {
       .subscribe((result: any) => {
         console.log(result?.data);
         this.bills$.next(result?.data?.bills || []);
+        this.currenciesRateData$.next(result?.data?.currenciesRate?.data || []);
+        this.currencies$.next(result?.data?.currencies || []);
       });
   }
 
@@ -58,7 +83,7 @@ export class BillsService {
       .mutate({
         mutation: gql`
           mutation deleteBill($deleteBillInput: DeleteBillInput!) {
-            deleteBill(deleteBillInput: $deleteBillInput) 
+            deleteBill(deleteBillInput: $deleteBillInput)
           }
         `,
         variables: {

@@ -31,12 +31,12 @@
 
   <ng-container matColumnDef="value">
     <th mat-header-cell *matHeaderCellDef>Value</th>
-    <td mat-cell *matCellDef="let element">{{ element.valueWithSuffix }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.value | number: '1.1-1'}} {{ element.internationalSimbol }}</td>
   </ng-container>
 
   <ng-container matColumnDef="valueInMain">
     <th mat-header-cell *matHeaderCellDef>Value in main</th>
-    <td mat-cell *matCellDef="let element">{{ element.valueInMain }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.valueInMain | number: '1.1-1'}} {{ element.internationalSimbolOfMain }}</td>
   </ng-container>
 
   <ng-container matColumnDef="delete">

@@ -13,21 +13,11 @@ import { AddBillComponent } from '../dialogs/add-bill/add-bill.component';
 })
 export class BillsComponent implements OnInit {
   bills$ = this.billsService.bills$;
-  billsForForm$ = combineLatest([
-    this.bills$,
-    this.currenciesService.currencies$,
-  ]).pipe(
-    map(([bills, currencies]) =>
-      bills.map((bill) => {
-        return {
-          ...bill,
-          valueWithSuffix: `${bill.value} ${
-            currencies.find((c) => c.id === bill.currencyId)?.internationalSimbol
-          }`,
-        };
-      })
-    )
-  );
+
+  billsWithValuesInMain$ = this.billsService.billsWithValuesInMain$;
+
+  billsForForm$ = this.billsWithValuesInMain$;
+  
   chart: Chart<'doughnut', number[], string> | null = null;
 
   displayedColumns: string[] = [

@@ -69,6 +69,8 @@ export abstract class IQuery {
     abstract transactions(page: number): Nullable<Nullable<Transaction>[]> | Promise<Nullable<Nullable<Transaction>[]>>;
 
     abstract currencies(): Nullable<Nullable<Currency>[]> | Promise<Nullable<Nullable<Currency>[]>>;
+
+    abstract currenciesRate(): Nullable<CurrenciesRate> | Promise<Nullable<CurrenciesRate>>;
 }
 
 export abstract class IMutation {
@@ -98,6 +100,20 @@ export class Bill {
     valueInMain: number;
     currencyId: string;
     type: BillType;
+}
+
+export class CurrenciesRate {
+    meta: CurrenciesRateMeta;
+    data: Nullable<CurrenciesRateData>[];
+}
+
+export class CurrenciesRateMeta {
+    last_updated_at: string;
+}
+
+export class CurrenciesRateData {
+    code: string;
+    value: number;
 }
 
 export class Transaction {

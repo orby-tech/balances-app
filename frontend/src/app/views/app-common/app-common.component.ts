@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { CommonService } from 'src/app/graphql/common.service';
 import Chart from 'chart.js/auto';
+import { CurrenciesService } from 'src/app/graphql/currencies.service';
 
 @Component({
   selector: 'app-app-common',
@@ -13,23 +14,45 @@ export class AppCommonComponent {
 
   bills$ = this.commonService.bills$;
 
-  dataSourceMain$ = this.commonService.dataSourceMain$;
+  billsWithValuesInMain$ = this.commonService.billsWithValuesInMain$;
 
-  dataSourceInNative$ = this.commonService.dataSourceInNative$;
+  dataSourceMain$ = this.billsWithValuesInMain$.pipe(
+    map((bills) =>
+      bills.map((bill) => ({
+        name: bill.title,
+        value: bill.valueInMain,
+        internationalSimbol: bill.internationalSimbolOfMain,
+      }))
+    )
+  );
 
-  datasets$ = this.bills$.pipe(
-    map((bills) => {
+  dataSourceInNative$ = this.billsWithValuesInMain$.pipe(
+    map((bills) =>
+      bills.map((bill) => ({
+        name: bill.title,
+        value: bill.value,
+        internationalSimbol: bill.internationalSimbol,
+      }))
+    )
+  );
+
+  datasets$ = combineLatest([
+    this.billsWithValuesInMain$,
+  ]).pipe(
+    map(([billsWithValuesInMain]) => {
       const datasets = [
         {
           label: 'Bills',
-          data: [...bills.map((bill) => bill.valueInMain)],
+          data: [...billsWithValuesInMain.map((bill) => bill.valueInMain)],
         },
       ];
       return datasets;
     })
   );
 
-  constructor(private commonService: CommonService) {
+  constructor(
+    private commonService: CommonService,
+  ) {
     commonService.load();
   }
 }

@@ -1,13 +1,92 @@
 import { Injectable } from '@angular/core';
-import { AddTransactionInput, DeleteTransactionInput, Transaction } from '@common/graphql';
+import {
+  AddTransactionInput,
+  Bill,
+  CurrenciesRateData,
+  Currency,
+  DeleteTransactionInput,
+  Transaction,
+} from '@common/graphql';
 import { Apollo, gql } from 'apollo-angular';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, map } from 'rxjs';
+
+export const getTransactionsWithValuesInMain = (
+  transactions$: BehaviorSubject<Transaction[]>,
+  bills$: BehaviorSubject<Bill[]>,
+  currenciesRateData$: BehaviorSubject<CurrenciesRateData[]>,
+  currencies$: BehaviorSubject<Currency[]>
+) =>
+  combineLatest([transactions$, bills$, currenciesRateData$, currencies$]).pipe(
+    map(([transactions, bills, currenciesRateData, currencies]) => {
+      return transactions.map((transaction) => {
+        const tobill = bills.find((bill) => bill?.id === transaction.to);
+        const frombill = bills.find((bill) => bill?.id === transaction.from);
+
+        const toCurrency = currencies.find(
+          (c) => c.id === tobill?.currencyId
+        );
+        const toInternationalShortName = currencies.find(
+          (c) => c.id === toCurrency?.id
+        )?.internationalShortName;
+
+        const toCoef =
+          currenciesRateData.find((c) => c.code === toInternationalShortName)
+            ?.value || 1;
+
+        const fromCurrency = currencies.find(
+          (c) => c.id === frombill?.currencyId
+        );
+        const fromInternationalShortName = currencies.find(
+          (c) => c.id === fromCurrency?.id
+        )?.internationalShortName;
+
+        const fromCoef =
+          currenciesRateData.find((c) => c.code === fromInternationalShortName)
+            ?.value || 1;
+
+        const mainCurrency = currencies.find(
+          (c) => c.internationalShortName === 'USD'
+        );
+
+        return {
+          ...transaction,
+          toValueInMain: transaction.toValue
+            ? +transaction.toValue / toCoef
+            : null,
+          fromValueInMain: transaction.fromValue
+            ? +transaction.fromValue / fromCoef
+            : null,
+          toInternationalSimbol: toCurrency?.internationalSimbol || '',
+          fromInternationalSimbol: fromCurrency?.internationalSimbol || '',
+          internationalSimbolOfMain: mainCurrency?.internationalSimbol || '',
+          toTitle: tobill?.title,
+          fromTitle: frombill?.title,
+          toCurrencyTitle: currencies.find((c) => c.id === tobill?.currencyId)
+            ?.title,
+          fromCurrencyTitle: currencies.find(
+            (c) => c.id === frombill?.currencyId
+          )?.title,
+        };
+      });
+    })
+  );
 
 @Injectable({
   providedIn: 'root',
 })
 export class TransactionsService {
   transactions$ = new BehaviorSubject<Transaction[]>([]);
+  bills$ = new BehaviorSubject<Bill[]>([]);
+
+  currenciesRateData$ = new BehaviorSubject<CurrenciesRateData[]>([]);
+  currencies$ = new BehaviorSubject<Currency[]>([]);
+
+  filledTransactions$ = getTransactionsWithValuesInMain(
+    this.transactions$,
+    this.bills$,
+    this.currenciesRateData$,
+    this.currencies$
+  );
 
   constructor(private apollo: Apollo) {}
   load() {
@@ -15,6 +94,15 @@ export class TransactionsService {
       .watchQuery({
         query: gql`
           {
+            bills {
+              id
+              type
+              title
+              host
+              value
+              valueInMain
+              currencyId
+            }
             transactions(page: 0) {
               id
               provider
@@ -33,15 +121,30 @@ export class TransactionsService {
               fee
               feeInPercents
             }
+            currencies {
+              id
+              shortTitle
+              title
+              internationalSimbol
+              internationalShortName
+            }
+            currenciesRate {
+              data {
+                code
+                value
+              }
+            }
           }
         `,
       })
       .valueChanges.subscribe((result: any) => {
         console.log(result?.data);
         this.transactions$.next(result?.data?.transactions || []);
+        this.bills$.next(result?.data?.bills || []);
+        this.currenciesRateData$.next(result?.data?.currenciesRate?.data || []);
+        this.currencies$.next(result?.data?.currencies || []);
       });
   }
-
 
   addTransaction(transaction: AddTransactionInput) {
     this.apollo
@@ -64,8 +167,10 @@ export class TransactionsService {
     this.apollo
       .mutate({
         mutation: gql`
-          mutation deleteTransaction($deleteTransactionInput: DeleteTransactionInput!) {
-            deleteTransaction(deleteTransactionInput: $deleteTransactionInput) 
+          mutation deleteTransaction(
+            $deleteTransactionInput: DeleteTransactionInput!
+          ) {
+            deleteTransaction(deleteTransactionInput: $deleteTransactionInput)
           }
         `,
         variables: {
