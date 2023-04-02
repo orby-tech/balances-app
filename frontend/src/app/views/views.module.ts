@@ -13,6 +13,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { AppCommonComponent } from './app-common/app-common.component';
 import { AddBillComponent } from './dialogs/add-bill/add-bill.component';
 import { AddTransactionComponent } from './dialogs/add-transaction/add-transaction.component';
+import { UserAccountComponent } from './user-account/user-account.component';
 
 
 
@@ -24,7 +25,8 @@ import { AddTransactionComponent } from './dialogs/add-transaction/add-transacti
     TransactionsComponent,
     SettingsComponent,
     AddBillComponent,
-    AddTransactionComponent
+    AddTransactionComponent,
+    UserAccountComponent
   ],
   imports: [
     CommonModule,
