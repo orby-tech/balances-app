@@ -6,3 +6,14 @@ ul {
   list-style: none;
   padding-left: 20px;
 }
+
+li {
+  display: flex;
+  justify-content: flex-end;
+  min-width: 100px;
+  padding-right: 20px;
+
+}
+a {
+  justify-content: flex-end;
+}
