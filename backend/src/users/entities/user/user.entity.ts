@@ -26,6 +26,12 @@ export class User {
 
   @Column()
   main_currency: string;
+
+  @Column()
+  login: string;
+
+  @Column()
+  password_hash: string;
 }
 
 @Entity({ name: 'transactions' })

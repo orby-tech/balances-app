@@ -1,0 +1,10 @@
+{
+  "/auth": {
+    "target": "http://localhost:3300",
+    "secure": false
+  },
+  "/graphql": {
+    "target": "http://localhost:3300",
+    "secure": false
+  }
+}

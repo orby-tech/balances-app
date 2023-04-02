@@ -14,7 +14,7 @@ export class TransactionsResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query()
-  async transactions(): Promise<Transaction[]> {
+  async transactions(a): Promise<Transaction[]> {
     const user = await this.usersService.getTransactionsById(
       '123e4567-e89b-12d3-a456-426614174000',
     );

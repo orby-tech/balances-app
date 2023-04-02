@@ -11,10 +11,13 @@ import { TransactionsModule } from './transactions/transactions.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { init1680003816406 } from './migration/1680003816406-init';
-import { UsersService } from './users/users.service';
+import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/auth.guard';
 
 @Module({
   imports: [
+    AuthModule,
     SettingsModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -44,7 +47,14 @@ import { UsersService } from './users/users.service';
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService, UsersModule],
+  providers: [
+    AppService,
+    UsersModule,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
   exports: [UsersModule],
 })
 export class AppModule {}

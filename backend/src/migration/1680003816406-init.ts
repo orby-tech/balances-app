@@ -25,12 +25,10 @@ export class init1680003816406 implements MigrationInterface {
           {
             name: 'login',
             type: 'text',
-            isNullable: true,
           },
           {
             name: 'password_hash',
             type: 'text',
-            isNullable: true,
           },
           {
             name: 'name',
@@ -225,7 +223,7 @@ export class init1680003816406 implements MigrationInterface {
         `);
 
     queryRunner.query(`
-        Insert into "users" ("user_id", "main_currency") VALUES ('123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001');
+        Insert into "users" ("user_id", "main_currency", "login", "password_hash") VALUES ('123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001', 'john', '057ba03d6c44104863dc7361fe4578965d1887360f90a0895882e58a6248fc86');
        
         Insert into "tags" ("tag_id", "transaction_name", "title") VALUES ('123e4567-e89b-12d3-a456-426614174002', 'transaction_name_', 'title');
         Insert into "user_tags" ("user_id", "tag_id") VALUES ('123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174002');

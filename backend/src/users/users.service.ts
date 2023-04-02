@@ -7,7 +7,7 @@ import {
 } from '@common/graphql';
 import { DeleteResult, Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-
+import { sha256 } from 'js-sha256';
 import {
   Bill,
   Currency,
@@ -49,6 +49,10 @@ export class UsersService {
 
   findAll(): Promise<User[]> {
     return this.userRepository.find();
+  }
+
+  async findOne(username: string): Promise<User | undefined> {
+    return this.userRepository.findOne({ where: { login: username } });
   }
 
   getById(id: string): Promise<User> {

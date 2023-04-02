@@ -1,0 +1,7 @@
+{
+    "scripts": {
+        "server": "cd backend && npm run start:debug",
+        "frontend": "cd frontend && ng serve",
+        "db": "sudo docker-compose up"
+    }
+}

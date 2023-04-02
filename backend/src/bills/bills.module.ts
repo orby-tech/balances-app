@@ -6,6 +6,5 @@ import { BillsService } from './bills.service';
 @Module({
   providers: [BillsResolver, BillsService],
   imports: [UsersModule],
-
 })
 export class BillsModule {}
