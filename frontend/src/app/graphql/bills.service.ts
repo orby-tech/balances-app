@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { AddBillInput, Bill, CurrenciesRateData, Currency, DeleteBillInput } from '@common/graphql';
+import {
+  AddBillInput,
+  Bill,
+  CurrenciesRateData,
+  Currency,
+  DeleteBillInput,
+} from '@common/graphql';
 import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, first, pipe } from 'rxjs';
 import { getBillsWithValuesInMain } from './common.service';
@@ -9,12 +15,14 @@ import { getBillsWithValuesInMain } from './common.service';
 })
 export class BillsService {
   bills$ = new BehaviorSubject<Bill[]>([]);
+  mainCurrency$ = new BehaviorSubject<string>('');
+
   currenciesRateData$ = new BehaviorSubject<CurrenciesRateData[]>([]);
   currencies$ = new BehaviorSubject<Currency[]>([]);
-  
 
   billsWithValuesInMain$ = getBillsWithValuesInMain(
     this.bills$,
+    this.mainCurrency$,
     this.currenciesRateData$,
     this.currencies$
   );
@@ -47,6 +55,9 @@ export class BillsService {
                 value
               }
             }
+            settings {
+              mainCurrency
+            }
           }
         `,
       })
@@ -56,6 +67,7 @@ export class BillsService {
         this.bills$.next(result?.data?.bills || []);
         this.currenciesRateData$.next(result?.data?.currenciesRate?.data || []);
         this.currencies$.next(result?.data?.currencies || []);
+        this.mainCurrency$.next(result?.data?.settings?.mainCurrency || '');
       });
   }
 

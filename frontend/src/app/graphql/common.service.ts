@@ -5,11 +5,12 @@ import { Bill, CurrenciesRateData, Currency } from '@common/graphql';
 
 export const getBillsWithValuesInMain = (
   bills$: BehaviorSubject<Bill[]>,
+  mainCurrency$: BehaviorSubject<string>,
   currenciesRateData$: BehaviorSubject<CurrenciesRateData[]>,
   currencies$: BehaviorSubject<Currency[]>
 ) =>
-  combineLatest([bills$, currenciesRateData$, currencies$]).pipe(
-    map(([bills, currenciesRateData, currencies]) => {
+  combineLatest([bills$, mainCurrency$, currenciesRateData$, currencies$]).pipe(
+    map(([bills, mainCurrencyId, currenciesRateData, currencies]) => {
       return bills.map((bill) => {
         const currency = currencies.find((c) => c.id === bill.currencyId);
         const internationalShortName = currencies.find(
@@ -20,13 +21,15 @@ export const getBillsWithValuesInMain = (
           currenciesRateData.find((c) => c.code === internationalShortName)
             ?.value || 1;
 
-        const mainCurrency = currencies.find(
-          (c) => c.internationalShortName === 'USD'
-        );
+        const mainCurrency = currencies.find((c) => c.id === mainCurrencyId);
+        const antCoef =
+          currenciesRateData.find(
+            (c) => c.code === mainCurrency?.internationalShortName
+          )?.value || 1;
 
         return {
           ...bill,
-          valueInMain: bill.value / coef,
+          valueInMain: (bill.value / coef) * antCoef,
           internationalSimbol: currency?.internationalSimbol || '',
           internationalSimbolOfMain: mainCurrency?.internationalSimbol || '',
         };
@@ -39,6 +42,7 @@ export const getBillsWithValuesInMain = (
 })
 export class CommonService {
   bills$ = new BehaviorSubject<Bill[]>([]);
+  mainCurrency$ = new BehaviorSubject<string>('');
   currenciesRateData$ = new BehaviorSubject<CurrenciesRateData[]>([]);
   currencies$ = new BehaviorSubject<Currency[]>([]);
 
@@ -56,6 +60,7 @@ export class CommonService {
 
   billsWithValuesInMain$ = getBillsWithValuesInMain(
     this.bills$,
+    this.mainCurrency$,
     this.currenciesRateData$,
     this.currencies$
   );
@@ -85,6 +90,9 @@ export class CommonService {
                 value
               }
             }
+            settings {
+              mainCurrency
+            }
           }
         `,
       })
@@ -93,6 +101,7 @@ export class CommonService {
         this.bills$.next(result?.data?.bills || []);
         this.currenciesRateData$.next(result?.data?.currenciesRate?.data || []);
         this.currencies$.next(result?.data?.currencies || []);
+        this.mainCurrency$.next(result?.data?.settings?.mainCurrency || '');
       });
   }
 }
