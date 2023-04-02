@@ -14,6 +14,7 @@ import { init1680003816406 } from './migration/1680003816406-init';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
@@ -27,9 +28,13 @@ import { AuthGuard } from './auth/auth.guard';
         outputAs: 'class',
       },
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../../../../frontend/dist/frontend'),
+    }),
+
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: process.env.DB_HOST || 'localhost',
       port: 5432,
       username: 'postgres',
       password: 'password',

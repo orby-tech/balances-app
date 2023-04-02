@@ -30,6 +30,7 @@
     "@nestjs/graphql": "^11.0.4",
     "@nestjs/jwt": "^10.0.3",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/serve-static": "^3.0.1",
     "@nestjs/typeorm": "^9.0.1",
     "graphql": "^16.6.0",
     "hbs": "^4.2.0",
