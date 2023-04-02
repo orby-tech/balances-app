@@ -63,6 +63,13 @@ export class UsersService {
     });
   }
 
+  async setMainCurrency(id: string, currencyId: string): Promise<void> {
+    await this.userRepository.update(
+      { user_id: id },
+      { main_currency: currencyId },
+    );
+  }
+
   async getTagsById(id: string): Promise<Tag[]> {
     const tags = await this.userTagRepository.find({ where: { user_id: id } });
     console.log(tags);

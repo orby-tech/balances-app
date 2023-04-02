@@ -1,9 +1,6 @@
-import { Args, Int, Query, Resolver } from '@nestjs/graphql';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Settings, TransactionType } from '@common/graphql';
-import { User } from 'src/users/entities/user/user.entity';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { SetMainCurrencyInput, Settings, Transaction } from '@common/graphql';
 import { UsersService } from 'src/users/users.service';
-import { Repository } from 'typeorm';
 
 @Resolver((of) => Settings)
 export class SettingsResolver {
@@ -26,5 +23,16 @@ export class SettingsResolver {
         transactionName: tag.transaction_name,
       })),
     };
+  }
+
+  @Mutation((returns) => Transaction, { name: 'setMainCurrency' })
+  async setMainCurrency(
+    @Args('setMainCurrencyInput') transaction: SetMainCurrencyInput,
+  ) {
+    await this.usersService.setMainCurrency(
+      '123e4567-e89b-12d3-a456-426614174000',
+      transaction.id,
+    );
+    return transaction.id;
   }
 }

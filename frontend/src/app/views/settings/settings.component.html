@@ -2,7 +2,7 @@
 <form>
   <mat-form-field appearance="fill">
     <mat-label>Main currency</mat-label>
-    <mat-select [(ngModel)]="selectedValue" name="food">
+    <mat-select [(ngModel)]="selectedValue" name="food" (ngModelChange)="selectMainCurrency()">
       <mat-option *ngFor="let food of foods$ | async" [value]="food.id">
         {{ food.title }} {{ food.shortTitle }}
       </mat-option>

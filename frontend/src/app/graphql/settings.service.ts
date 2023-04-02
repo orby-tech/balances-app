@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Settings } from '@common/graphql';
+import { SetMainCurrencyInput, Settings } from '@common/graphql';
 import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject } from 'rxjs';
 
@@ -31,6 +31,25 @@ export class SettingsService {
         console.log(result?.data);
         this.mainCurrency$.next(result?.data?.settings?.mainCurrency || []);
         this.tags$.next(result?.data?.settings?.tags || []);
+      });
+  }
+
+  setMainCurrency(currencyId: SetMainCurrencyInput) {
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation setMainCurrency(
+            $setMainCurrencyInput: SetMainCurrencyInput!
+          ) {
+            setMainCurrency(setMainCurrencyInput: $setMainCurrencyInput)
+          }
+        `,
+        variables: {
+          setMainCurrencyInput: currencyId,
+        },
+      })
+      .subscribe((x) => {
+        this.load();
       });
   }
 }
