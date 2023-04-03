@@ -10,6 +10,7 @@ import { GraphQLModule } from './graphql.module';
 import { HttpClientModule } from '@angular/common/http';
 import { NgChartsModule } from 'ng2-charts';
 import { AppService } from './app.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,6 +23,8 @@ import { AppService } from './app.service';
     HttpClientModule,
     NgChartsModule,
     ViewsModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [MaterialModule],
   bootstrap: [AppComponent],

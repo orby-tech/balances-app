@@ -104,11 +104,11 @@ input AddTransactionInput {
   type: TransactionType!
 
   from: ID
-  fromValue: String
+  fromValue: Float
   fromCurrency: String
 
   to: ID
-  toValue: String
+  toValue: Float
   toCurrency: String
 
   provider: String

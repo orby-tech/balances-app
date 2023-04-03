@@ -42,10 +42,10 @@ export class DeleteBillInput {
 export class AddTransactionInput {
     type: TransactionType;
     from?: Nullable<string>;
-    fromValue?: Nullable<string>;
+    fromValue?: Nullable<number>;
     fromCurrency?: Nullable<string>;
     to?: Nullable<string>;
-    toValue?: Nullable<string>;
+    toValue?: Nullable<number>;
     toCurrency?: Nullable<string>;
     provider?: Nullable<string>;
     tags?: Nullable<Nullable<TagInput>[]>;

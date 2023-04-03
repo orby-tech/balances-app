@@ -6,7 +6,7 @@ import { TransactionsComponent } from './transactions/transactions.component';
 import { SettingsComponent } from './settings/settings.component';
 import { MaterialModule } from '../material/material.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgChartsModule } from 'ng2-charts';
@@ -28,7 +28,7 @@ import { LoginComponent } from './dialogs/login/login.component';
     AddBillComponent,
     AddTransactionComponent,
     UserAccountComponent,
-    LoginComponent
+    LoginComponent,
   ],
   imports: [
     CommonModule,
@@ -41,6 +41,7 @@ import { LoginComponent } from './dialogs/login/login.component';
 
     MatInputModule,
     MatFormFieldModule,
+    ReactiveFormsModule
   ]
 })
 export class ViewsModule { }

@@ -7,7 +7,7 @@ import {
   DeleteBillInput,
 } from '@common/graphql';
 import { Apollo, gql } from 'apollo-angular';
-import { BehaviorSubject, first, pipe } from 'rxjs';
+import { BehaviorSubject, first, pipe, tap } from 'rxjs';
 import { getBillsWithValuesInMain } from './common.service';
 
 @Injectable({
@@ -25,8 +25,7 @@ export class BillsService {
     this.mainCurrency$,
     this.currenciesRateData$,
     this.currencies$
-  );
-
+  )
   constructor(private apollo: Apollo) {}
   load() {
     this.apollo

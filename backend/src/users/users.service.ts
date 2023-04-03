@@ -139,8 +139,8 @@ export class UsersService {
     await this.transactionRepository.insert({
       ...transaction,
       transaction_id: transactionId,
-      from_value: transaction.fromValue,
-      to_value: transaction.toValue,
+      from_value: transaction.fromValue.toString(),
+      to_value: transaction.toValue.toString(),
       from_currency: transaction.fromCurrency,
       to_currency: transaction.toCurrency,
     });

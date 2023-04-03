@@ -1,92 +1,97 @@
-<mat-form-field appearance="fill">
-  <mat-label>Value</mat-label>
-  <mat-select [(ngModel)]="data.type">
-    <mat-option [value]="transactionType.RECEIVE">{{
-      transactionType.RECEIVE
-    }}</mat-option>
-    <mat-option [value]="transactionType.SEND">{{
-      transactionType.SEND
-    }}</mat-option>
-    <mat-option [value]="transactionType.TRANSFER">{{
-      transactionType.TRANSFER
-    }}</mat-option>
-  </mat-select>
-</mat-form-field>
-
-<ng-container *ngIf="data.type === transactionType.RECEIVE">
+<form [formGroup]="profileForm">
   <mat-form-field appearance="fill">
-    <mat-label>To</mat-label>
-    <mat-select [(ngModel)]="data.to">
-      <mat-option *ngFor="let bill of bills$ | async" [value]="bill.id">{{
-        bill.title
+    <mat-label>Value</mat-label>
+    <mat-select formControlName="type">
+      <mat-option [value]="transactionType.RECEIVE">{{
+        transactionType.RECEIVE
+      }}</mat-option>
+      <mat-option [value]="transactionType.SEND">{{
+        transactionType.SEND
+      }}</mat-option>
+      <mat-option [value]="transactionType.TRANSFER">{{
+        transactionType.TRANSFER
       }}</mat-option>
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>To value</mat-label>
-    <input matInput [(ngModel)]="data.toValue" />
-  </mat-form-field>
-</ng-container>
-
-<ng-container *ngIf="data.type === transactionType.SEND">
-  <mat-form-field appearance="fill">
-    <mat-label>From</mat-label>
-    <mat-select [(ngModel)]="data.from">
-      <mat-option *ngFor="let bill of bills$ | async" [value]="bill.id">{{
-        bill.title
-      }}</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>From value</mat-label>
-    <input matInput [(ngModel)]="data.fromValue" /> </mat-form-field
-></ng-container>
-
-<div
-  *ngIf="data.type === transactionType.TRANSFER"
-  class="transfer-transaction"
->
-  <div>
+  <ng-container *ngIf="(type$ | async) === transactionType.RECEIVE">
     <mat-form-field appearance="fill">
       <mat-label>To</mat-label>
-      <mat-select [(ngModel)]="data.to" (select)="dataToSelect()">
-        <mat-option
-          *ngFor="let bill of bills$ | async"
-          [value]="bill?.id"
-          [disabled]="bill?.id === data.from"
-          >{{ bill.title }}</mat-option
-        >
+      <mat-select formControlName="to">
+        <mat-option *ngFor="let bill of bills$ | async" [value]="bill.id">{{
+          bill.title
+        }}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>To value</mat-label>
-      <input matInput [(ngModel)]="data.toValue" />
+      <input matInput formControlName="toValue" type="number" />
     </mat-form-field>
+  </ng-container>
 
-    {{ toCurrency$ | async }}
-  </div>
-  <div>
+  <ng-container *ngIf="(type$ | async) === transactionType.SEND">
     <mat-form-field appearance="fill">
       <mat-label>From</mat-label>
-      <mat-select [(ngModel)]="data.from">
-        <mat-option
-          *ngFor="let bill of bills$ | async"
-          [value]="bill.id"
-          [disabled]="bill.id === data.to"
-          >{{ bill.title }}</mat-option
-        >
+      <mat-select formControlName="from">
+        <mat-option *ngFor="let bill of bills$ | async" [value]="bill.id">{{
+          bill.title
+        }}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>From value</mat-label>
-      <input matInput [(ngModel)]="data.fromValue" />
+      <input matInput formControlName="fromValue" type="number" />
     </mat-form-field>
+  </ng-container>
+
+  <div
+    *ngIf="(type$ | async) === transactionType.TRANSFER"
+    class="transfer-transaction"
+  >
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>From</mat-label>
+        <mat-select formControlName="from">
+          <mat-option *ngFor="let bill of bills$ | async" [value]="bill.id"
+            >{{ bill.title }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>To</mat-label>
+        <mat-select formControlName="to">
+          <mat-option *ngFor="let bill of bills$ | async" [value]="bill?.id">{{
+            bill.title
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label
+          >From value ({{ fromValueInToCurrency$ | async | number : "1.1-1" }}
+          {{ toBillInternationalSimbol$ | async }})</mat-label
+        >
+        <input matInput formControlName="fromValue" type="number" />
+        <mat-icon matSuffix>{{
+          fromBillInternationalSimbol$ | async
+        }}</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>
+          To value ({{ toValueInFromCurrency$ | async | number : "1.1-1" }}
+          {{ fromBillInternationalSimbol$ | async }})
+        </mat-label>
+        <input matInput formControlName="toValue" type="number" />
+        <mat-icon matSuffix>{{ toBillInternationalSimbol$ | async }}</mat-icon>
+      </mat-form-field>
+    </div>
   </div>
-</div>
+</form>
 
 <div mat-dialog-actions>
   <button mat-button [mat-dialog-close]="null">No Thanks</button>
