@@ -17,3 +17,12 @@ li {
 a {
   justify-content: flex-end;
 }
+
+.nav-bar{ 
+  display: flex;
+}
+
+.logout-button {
+  position: absolute;
+  bottom: 10px;
+}

@@ -17,11 +17,6 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Public()
-  @Render('index.hbs')
-  @Get()
-  lognPage() {}
-
-  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
   signIn(@Body() signInDto: Record<string, any>) {

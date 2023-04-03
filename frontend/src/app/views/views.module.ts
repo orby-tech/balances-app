@@ -14,6 +14,7 @@ import { AppCommonComponent } from './app-common/app-common.component';
 import { AddBillComponent } from './dialogs/add-bill/add-bill.component';
 import { AddTransactionComponent } from './dialogs/add-transaction/add-transaction.component';
 import { UserAccountComponent } from './user-account/user-account.component';
+import { LoginComponent } from './dialogs/login/login.component';
 
 
 
@@ -26,7 +27,8 @@ import { UserAccountComponent } from './user-account/user-account.component';
     SettingsComponent,
     AddBillComponent,
     AddTransactionComponent,
-    UserAccountComponent
+    UserAccountComponent,
+    LoginComponent
   ],
   imports: [
     CommonModule,

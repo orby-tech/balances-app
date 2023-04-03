@@ -2,7 +2,7 @@
   "scripts": {
     "server": "cd backend && npm run start:debug",
     "frontend": "cd frontend && ng serve",
-    "db": "sudo docker-compose up",
+    "db": "cd db && sudo docker-compose up",
     "build": "cd backend && npm run build && cd ./../frontend && npm run build",
     "deploy": "npm run build && sh ./deploy.sh"
 

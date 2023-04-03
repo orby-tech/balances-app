@@ -12,7 +12,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     graphQLErrors.map((error) => {
       const { message, locations, path } = error;
       if (error.extensions['code'] === 'UNAUTHENTICATED') {
-        window.location.href = '/auth';
+        localStorage.removeItem('token');
       }
       console.log(
         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
