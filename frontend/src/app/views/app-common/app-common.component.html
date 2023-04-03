@@ -1,7 +1,7 @@
 <div class="common-container">
   <div class="column bill-column">
     <div *ngIf="dataSourceMain$ | async; let dataSourceMain">
-      <h3>Bills in main</h3>
+      <h3>Balances in main</h3>
       <table mat-table [dataSource]="dataSourceMain" class="mat-elevation-z8">
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef>Name</th>
@@ -29,7 +29,7 @@
   </div>
   <div class="column bill-column">
     <div *ngIf="dataSourceInNative$ | async as dataSourceInNative">
-      <h3>Bills in native</h3>
+      <h3>Balances in native</h3>
       <table
         mat-table
         [dataSource]="dataSourceInNative"
