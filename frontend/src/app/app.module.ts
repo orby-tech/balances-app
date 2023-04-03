@@ -21,10 +21,10 @@ import { AppService } from './app.service';
     GraphQLModule,
     HttpClientModule,
     NgChartsModule,
-    ViewsModule
+    ViewsModule,
   ],
   providers: [MaterialModule],
-  bootstrap: [AppComponent, AppService],
+  bootstrap: [AppComponent],
 })
 export class AppModule {
   constructor(private appService: AppService) {}
