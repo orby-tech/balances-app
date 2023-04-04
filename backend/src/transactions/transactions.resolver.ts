@@ -1,45 +1,38 @@
-import { Args, Mutation, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   AddTransactionInput,
   Bill,
-  BillType,
   DeleteTransactionInput,
   Transaction,
-  TransactionType,
 } from '@common/graphql';
 import { UsersService } from 'src/users/users.service';
+import { UserId } from 'src/decorators/user-id.decorator';
 
 @Resolver('Transaction')
 export class TransactionsResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query()
-  async transactions(a): Promise<Transaction[]> {
-    const user = await this.usersService.getTransactionsById(
-      '123e4567-e89b-12d3-a456-426614174000',
-    );
-    return user;
+  async transactions(@UserId() userId): Promise<Transaction[]> {
+    const transactions = await this.usersService.getTransactionsById(userId);
+    return transactions;
   }
 
   @Mutation((returns) => Transaction, { name: 'addTransaction' })
-  async addBill(@Args('addTransactionInput') transaction: AddTransactionInput) {
-    console.log(transaction);
-    await this.usersService.setTransactionById(
-      '123e4567-e89b-12d3-a456-426614174000',
-      transaction,
-    );
+  async addBill(
+    @Args('addTransactionInput') transaction: AddTransactionInput,
+    @UserId() userId,
+  ) {
+    await this.usersService.setTransactionById(userId, transaction);
     return '';
   }
 
   @Mutation((returns) => Bill, { name: 'deleteTransaction' })
   async deleteBill(
     @Args('deleteTransactionInput') transaction: DeleteTransactionInput,
+    @UserId() userId,
   ) {
-    console.log(transaction);
-    await this.usersService.deleteTransactionById(
-      '123e4567-e89b-12d3-a456-426614174000',
-      transaction.id,
-    );
+    await this.usersService.deleteTransactionById(userId, transaction.id);
     return '';
   }
 }

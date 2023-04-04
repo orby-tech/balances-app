@@ -1,23 +1,18 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { SetMainCurrencyInput, Settings, Transaction } from '@common/graphql';
 import { UsersService } from 'src/users/users.service';
+import { UserId } from 'src/decorators/user-id.decorator';
 
 @Resolver((of) => Settings)
 export class SettingsResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query((returns) => Settings)
-  async settings(): Promise<Settings> {
-    const user = await this.usersService.getById(
-      '123e4567-e89b-12d3-a456-426614174000',
-    );
+  async settings(@UserId() userId): Promise<Settings> {
+    const user = await this.usersService.getById(userId);
     return {
       mainCurrency: user.main_currency,
-      tags: (
-        await this.usersService.getTagsById(
-          '123e4567-e89b-12d3-a456-426614174000',
-        )
-      ).map((tag) => ({
+      tags: (await this.usersService.getTagsById(userId)).map((tag) => ({
         title: tag.title,
         id: tag.tag_id,
         transactionName: tag.transaction_name,
@@ -27,12 +22,10 @@ export class SettingsResolver {
 
   @Mutation((returns) => Transaction, { name: 'setMainCurrency' })
   async setMainCurrency(
-    @Args('setMainCurrencyInput') transaction: SetMainCurrencyInput,
+    @Args('setMainCurrencyInput') mainCurrency: SetMainCurrencyInput,
+    @UserId() userId,
   ) {
-    await this.usersService.setMainCurrency(
-      '123e4567-e89b-12d3-a456-426614174000',
-      transaction.id,
-    );
-    return transaction.id;
+    await this.usersService.setMainCurrency(userId, mainCurrency.id);
+    return mainCurrency.id;
   }
 }

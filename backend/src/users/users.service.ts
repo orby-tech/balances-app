@@ -1,13 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   AddBillInput,
   AddTransactionInput,
   Transaction,
 } from '@common/graphql';
-import { DeleteResult, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { sha256 } from 'js-sha256';
 import {
   Bill,
   Currency,
@@ -72,62 +71,49 @@ export class UsersService {
 
   async getTagsById(id: string): Promise<Tag[]> {
     const tags = await this.userTagRepository.find({ where: { user_id: id } });
-    console.log(tags);
     return this.tagRepository.find({
       where: tags.map((tag) => ({ tag_id: tag.tag_id })),
     });
   }
 
-  async getCurrenciesById(id: string): Promise<Currency[]> {
-    const currencies = await this.userCurrencyRepository.find({
-      where: { user_id: id },
-    });
-    console.log(currencies);
+  async getCurrenciesById(userId: string): Promise<Currency[]> {
     return this.currencyRepository.find();
   }
 
-  async setBillById(id: string, bill: AddBillInput): Promise<Bill[]> {
+  async setBillById(userId: string, bill: AddBillInput): Promise<Bill> {
     const billId = uuidv4();
-    console.log(77, bill);
-    console.log(
-      78,
-      await this.billRepository.insert({
-        ...bill,
-        bill_id: billId,
-        currency_id: bill.currencyId,
-      }),
-    );
-    console.log(
-      79,
-      await this.userBillRepository.insert({
-        id: uuidv4(),
-        user_id: id,
-        bill_id: billId,
-      }),
-    );
 
-    const currencies = await this.userBillRepository.find({
-      where: { user_id: id },
+    await this.billRepository.insert({
+      ...bill,
+      bill_id: billId,
+      currency_id: bill.currencyId,
     });
-    console.log(currencies);
-    return this.billRepository.find({
+
+    await this.userBillRepository.insert({
+      id: uuidv4(),
+      user_id: userId,
+      bill_id: billId,
+    });
+
+    return this.billRepository.findOne({
       where: { bill_id: billId },
     });
   }
 
-  async getBillsById(id: string): Promise<Bill[]> {
-    const currencies = await this.userBillRepository.find({
-      where: { user_id: id },
+  async getBillsById(userId: string): Promise<Bill[]> {
+    const userBalances = await this.userBillRepository.find({
+      where: { user_id: userId },
     });
     return this.billRepository.find({
-      where: currencies.map((tag) => ({ bill_id: tag.bill_id })),
+      where: userBalances.map((userBalance) => ({
+        bill_id: userBalance.bill_id,
+      })),
     });
   }
 
-  async deleteBillById(id: string, billId: string): Promise<void> {
-    console.log('deleteBillById');
-    console.log(116, await this.userBillRepository.delete({ bill_id: billId }));
-    console.log(117, await this.billRepository.delete({ bill_id: billId }));
+  async deleteBillById(userId: string, billId: string): Promise<void> {
+    await this.userBillRepository.delete({ bill_id: billId });
+    await this.billRepository.delete({ bill_id: billId });
     return;
   }
 
@@ -179,44 +165,44 @@ export class UsersService {
   }
 
   async deleteTransactionById(
-    id: string,
+    userId: string,
     transactionId: string,
   ): Promise<void> {
-    console.log('deleteBillById');
-    console.log(
-      117,
-      await this.userTransactionsRepository.delete({
-        transaction_id: transactionId,
-      }),
-    );
-    console.log(
-      116,
-      await this.transactionRepository.delete({
-        transaction_id: transactionId,
-      }),
-    );
+    await this.userTransactionsRepository.delete({
+      transaction_id: transactionId,
+    });
+    await this.transactionRepository.delete({
+      transaction_id: transactionId,
+    });
     return;
   }
 
-  async getTransactionsById(id: string): Promise<Transaction[]> {
-    const currencies = await this.userTransactionsRepository.find({
-      where: { user_id: id },
+  async getTransactionsById(userId: string): Promise<Transaction[]> {
+    const transactions = await this.userTransactionsRepository.find({
+      where: { user_id: userId },
     });
-    console.log(currencies);
     return Promise.all(
       (
         await this.transactionRepository.find({
-          where: currencies.map((tag) => ({
+          where: transactions.map((tag) => ({
             transaction_id: tag.transaction_id,
           })),
         })
       ).map(async (t) => {
-        const tags = await this.transactionTagsRepository.find({
+        const transactionTags = await this.transactionTagsRepository.find({
           where: {
             transaction_id: t.transaction_id,
           },
         });
-
+        const tags = (
+          await this.tagRepository.find({
+            where: transactionTags.map((tag) => ({ tag_id: tag.tag_id })),
+          })
+        ).map((f) => ({
+          transactionName: f.transaction_name,
+          title: f.title,
+          id: f.tag_id,
+        }));
         return {
           ...t,
           id: t.transaction_id,
@@ -228,15 +214,7 @@ export class UsersService {
           fromCurrency: t.from_currency,
           fee: '0',
           feeInPercents: '0',
-          tags: (
-            await this.tagRepository.find({
-              where: tags.map((tag) => ({ tag_id: tag.tag_id })),
-            })
-          ).map((f) => ({
-            transactionName: f.transaction_name,
-            title: f.title,
-            id: f.tag_id,
-          })),
+          tags: tags,
         };
       }),
     );
