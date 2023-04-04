@@ -1,7 +1,15 @@
-<!-- The routed views render in the <router-outlet>-->
-
+<header>
+  <button
+    mat-icon-button
+    color="primary"
+    aria-label="Example icon button with a menu icon"
+    (click)="menuVisible = !menuVisible"
+  >
+    <mat-icon>menu</mat-icon>
+  </button>
+</header>
 <mat-drawer-container class="example-container">
-  <mat-drawer mode="side" opened>
+  <mat-drawer mode="side" [opened]="menuVisible">
     <nav>
       <ul>
         <li>

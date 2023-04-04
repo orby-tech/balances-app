@@ -1,5 +1,9 @@
+header {
+  height: 50px;
+}
+
 .example-container {
-  height: 100%;
+  height: calc(100% - 50px);
 }
 
 ul {
