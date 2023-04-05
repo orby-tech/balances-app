@@ -16,7 +16,7 @@ import { AddTransactionComponent } from './dialogs/add-transaction/add-transacti
 import { UserAccountComponent } from './user-account/user-account.component';
 import { LoginComponent } from './dialogs/login/login.component';
 import { ComponentsModule } from './user-account/components/components.module';
-import { TagsComponent } from './user-account/components/tags/tags.component';
+import { SignUpComponent } from './dialogs/sign-up/sign-up.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +29,7 @@ import { TagsComponent } from './user-account/components/tags/tags.component';
     AddTransactionComponent,
     UserAccountComponent,
     LoginComponent,
+    SignUpComponent,
   ],
   imports: [
     CommonModule,

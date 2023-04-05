@@ -3,6 +3,7 @@ import {
   SetMainCurrencyInput,
   SetNewPasswordInput,
   Settings,
+  SignUpInput,
 } from '@common/graphql';
 import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject } from 'rxjs';
@@ -73,5 +74,20 @@ export class SettingsService {
         this.load();
         localStorage.removeItem('token');
       });
+  }
+
+  signUp(signUp: SignUpInput) {
+   return this.apollo
+      .mutate({
+        mutation: gql`
+          mutation signUp($signUpInput: SignUpInput!) {
+            signUp(signUpInput: $signUpInput)
+          }
+        `,
+        variables: {
+          signUpInput: signUp,
+        },
+      })
+     
   }
 }

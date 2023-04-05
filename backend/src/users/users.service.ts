@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   AddBillInput,
   AddTransactionInput,
+  SignUpInput,
   Transaction,
 } from '@common/graphql';
 import { Repository } from 'typeorm';
@@ -52,7 +53,10 @@ export class UsersService {
   }
 
   async findOne(username: string): Promise<User | undefined> {
-    return this.userRepository.findOne({ where: { login: username } });
+    const user = await this.userRepository.findOne({
+      where: { email: username },
+    });
+    return user;
   }
 
   getById(userId: string): Promise<User> {
@@ -70,6 +74,19 @@ export class UsersService {
     );
   }
 
+  async createUser(password: SignUpInput): Promise<void> {
+    const defaultCurrency = '00000000-0000-0000-0000-000000000000';
+    const result = await this.userRepository.insert({
+      user_id: uuidv4(),
+      email: password.email,
+      main_currency: defaultCurrency,
+      username: password.username,
+      password_hash: sha256(password.password),
+      date_created: new Date(), // TODO: problem with time zones
+    });
+  return result.raw  
+  }
+
   async setMainCurrency(id: string, currencyId: string): Promise<void> {
     await this.userRepository.update(
       { user_id: id },
@@ -79,6 +96,9 @@ export class UsersService {
 
   async getTagsById(id: string): Promise<Tag[]> {
     const tags = await this.userTagRepository.find({ where: { user_id: id } });
+    if (!tags.length) {
+      return [];
+    }
     return this.tagRepository.find({
       where: tags.map((tag) => ({ tag_id: tag.tag_id })),
     });
@@ -112,6 +132,9 @@ export class UsersService {
     const userBalances = await this.userBillRepository.find({
       where: { user_id: userId },
     });
+    if (!userBalances.length) {
+      return [];
+    }
     return this.billRepository.find({
       where: userBalances.map((userBalance) => ({
         bill_id: userBalance.bill_id,
@@ -203,9 +226,11 @@ export class UsersService {
           },
         });
         const tags = (
-          await this.tagRepository.find({
-            where: transactionTags.map((tag) => ({ tag_id: tag.tag_id })),
-          })
+          transactionTags.length
+            ? await this.tagRepository.find({
+                where: transactionTags.map((tag) => ({ tag_id: tag.tag_id })),
+              })
+            : []
         ).map((f) => ({
           transactionName: f.transaction_name,
           title: f.title,
@@ -226,12 +251,5 @@ export class UsersService {
         };
       }),
     );
-  }
-
-  add() {
-    this.userRepository.save({
-      user_id: '123e4567-e89b-12d3-a456-426614174000',
-      main_currency: '123e4567-e89b-12d3-a456-426614174000',
-    });
   }
 }

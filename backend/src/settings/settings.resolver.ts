@@ -3,10 +3,12 @@ import {
   SetMainCurrencyInput,
   SetNewPasswordInput,
   Settings,
+  SignUpInput,
   Transaction,
 } from '@common/graphql';
 import { UsersService } from 'src/users/users.service';
 import { UserId } from 'src/decorators/user-id.decorator';
+import { Public } from 'src/auth/auth.guard';
 
 @Resolver((of) => Settings)
 export class SettingsResolver {
@@ -41,5 +43,11 @@ export class SettingsResolver {
   ) {
     await this.usersService.setNewPassword(userId, password.password);
     return '0';
+  }
+
+  @Public()
+  @Mutation((returns) => Transaction, { name: 'signUp' })
+  async signUp(@Args('signUpInput') password: SignUpInput) {
+    return await this.usersService.createUser(password);
   }
 }

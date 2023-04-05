@@ -24,7 +24,7 @@ export class UserService {
         query: gql`
           {
             user {
-              login
+              email
               mainCurrency
             }
             currencies {

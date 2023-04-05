@@ -26,6 +26,12 @@ export class SetNewPasswordInput {
     password: string;
 }
 
+export class SignUpInput {
+    username: string;
+    email: string;
+    password: string;
+}
+
 export class AddTagInput {
     transactionType?: Nullable<string>;
     title?: Nullable<string>;
@@ -84,6 +90,8 @@ export abstract class IMutation {
 
     abstract setNewPassword(setNewPasswordInput?: Nullable<SetNewPasswordInput>): string | Promise<string>;
 
+    abstract signUp(signUpInput?: Nullable<SignUpInput>): string | Promise<string>;
+
     abstract addTag(addTagInput?: Nullable<AddTagInput>): string | Promise<string>;
 
     abstract addBill(addBillInput: AddBillInput): Bill | Promise<Bill>;
@@ -96,7 +104,8 @@ export abstract class IMutation {
 }
 
 export class User {
-    login: string;
+    email: string;
+    username?: Nullable<string>;
     mainCurrency: string;
 }
 

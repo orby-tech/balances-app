@@ -1,0 +1,15 @@
+.content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  ::ng-deep .cdk-overlay-dark-backdrop {
+    background: #8c8c8cf4;
+  }
+  
+  .title-container {
+    display: flex;
+  
+    justify-content: space-between;
+  }
+  

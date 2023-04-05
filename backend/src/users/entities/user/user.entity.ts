@@ -28,7 +28,13 @@ export class User {
   main_currency: string;
 
   @Column()
-  login: string;
+  username: string;
+
+  @Column()
+  email: string;
+
+  @Column()
+  date_created: Date;
 
   @Column()
   password_hash: string;

@@ -1,0 +1,22 @@
+<div mat-dialog-title class="title-container"><h2>Log in</h2></div>
+
+<div mat-dialog-content class="content">
+  <mat-form-field appearance="fill">
+    <input matInput type="email" placeholder="e-mail" [(ngModel)]="email" />
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <input matInput type="text" placeholder="username" [(ngModel)]="username" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <input
+      matInput
+      type="password"
+      placeholder="password"
+      [(ngModel)]="password"
+    />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="signUp()">Sign up</button>
+</div>
