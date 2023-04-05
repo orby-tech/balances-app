@@ -4,6 +4,7 @@ schema {
 }
 
 type Query {
+  user: User!
   settings: Settings!
   bills: [Bill]
   transactions(page: Int!): [Transaction]
@@ -13,10 +14,10 @@ type Query {
 
 type Mutation {
   setMainCurrency(setMainCurrencyInput: SetMainCurrencyInput): String!
+  setNewPassword(setNewPasswordInput: SetNewPasswordInput): String!
   addTag(addTagInput: AddTagInput): String!
   addBill(addBillInput: AddBillInput!): Bill!
   deleteBill(deleteBillInput: DeleteBillInput!): String
-
 
   addTransaction(addTransactionInput: AddTransactionInput!): String
   deleteTransaction(deleteTransactionInput: DeleteTransactionInput!): String
@@ -24,6 +25,10 @@ type Mutation {
 
 input SetMainCurrencyInput {
   id: ID!
+}
+
+input SetNewPasswordInput {
+  password: String!
 }
 
 input AddTagInput {
@@ -41,6 +46,11 @@ input AddBillInput {
 
 input DeleteBillInput {
   id: String!
+}
+
+type User {
+  login: String!
+  mainCurrency: String!
 }
 
 type Settings {
@@ -79,7 +89,7 @@ type CurrenciesRateMeta {
 
 type CurrenciesRateData {
   code: String!
-  value: Float! 
+  value: Float!
 }
 
 type Transaction {
@@ -124,7 +134,6 @@ input TagInput {
 input DeleteTransactionInput {
   id: String!
 }
-
 
 type Tag {
   transactionName: String!

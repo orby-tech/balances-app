@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { SetMainCurrencyInput, Settings } from '@common/graphql';
+import {
+  SetMainCurrencyInput,
+  SetNewPasswordInput,
+  Settings,
+} from '@common/graphql';
 import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject } from 'rxjs';
 
@@ -50,6 +54,24 @@ export class SettingsService {
       })
       .subscribe((x) => {
         this.load();
+      });
+  }
+
+  setNewPassword(password: SetNewPasswordInput) {
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation setNewPassword($setNewPasswordInput: SetNewPasswordInput!) {
+            setNewPassword(setNewPasswordInput: $setNewPasswordInput)
+          }
+        `,
+        variables: {
+          setNewPasswordInput: password,
+        },
+      })
+      .subscribe((x) => {
+        this.load();
+        localStorage.removeItem('token');
       });
   }
 }

@@ -15,8 +15,8 @@ import { AddBillComponent } from './dialogs/add-bill/add-bill.component';
 import { AddTransactionComponent } from './dialogs/add-transaction/add-transaction.component';
 import { UserAccountComponent } from './user-account/user-account.component';
 import { LoginComponent } from './dialogs/login/login.component';
-
-
+import { ComponentsModule } from './user-account/components/components.module';
+import { TagsComponent } from './user-account/components/tags/tags.component';
 
 @NgModule({
   declarations: [
@@ -32,16 +32,16 @@ import { LoginComponent } from './dialogs/login/login.component';
   ],
   imports: [
     CommonModule,
+    ComponentsModule,
     MaterialModule,
     MaterialModule,
-    BrowserModule, 
-    FormsModule, 
+    BrowserModule,
+    FormsModule,
     MatFormFieldModule,
     NgChartsModule,
 
     MatInputModule,
-    MatFormFieldModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+  ],
 })
-export class ViewsModule { }
+export class ViewsModule {}

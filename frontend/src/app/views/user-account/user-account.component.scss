@@ -1,0 +1,25 @@
+:host {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+
+  .cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    flex: 1;
+
+
+    .cart {
+      padding: 15px;
+      flex: 1;
+      min-width: 300px;
+
+      .new-password-container {
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+}

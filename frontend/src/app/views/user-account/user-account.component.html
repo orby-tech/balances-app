@@ -1,8 +1,72 @@
-<h3>User Data</h3>
-<p>Username</p>
-<p>Login</p>
-<p>Change password</p>
-<p>Date of registaration</p>
-<h3>Organizations</h3>
-<p>List of organizations</p>
-<button>Add organization</button>
+<div class="cards-container">
+  <mat-card class="cart">
+    <mat-card-title>User Data</mat-card-title>
+    <p>Login: {{ (user$ | async)?.login }}</p>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Main currency</mat-label>
+      <mat-select
+        [(ngModel)]="selectedValue"
+        name="currency"
+        (ngModelChange)="selectMainCurrency()"
+      >
+        <mat-option
+          *ngFor="let currency of currencies$ | async"
+          [value]="currency.id"
+        >
+          {{ currency.title }} {{ currency.shortTitle }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-divider></mat-divider>
+    <div class="new-password-container">
+      <mat-form-field class="new-password-form-field">
+        <mat-label>New password</mat-label>
+        <input
+          matInput
+          type="password"
+          [(ngModel)]="newPassword"
+          (ngModelChange)="changePassword()"
+        />
+      </mat-form-field>
+      <mat-form-field class="new-password-form-field">
+        <mat-label>Confirm new password </mat-label>
+        <input
+          matInput
+          type="password"
+          [(ngModel)]="newPasswordConfirm"
+          (ngModelChange)="changePassword()"
+        />
+      </mat-form-field>
+      <button
+        mat-raised-button
+        color="warn"
+        [disabled]="!(!!newPassword && newPassword === newPasswordConfirm)"
+        (click)="updatePassword()"
+      >
+        Update password
+      </button>
+    </div>
+  </mat-card>
+
+  <mat-card class="cart">
+    <mat-card-title>Organizations</mat-card-title>
+    <p>No organizations found</p>
+    <button mat-raised-button color="primary" disabled>Add organization</button>
+  </mat-card>
+</div>
+
+<div class="cards-container">
+  <mat-card class="cart">
+    <app-tags [type]="transactionType.RECEIVE"></app-tags>
+  </mat-card>
+
+  <mat-card class="cart">
+    <app-tags [type]="transactionType.SEND"></app-tags>
+  </mat-card>
+
+  <mat-card class="cart">
+    <app-tags [type]="transactionType.TRANSFER"></app-tags>
+  </mat-card>
+</div>

@@ -22,6 +22,10 @@ export class SetMainCurrencyInput {
     id: string;
 }
 
+export class SetNewPasswordInput {
+    password: string;
+}
+
 export class AddTagInput {
     transactionType?: Nullable<string>;
     title?: Nullable<string>;
@@ -62,6 +66,8 @@ export class DeleteTransactionInput {
 }
 
 export abstract class IQuery {
+    abstract user(): User | Promise<User>;
+
     abstract settings(): Settings | Promise<Settings>;
 
     abstract bills(): Nullable<Nullable<Bill>[]> | Promise<Nullable<Nullable<Bill>[]>>;
@@ -76,6 +82,8 @@ export abstract class IQuery {
 export abstract class IMutation {
     abstract setMainCurrency(setMainCurrencyInput?: Nullable<SetMainCurrencyInput>): string | Promise<string>;
 
+    abstract setNewPassword(setNewPasswordInput?: Nullable<SetNewPasswordInput>): string | Promise<string>;
+
     abstract addTag(addTagInput?: Nullable<AddTagInput>): string | Promise<string>;
 
     abstract addBill(addBillInput: AddBillInput): Bill | Promise<Bill>;
@@ -85,6 +93,11 @@ export abstract class IMutation {
     abstract addTransaction(addTransactionInput: AddTransactionInput): Nullable<string> | Promise<Nullable<string>>;
 
     abstract deleteTransaction(deleteTransactionInput: DeleteTransactionInput): Nullable<string> | Promise<Nullable<string>>;
+}
+
+export class User {
+    login: string;
+    mainCurrency: string;
 }
 
 export class Settings {

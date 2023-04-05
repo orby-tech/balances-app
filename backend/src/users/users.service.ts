@@ -19,6 +19,7 @@ import {
   UserTag,
   UserTransactions,
 } from './entities/user/user.entity';
+import { sha256 } from 'js-sha256';
 
 @Injectable()
 export class UsersService {
@@ -54,12 +55,19 @@ export class UsersService {
     return this.userRepository.findOne({ where: { login: username } });
   }
 
-  getById(id: string): Promise<User> {
+  getById(userId: string): Promise<User> {
     return this.userRepository.findOne({
       where: {
-        user_id: id,
+        user_id: userId,
       },
     });
+  }
+
+  async setNewPassword(id: string, password: string): Promise<void> {
+    await this.userRepository.update(
+      { user_id: id },
+      { password_hash: sha256(password) },
+    );
   }
 
   async setMainCurrency(id: string, currencyId: string): Promise<void> {

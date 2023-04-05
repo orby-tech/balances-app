@@ -1,5 +1,10 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { SetMainCurrencyInput, Settings, Transaction } from '@common/graphql';
+import {
+  SetMainCurrencyInput,
+  SetNewPasswordInput,
+  Settings,
+  Transaction,
+} from '@common/graphql';
 import { UsersService } from 'src/users/users.service';
 import { UserId } from 'src/decorators/user-id.decorator';
 
@@ -27,5 +32,14 @@ export class SettingsResolver {
   ) {
     await this.usersService.setMainCurrency(userId, mainCurrency.id);
     return mainCurrency.id;
+  }
+
+  @Mutation((returns) => Transaction, { name: 'setNewPassword' })
+  async setNewPassword(
+    @Args('setNewPasswordInput') password: SetNewPasswordInput,
+    @UserId() userId,
+  ) {
+    await this.usersService.setNewPassword(userId, password.password);
+    return '0';
   }
 }

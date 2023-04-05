@@ -14,6 +14,7 @@ import {
 } from './entities/user/user.entity';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
+import { UsersResolver } from './users.resolver';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { UsersController } from './users.controller';
       TransactionTags,
     ]),
   ],
-  providers: [UsersService],
+  providers: [UsersService, UsersResolver],
   controllers: [UsersController],
   exports: [UsersService],
 })

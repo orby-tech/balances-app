@@ -47,6 +47,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { DialogModule } from '@angular/cdk/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   exports: [
@@ -100,6 +101,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatInputModule,
     ScrollingModule,
     DialogModule,
+    ReactiveFormsModule
   ],
 })
 export class MaterialModule {}

@@ -1,14 +1,3 @@
-<h2>User settings</h2>
-<form>
-  <mat-form-field appearance="fill">
-    <mat-label>Main currency</mat-label>
-    <mat-select [(ngModel)]="selectedValue" name="food" (ngModelChange)="selectMainCurrency()">
-      <mat-option *ngFor="let food of foods$ | async" [value]="food.id">
-        {{ food.title }} {{ food.shortTitle }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-</form>
 <h2>Tags</h2>
 <table mat-table *ngIf="dataSource$ | async; let dataSource" [dataSource]="dataSource" class="mat-elevation-z8">
   <ng-container matColumnDef="title">
