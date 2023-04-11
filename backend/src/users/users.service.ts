@@ -84,7 +84,7 @@ export class UsersService {
       password_hash: sha256(password.password),
       date_created: new Date(), // TODO: problem with time zones
     });
-  return result.raw  
+    return result.raw;
   }
 
   async setMainCurrency(id: string, currencyId: string): Promise<void> {
@@ -108,7 +108,10 @@ export class UsersService {
     return this.currencyRepository.find();
   }
 
-  async setBalanceById(userId: string, balance: AddBalanceInput): Promise<Balance> {
+  async setBalanceById(
+    userId: string,
+    balance: AddBalanceInput,
+  ): Promise<Balance> {
     const balanceId = uuidv4();
 
     await this.balanceRepository.insert({
@@ -199,6 +202,9 @@ export class UsersService {
     userId: string,
     transactionId: string,
   ): Promise<void> {
+    await this.transactionTagsRepository.delete({
+      transaction_id: transactionId,
+    });
     await this.userTransactionsRepository.delete({
       transaction_id: transactionId,
     });
