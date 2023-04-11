@@ -161,7 +161,6 @@ export class TransactionsService {
         `,
       })
       .valueChanges.subscribe((result: any) => {
-        console.log(result?.data);
         this.transactions$.next(result?.data?.transactions || []);
         this.balances$.next(result?.data?.balances || []);
         this.currenciesRateData$.next(result?.data?.currenciesRate?.data || []);

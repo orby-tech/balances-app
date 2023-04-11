@@ -48,7 +48,6 @@ export class CurrenciesService {
         `,
       })
       .valueChanges.subscribe((result: any) => {
-        console.log(result?.data);
         this.currencies$.next(result?.data?.currencies || []);
         this.currenciesRateData$.next(result?.data?.currenciesRate?.data || []);
       });

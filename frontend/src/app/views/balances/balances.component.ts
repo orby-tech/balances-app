@@ -17,7 +17,7 @@ export class BalancesComponent implements OnInit {
   balancesWithValuesInMain$ = this.balancesService.balancesWithValuesInMain$;
 
   balancesForForm$ = this.balancesWithValuesInMain$;
-  
+
   chart: Chart<'doughnut', number[], string> | null = null;
 
   displayedColumns: string[] = [
@@ -54,14 +54,11 @@ export class BalancesComponent implements OnInit {
   }
 
   addBalance() {
-    console.log('add balance');
-
     const dialogRef = this.dialog.open(AddBalanceComponent, {
       data: { type: 'CARD' },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed', result);
       if (result) {
         this.balancesService.addBalance(result);
       }

@@ -7,18 +7,14 @@ import { onError } from '@apollo/client/link/error';
 
 const uri = '/graphql';
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
+const errorLink = onError(({ graphQLErrors }) => {
   if (graphQLErrors)
     graphQLErrors.map((error) => {
       const { message, locations, path } = error;
       if (error.extensions['code'] === 'UNAUTHENTICATED') {
         localStorage.removeItem('token');
       }
-      console.log(
-        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-      );
     });
-  if (networkError) console.log(`[Network error]: ${networkError}`);
 });
 
 export function createApollo(httpLink: HttpLink): ApolloClientOptions<any> {

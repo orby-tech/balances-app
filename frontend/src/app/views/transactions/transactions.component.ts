@@ -14,7 +14,7 @@ import { AddTransactionComponent } from '../dialogs/add-transaction/add-transact
 export class TransactionsComponent {
   transactions$ = this.transactionsService.transactions$;
 
-  transactionsToFrom$ = this.transactionsService.filledTransactions$
+  transactionsToFrom$ = this.transactionsService.filledTransactions$;
 
   displayedColumns: string[] = [
     'provider',
@@ -45,14 +45,11 @@ export class TransactionsComponent {
   }
 
   addTransaction() {
-    console.log('add balance');
-
     const dialogRef = this.dialog.open(AddTransactionComponent, {
       data: { type: 'TRANSFER', provider: '123' },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed', result);
       if (result) {
         this.transactionsService.addTransaction(result);
       }

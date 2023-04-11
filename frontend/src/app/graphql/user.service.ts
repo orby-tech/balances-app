@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Currency, User } from '@common/graphql';
 import { Apollo, gql } from 'apollo-angular';
-import { BehaviorSubject, combineLatest, first, map, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, first, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +13,7 @@ export class UserService {
   userMainCurrency$ = combineLatest([this.user$, this.currencies$]).pipe(
     map(([user, currencies]) =>
       currencies?.find((currency) => currency.id === user?.mainCurrency)
-    ),
-    tap((x) => console.log(x))
+    )
   );
 
   constructor(private apollo: Apollo) {}
@@ -38,7 +37,6 @@ export class UserService {
       })
       .pipe(first())
       .subscribe((result: any) => {
-        console.log(result?.data);
         this.user$.next(result?.data?.user || []);
         this.currencies$.next(result?.data?.currencies || []);
       });

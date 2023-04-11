@@ -37,7 +37,6 @@ export class AppService {
       });
 
       dialogRef.afterClosed().subscribe((result) => {
-        console.log('The dialog was closed');
         this.validateToken();
       });
     } else {

@@ -62,7 +62,6 @@ export class BalancesService {
       })
       .pipe(first())
       .subscribe((result: any) => {
-        console.log(result?.data);
         this.balances$.next(result?.data?.balances || []);
         this.currenciesRateData$.next(result?.data?.currenciesRate?.data || []);
         this.currencies$.next(result?.data?.currencies || []);

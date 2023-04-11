@@ -33,7 +33,6 @@ export class SettingsService {
         `,
       })
       .valueChanges.subscribe((result: any) => {
-        console.log(result?.data);
         this.mainCurrency$.next(result?.data?.settings?.mainCurrency || []);
         this.tags$.next(result?.data?.settings?.tags || []);
       });

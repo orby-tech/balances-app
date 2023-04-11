@@ -38,8 +38,6 @@ export class LoginComponent {
       data: {},
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The SignUpComponent dialog was closed');
-    });
+    dialogRef.afterClosed().subscribe((result) => {});
   }
 }
