@@ -1,5 +1,15 @@
 header {
   height: 50px;
+  display: flex;
+  justify-content: space-between;
+
+  align-items: center;
+
+  .header--user-info-block {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
 }
 
 .example-container {
@@ -16,19 +26,13 @@ li {
   justify-content: flex-end;
   min-width: 100px;
   padding-right: 20px;
-
 }
 a {
   justify-content: flex-end;
 }
 
-.nav-bar{ 
+.nav-bar {
   display: flex;
-}
-
-.logout-button {
-  position: absolute;
-  bottom: 10px;
 }
 
 .content {
