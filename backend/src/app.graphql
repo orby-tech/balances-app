@@ -6,7 +6,7 @@ schema {
 type Query {
   user: User!
   settings: Settings!
-  bills: [Bill]
+  balances: [Balance]
   transactions(page: Int!): [Transaction]
   currencies: [Currency]
   currenciesRate: CurrenciesRate
@@ -17,8 +17,8 @@ type Mutation {
   setNewPassword(setNewPasswordInput: SetNewPasswordInput): String!
   signUp(signUpInput: SignUpInput): String!
   addTag(addTagInput: AddTagInput): String!
-  addBill(addBillInput: AddBillInput!): Bill!
-  deleteBill(deleteBillInput: DeleteBillInput!): String
+  addBalance(addBalanceInput: AddBalanceInput!): Balance!
+  deleteBalance(deleteBalanceInput: DeleteBalanceInput!): String
 
   addTransaction(addTransactionInput: AddTransactionInput!): String
   deleteTransaction(deleteTransactionInput: DeleteTransactionInput!): String
@@ -43,15 +43,15 @@ input AddTagInput {
   title: String
 }
 
-input AddBillInput {
+input AddBalanceInput {
   title: String!
   host: String!
   value: Float!
   currencyId: String!
-  type: BillType!
+  type: BalanceType!
 }
 
-input DeleteBillInput {
+input DeleteBalanceInput {
   id: String!
 }
 
@@ -66,17 +66,17 @@ type Settings {
   tags: [Tag]
 }
 
-type Bill {
+type Balance {
   id: ID!
   title: String!
   host: String!
   value: Float!
   valueInMain: Float!
   currencyId: String!
-  type: BillType!
+  type: BalanceType!
 }
 
-enum BillType {
+enum BalanceType {
   CARD
 }
 

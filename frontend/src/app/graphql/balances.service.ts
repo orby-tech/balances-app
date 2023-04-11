@@ -1,27 +1,27 @@
 import { Injectable } from '@angular/core';
 import {
-  AddBillInput,
-  Bill,
+  AddBalanceInput,
+  Balance,
   CurrenciesRateData,
   Currency,
-  DeleteBillInput,
+  DeleteBalanceInput,
 } from '@common/graphql';
 import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, first, pipe, tap } from 'rxjs';
-import { getBillsWithValuesInMain } from './common.service';
+import { getBalancesWithValuesInMain } from './common.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class BillsService {
-  bills$ = new BehaviorSubject<Bill[]>([]);
+export class BalancesService {
+  balances$ = new BehaviorSubject<Balance[]>([]);
   mainCurrency$ = new BehaviorSubject<string>('');
 
   currenciesRateData$ = new BehaviorSubject<CurrenciesRateData[]>([]);
   currencies$ = new BehaviorSubject<Currency[]>([]);
 
-  billsWithValuesInMain$ = getBillsWithValuesInMain(
-    this.bills$,
+  balancesWithValuesInMain$ = getBalancesWithValuesInMain(
+    this.balances$,
     this.mainCurrency$,
     this.currenciesRateData$,
     this.currencies$
@@ -32,7 +32,7 @@ export class BillsService {
       .query({
         query: gql`
           {
-            bills {
+            balances {
               id
               type
               title
@@ -63,25 +63,25 @@ export class BillsService {
       .pipe(first())
       .subscribe((result: any) => {
         console.log(result?.data);
-        this.bills$.next(result?.data?.bills || []);
+        this.balances$.next(result?.data?.balances || []);
         this.currenciesRateData$.next(result?.data?.currenciesRate?.data || []);
         this.currencies$.next(result?.data?.currencies || []);
         this.mainCurrency$.next(result?.data?.settings?.mainCurrency || '');
       });
   }
 
-  addBill(bill: AddBillInput) {
+  addBalance(balance: AddBalanceInput) {
     this.apollo
       .mutate({
         mutation: gql`
-          mutation addBill($addBillInput: AddBillInput!) {
-            addBill(addBillInput: $addBillInput) {
+          mutation addBalance($addBalanceInput: AddBalanceInput!) {
+            addBalance(addBalanceInput: $addBalanceInput) {
               id
             }
           }
         `,
         variables: {
-          addBillInput: bill,
+          addBalanceInput: balance,
         },
       })
       .subscribe((x) => {
@@ -89,16 +89,16 @@ export class BillsService {
       });
   }
 
-  deleteBill(bill: DeleteBillInput) {
+  deleteBalance(balance: DeleteBalanceInput) {
     this.apollo
       .mutate({
         mutation: gql`
-          mutation deleteBill($deleteBillInput: DeleteBillInput!) {
-            deleteBill(deleteBillInput: $deleteBillInput)
+          mutation deleteBalance($deleteBalanceInput: DeleteBalanceInput!) {
+            deleteBalance(deleteBalanceInput: $deleteBalanceInput)
           }
         `,
         variables: {
-          deleteBillInput: bill,
+          deleteBalanceInput: balance,
         },
       })
       .subscribe((x) => {

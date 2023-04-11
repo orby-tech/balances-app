@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AppCommonComponent } from './views/app-common/app-common.component';
-import { BillsComponent } from './views/bills/bills.component';
+import { BalancesComponent } from './views/balances/balances.component';
 import { CurrenciesComponent } from './views/currencies/currencies.component';
 import { SettingsComponent } from './views/settings/settings.component';
 import { TransactionsComponent } from './views/transactions/transactions.component';
@@ -19,9 +19,9 @@ const routes: Routes = [
     component: AppCommonComponent,
   },
   {
-    title: 'bills',
-    path: 'bills',
-    component: BillsComponent,
+    title: 'balances',
+    path: 'balances',
+    component: BalancesComponent,
   },
   {
     title: 'currencies',

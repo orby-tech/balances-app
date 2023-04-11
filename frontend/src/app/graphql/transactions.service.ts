@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   AddTransactionInput,
-  Bill,
+  Balance,
   CurrenciesRateData,
   Currency,
   DeleteTransactionInput,
@@ -12,14 +12,14 @@ import { BehaviorSubject, combineLatest, map } from 'rxjs';
 
 export const getTransactionsWithValuesInMain = (
   transactions$: BehaviorSubject<Transaction[]>,
-  bills$: BehaviorSubject<Bill[]>,
+  balances$: BehaviorSubject<Balance[]>,
   mainCurrency$: BehaviorSubject<string>,
   currenciesRateData$: BehaviorSubject<CurrenciesRateData[]>,
   currencies$: BehaviorSubject<Currency[]>
 ) =>
   combineLatest([
     transactions$,
-    bills$,
+    balances$,
     mainCurrency$,
     currenciesRateData$,
     currencies$,
@@ -27,17 +27,17 @@ export const getTransactionsWithValuesInMain = (
     map(
       ([
         transactions,
-        bills,
+        balances,
         mainCurrencyId,
         currenciesRateData,
         currencies,
       ]) => {
         return transactions.map((transaction) => {
-          const tobill = bills.find((bill) => bill?.id === transaction.to);
-          const frombill = bills.find((bill) => bill?.id === transaction.from);
+          const tobalance = balances.find((balance) => balance?.id === transaction.to);
+          const frombalance = balances.find((balance) => balance?.id === transaction.from);
 
           const toCurrency = currencies.find(
-            (c) => c.id === tobill?.currencyId
+            (c) => c.id === tobalance?.currencyId
           );
           const toInternationalShortName = currencies.find(
             (c) => c.id === toCurrency?.id
@@ -48,7 +48,7 @@ export const getTransactionsWithValuesInMain = (
               ?.value || 1;
 
           const fromCurrency = currencies.find(
-            (c) => c.id === frombill?.currencyId
+            (c) => c.id === frombalance?.currencyId
           );
           const fromInternationalShortName = currencies.find(
             (c) => c.id === fromCurrency?.id
@@ -76,12 +76,12 @@ export const getTransactionsWithValuesInMain = (
             toInternationalSimbol: toCurrency?.internationalSimbol || '',
             fromInternationalSimbol: fromCurrency?.internationalSimbol || '',
             internationalSimbolOfMain: mainCurrency?.internationalSimbol || '',
-            toTitle: tobill?.title,
-            fromTitle: frombill?.title,
-            toCurrencyTitle: currencies.find((c) => c.id === tobill?.currencyId)
+            toTitle: tobalance?.title,
+            fromTitle: frombalance?.title,
+            toCurrencyTitle: currencies.find((c) => c.id === tobalance?.currencyId)
               ?.title,
             fromCurrencyTitle: currencies.find(
-              (c) => c.id === frombill?.currencyId
+              (c) => c.id === frombalance?.currencyId
             )?.title,
           };
         });
@@ -94,7 +94,7 @@ export const getTransactionsWithValuesInMain = (
 })
 export class TransactionsService {
   transactions$ = new BehaviorSubject<Transaction[]>([]);
-  bills$ = new BehaviorSubject<Bill[]>([]);
+  balances$ = new BehaviorSubject<Balance[]>([]);
   mainCurrency$ = new BehaviorSubject<string>('');
 
   currenciesRateData$ = new BehaviorSubject<CurrenciesRateData[]>([]);
@@ -102,7 +102,7 @@ export class TransactionsService {
 
   filledTransactions$ = getTransactionsWithValuesInMain(
     this.transactions$,
-    this.bills$,
+    this.balances$,
     this.mainCurrency$,
     this.currenciesRateData$,
     this.currencies$
@@ -114,7 +114,7 @@ export class TransactionsService {
       .watchQuery({
         query: gql`
           {
-            bills {
+            balances {
               id
               type
               title
@@ -163,7 +163,7 @@ export class TransactionsService {
       .valueChanges.subscribe((result: any) => {
         console.log(result?.data);
         this.transactions$.next(result?.data?.transactions || []);
-        this.bills$.next(result?.data?.bills || []);
+        this.balances$.next(result?.data?.balances || []);
         this.currenciesRateData$.next(result?.data?.currenciesRate?.data || []);
         this.currencies$.next(result?.data?.currencies || []);
         this.mainCurrency$.next(result?.data?.settings?.mainCurrency || '');

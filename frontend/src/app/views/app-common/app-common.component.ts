@@ -12,38 +12,38 @@ import { CurrenciesService } from 'src/app/graphql/currencies.service';
 export class AppCommonComponent {
   displayedColumns: string[] = ['name', 'value'];
 
-  bills$ = this.commonService.bills$;
+  balances$ = this.commonService.balances$;
 
-  billsWithValuesInMain$ = this.commonService.billsWithValuesInMain$;
+  balancesWithValuesInMain$ = this.commonService.balancesWithValuesInMain$;
 
-  dataSourceMain$ = this.billsWithValuesInMain$.pipe(
-    map((bills) =>
-      bills.map((bill) => ({
-        name: bill.title,
-        value: bill.valueInMain,
-        internationalSimbol: bill.internationalSimbolOfMain,
+  dataSourceMain$ = this.balancesWithValuesInMain$.pipe(
+    map((balances) =>
+      balances.map((balance) => ({
+        name: balance.title,
+        value: balance.valueInMain,
+        internationalSimbol: balance.internationalSimbolOfMain,
       }))
     )
   );
 
-  dataSourceInNative$ = this.billsWithValuesInMain$.pipe(
-    map((bills) =>
-      bills.map((bill) => ({
-        name: bill.title,
-        value: bill.value,
-        internationalSimbol: bill.internationalSimbol,
+  dataSourceInNative$ = this.balancesWithValuesInMain$.pipe(
+    map((balances) =>
+      balances.map((balance) => ({
+        name: balance.title,
+        value: balance.value,
+        internationalSimbol: balance.internationalSimbol,
       }))
     )
   );
 
   datasets$ = combineLatest([
-    this.billsWithValuesInMain$,
+    this.balancesWithValuesInMain$,
   ]).pipe(
-    map(([billsWithValuesInMain]) => {
+    map(([balancesWithValuesInMain]) => {
       const datasets = [
         {
-          label: 'Bills',
-          data: [...billsWithValuesInMain.map((bill) => bill.valueInMain)],
+          label: 'Balances',
+          data: [...balancesWithValuesInMain.map((balance) => balance.valueInMain)],
         },
       ];
       return datasets;

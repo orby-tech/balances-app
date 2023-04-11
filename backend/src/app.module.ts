@@ -6,7 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SettingsModule } from './settings/settings.module';
 import { CurrenciesModule } from './currencies/currencies.module';
-import { BillsModule } from './bills/bills.module';
+import { BalancesModule } from './balances/balances.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -47,7 +47,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
       migrations: [init1680003816406],
     }),
     CurrenciesModule,
-    BillsModule,
+    BalancesModule,
     TransactionsModule,
     UsersModule,
   ],

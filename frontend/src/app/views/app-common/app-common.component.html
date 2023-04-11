@@ -1,5 +1,5 @@
 <div class="common-container">
-  <div class="column bill-column">
+  <div class="column balance-column">
     <div *ngIf="dataSourceMain$ | async; let dataSourceMain">
       <h3>Balances in main</h3>
       <table mat-table [dataSource]="dataSourceMain" class="mat-elevation-z8">
@@ -27,7 +27,7 @@
     >
     </canvas>
   </div>
-  <div class="column bill-column">
+  <div class="column balance-column">
     <div *ngIf="dataSourceInNative$ | async as dataSourceInNative">
       <h3>Balances in native</h3>
       <table

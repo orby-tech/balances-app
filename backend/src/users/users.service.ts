@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
-  AddBillInput,
+  AddBalanceInput,
   AddTransactionInput,
   SignUpInput,
   Transaction,
@@ -9,13 +9,13 @@ import {
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import {
-  Bill,
+  Balance,
   Currency,
   Tag,
   Transactions,
   TransactionTags,
   User,
-  UserBills,
+  UserBalances,
   UserCurrencies,
   UserTag,
   UserTransactions,
@@ -35,10 +35,10 @@ export class UsersService {
     private readonly currencyRepository: Repository<Currency>,
     @InjectRepository(UserCurrencies)
     private readonly userCurrencyRepository: Repository<UserCurrencies>,
-    @InjectRepository(Bill)
-    private readonly billRepository: Repository<Bill>,
-    @InjectRepository(UserBills)
-    private readonly userBillRepository: Repository<UserBills>,
+    @InjectRepository(Balance)
+    private readonly balanceRepository: Repository<Balance>,
+    @InjectRepository(UserBalances)
+    private readonly userBalanceRepository: Repository<UserBalances>,
 
     @InjectRepository(Transactions)
     private readonly transactionRepository: Repository<Transactions>,
@@ -108,43 +108,43 @@ export class UsersService {
     return this.currencyRepository.find();
   }
 
-  async setBillById(userId: string, bill: AddBillInput): Promise<Bill> {
-    const billId = uuidv4();
+  async setBalanceById(userId: string, balance: AddBalanceInput): Promise<Balance> {
+    const balanceId = uuidv4();
 
-    await this.billRepository.insert({
-      ...bill,
-      bill_id: billId,
-      currency_id: bill.currencyId,
+    await this.balanceRepository.insert({
+      ...balance,
+      balance_id: balanceId,
+      currency_id: balance.currencyId,
     });
 
-    await this.userBillRepository.insert({
+    await this.userBalanceRepository.insert({
       id: uuidv4(),
       user_id: userId,
-      bill_id: billId,
+      balance_id: balanceId,
     });
 
-    return this.billRepository.findOne({
-      where: { bill_id: billId },
+    return this.balanceRepository.findOne({
+      where: { balance_id: balanceId },
     });
   }
 
-  async getBillsById(userId: string): Promise<Bill[]> {
-    const userBalances = await this.userBillRepository.find({
+  async getBalancesById(userId: string): Promise<Balance[]> {
+    const userBalances = await this.userBalanceRepository.find({
       where: { user_id: userId },
     });
     if (!userBalances.length) {
       return [];
     }
-    return this.billRepository.find({
+    return this.balanceRepository.find({
       where: userBalances.map((userBalance) => ({
-        bill_id: userBalance.bill_id,
+        balance_id: userBalance.balance_id,
       })),
     });
   }
 
-  async deleteBillById(userId: string, billId: string): Promise<void> {
-    await this.userBillRepository.delete({ bill_id: billId });
-    await this.billRepository.delete({ bill_id: billId });
+  async deleteBalanceById(userId: string, balanceId: string): Promise<void> {
+    await this.userBalanceRepository.delete({ balance_id: balanceId });
+    await this.balanceRepository.delete({ balance_id: balanceId });
     return;
   }
 
@@ -169,11 +169,11 @@ export class UsersService {
     });
 
     if (transaction.from) {
-      const oldValue = await this.billRepository.findOne({
-        where: { bill_id: transaction.from },
+      const oldValue = await this.balanceRepository.findOne({
+        where: { balance_id: transaction.from },
       });
-      await this.billRepository.update(
-        { bill_id: transaction.from },
+      await this.balanceRepository.update(
+        { balance_id: transaction.from },
         {
           value: +oldValue.value - +transaction.toValue,
         },
@@ -181,11 +181,11 @@ export class UsersService {
     }
 
     if (transaction.to) {
-      const oldValue = await this.billRepository.findOne({
-        where: { bill_id: transaction.to },
+      const oldValue = await this.balanceRepository.findOne({
+        where: { balance_id: transaction.to },
       });
-      await this.billRepository.update(
-        { bill_id: transaction.to },
+      await this.balanceRepository.update(
+        { balance_id: transaction.to },
         {
           value: +oldValue.value + +transaction.toValue,
         },

@@ -1,20 +1,20 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
-import { Bill, CurrenciesRateData, Currency } from '@common/graphql';
+import { Balance, CurrenciesRateData, Currency } from '@common/graphql';
 
-export const getBillsWithValuesInMain = (
-  bills$: BehaviorSubject<Bill[]>,
+export const getBalancesWithValuesInMain = (
+  balances$: BehaviorSubject<Balance[]>,
   mainCurrency$: BehaviorSubject<string>,
   currenciesRateData$: BehaviorSubject<CurrenciesRateData[]>,
   currencies$: BehaviorSubject<Currency[]>
 ) =>
-  combineLatest([bills$, mainCurrency$, currenciesRateData$, currencies$]).pipe(
-    map(([bills, mainCurrencyId, currenciesRateData, currencies]) => {
-      return bills.map((bill) => {
-        const currency = currencies.find((c) => c.id === bill.currencyId);
+  combineLatest([balances$, mainCurrency$, currenciesRateData$, currencies$]).pipe(
+    map(([balances, mainCurrencyId, currenciesRateData, currencies]) => {
+      return balances.map((balance) => {
+        const currency = currencies.find((c) => c.id === balance.currencyId);
         const internationalShortName = currencies.find(
-          (c) => c.id === bill.currencyId
+          (c) => c.id === balance.currencyId
         )?.internationalShortName;
 
         const coef =
@@ -28,8 +28,8 @@ export const getBillsWithValuesInMain = (
           )?.value || 1;
 
         return {
-          ...bill,
-          valueInMain: (bill.value / coef) * antCoef,
+          ...balance,
+          valueInMain: (balance.value / coef) * antCoef,
           internationalSimbol: currency?.internationalSimbol || '',
           internationalSimbolOfMain: mainCurrency?.internationalSimbol || '',
         };
@@ -41,25 +41,25 @@ export const getBillsWithValuesInMain = (
   providedIn: 'root',
 })
 export class CommonService {
-  bills$ = new BehaviorSubject<Bill[]>([]);
+  balances$ = new BehaviorSubject<Balance[]>([]);
   mainCurrency$ = new BehaviorSubject<string>('');
   currenciesRateData$ = new BehaviorSubject<CurrenciesRateData[]>([]);
   currencies$ = new BehaviorSubject<Currency[]>([]);
 
-  dataSourceMain$ = this.bills$.pipe(
-    map((bills) =>
-      bills.map((bill) => ({ name: bill.title, value: bill.valueInMain }))
+  dataSourceMain$ = this.balances$.pipe(
+    map((balances) =>
+      balances.map((balance) => ({ name: balance.title, value: balance.valueInMain }))
     )
   );
 
-  dataSourceInNative$ = this.bills$.pipe(
-    map((bills) =>
-      bills.map((bill) => ({ name: bill.title, value: bill.value }))
+  dataSourceInNative$ = this.balances$.pipe(
+    map((balances) =>
+      balances.map((balance) => ({ name: balance.title, value: balance.value }))
     )
   );
 
-  billsWithValuesInMain$ = getBillsWithValuesInMain(
-    this.bills$,
+  balancesWithValuesInMain$ = getBalancesWithValuesInMain(
+    this.balances$,
     this.mainCurrency$,
     this.currenciesRateData$,
     this.currencies$
@@ -72,7 +72,7 @@ export class CommonService {
       .watchQuery({
         query: gql`
           {
-            bills {
+            balances {
               title
               value
               currencyId
@@ -98,7 +98,7 @@ export class CommonService {
       })
       .valueChanges.subscribe((result: any) => {
         console.log(result?.data);
-        this.bills$.next(result?.data?.bills || []);
+        this.balances$.next(result?.data?.balances || []);
         this.currenciesRateData$.next(result?.data?.currenciesRate?.data || []);
         this.currencies$.next(result?.data?.currencies || []);
         this.mainCurrency$.next(result?.data?.settings?.mainCurrency || '');

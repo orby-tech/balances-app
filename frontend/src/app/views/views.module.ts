@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BillsComponent } from './bills/bills.component';
+import { BalancesComponent } from './balances/balances.component';
 import { CurrenciesComponent } from './currencies/currencies.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -11,7 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgChartsModule } from 'ng2-charts';
 import { AppCommonComponent } from './app-common/app-common.component';
-import { AddBillComponent } from './dialogs/add-bill/add-bill.component';
+import { AddBalanceComponent } from './dialogs/add-balance/add-balance.component';
 import { AddTransactionComponent } from './dialogs/add-transaction/add-transaction.component';
 import { UserAccountComponent } from './user-account/user-account.component';
 import { LoginComponent } from './dialogs/login/login.component';
@@ -21,11 +21,11 @@ import { SignUpComponent } from './dialogs/sign-up/sign-up.component';
 @NgModule({
   declarations: [
     AppCommonComponent,
-    BillsComponent,
+    BalancesComponent,
     CurrenciesComponent,
     TransactionsComponent,
     SettingsComponent,
-    AddBillComponent,
+    AddBalanceComponent,
     AddTransactionComponent,
     UserAccountComponent,
     LoginComponent,

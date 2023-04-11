@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { combineLatest, map } from 'rxjs';
-import { BillsService } from 'src/app/graphql/bills.service';
+import { BalancesService } from 'src/app/graphql/balances.service';
 import { CurrenciesService } from 'src/app/graphql/currencies.service';
 import { TransactionsService } from 'src/app/graphql/transactions.service';
 import { AddTransactionComponent } from '../dialogs/add-transaction/add-transaction.component';
@@ -35,17 +35,17 @@ export class TransactionsComponent {
 
   constructor(
     private transactionsService: TransactionsService,
-    private billsService: BillsService,
+    private balancesService: BalancesService,
     private currenciesService: CurrenciesService,
     public dialog: MatDialog
   ) {
     this.transactionsService.load();
-    this.billsService.load();
+    this.balancesService.load();
     this.currenciesService.load();
   }
 
   addTransaction() {
-    console.log('add bill');
+    console.log('add balance');
 
     const dialogRef = this.dialog.open(AddTransactionComponent, {
       data: { type: 'TRANSFER', provider: '123' },
@@ -65,9 +65,9 @@ export class TransactionsComponent {
     });
   }
 
-  getBillTitleByBillId(billId: string) {
-    return this.billsService.bills$
+  getBalanceTitleByBalanceId(balanceId: string) {
+    return this.balancesService.balances$
       .getValue()
-      .find((bill) => bill.id === billId)?.title;
+      .find((balance) => balance.id === balanceId)?.title;
   }
 }

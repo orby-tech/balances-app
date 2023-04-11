@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
-  Bill,
+  Balance,
   Currency,
   Tag,
   Transactions,
   TransactionTags,
   User,
-  UserBills,
+  UserBalances,
   UserCurrencies,
   UserTag,
   UserTransactions,
@@ -24,8 +24,8 @@ import { UsersResolver } from './users.resolver';
       UserTag,
       UserCurrencies,
       Currency,
-      Bill,
-      UserBills,
+      Balance,
+      UserBalances,
       Transactions,
       UserTransactions,
       TransactionTags,

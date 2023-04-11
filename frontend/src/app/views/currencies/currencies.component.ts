@@ -32,10 +32,10 @@ export class CurrenciesComponent implements AfterViewInit {
       }
 
       const datapoints = [
-        ...currencies.map((bill) => [bill.valueRelatedMain]),
+        ...currencies.map((balance) => [balance.valueRelatedMain]),
       ];
 
-      const labels = currencies.map((bill) => bill.title);
+      const labels = currencies.map((balance) => balance.title);
 
       this.chart?.destroy();
       // this.chart = new Chart(ctx, {

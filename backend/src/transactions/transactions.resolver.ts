@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   AddTransactionInput,
-  Bill,
+  Balance,
   DeleteTransactionInput,
   Transaction,
 } from '@common/graphql';
@@ -19,7 +19,7 @@ export class TransactionsResolver {
   }
 
   @Mutation((returns) => Transaction, { name: 'addTransaction' })
-  async addBill(
+  async addBalance(
     @Args('addTransactionInput') transaction: AddTransactionInput,
     @UserId() userId,
   ) {
@@ -27,8 +27,8 @@ export class TransactionsResolver {
     return '';
   }
 
-  @Mutation((returns) => Bill, { name: 'deleteTransaction' })
-  async deleteBill(
+  @Mutation((returns) => Balance, { name: 'deleteTransaction' })
+  async deleteBalance(
     @Args('deleteTransactionInput') transaction: DeleteTransactionInput,
     @UserId() userId,
   ) {

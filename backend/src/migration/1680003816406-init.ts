@@ -89,10 +89,10 @@ export class init1680003816406 implements MigrationInterface {
 
     queryRunner.createTable(
       new Table({
-        name: 'bills',
+        name: 'balances',
         columns: [
           {
-            name: 'bill_id',
+            name: 'balance_id',
             type: 'uuid',
             isPrimary: true,
             isUnique: true,
@@ -210,10 +210,10 @@ export class init1680003816406 implements MigrationInterface {
       `);
 
     queryRunner.query(`
-      CREATE TABLE user_bills (
+      CREATE TABLE user_balances (
           id uuid NOT NULL,
           user_id uuid NOT NULL REFERENCES users(user_id),
-          bill_id uuid NOT NULL REFERENCES bills(bill_id),
+          balance_id uuid NOT NULL REFERENCES balances(balance_id),
           PRIMARY KEY(id)
         );
         `);
@@ -225,8 +225,8 @@ export class init1680003816406 implements MigrationInterface {
         Insert into "user_tags" ("user_id", "tag_id") VALUES ('123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174002');
         
         
-        Insert into "bills" ("bill_id", "title", "host", "type", "value", "currency_id") VALUES ('123e4567-e89b-12d3-a456-426614174004', 'title_', 'short_title_', 'CARD', '10', '123e4567-e89b-12d3-a456-426614174003');
-        Insert into "user_bills" ("id", "user_id", "bill_id") VALUES ('123e4567-e89b-12d3-a456-426614175000', '123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174004');
+        Insert into "balances" ("balance_id", "title", "host", "type", "value", "currency_id") VALUES ('123e4567-e89b-12d3-a456-426614174004', 'title_', 'short_title_', 'CARD', '10', '123e4567-e89b-12d3-a456-426614174003');
+        Insert into "user_balances" ("id", "user_id", "balance_id") VALUES ('123e4567-e89b-12d3-a456-426614175000', '123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174004');
 
         Insert into transactions ("transaction_id", "type", "provider") VALUES ('123e4567-e89b-12d3-a456-426614174005', 'TRANSFER', 'provider_');
         Insert into "user_transactions" ("id", "user_id", "transaction_id") VALUES ('123e4567-e89b-12d3-a456-426614175000', '123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174005');

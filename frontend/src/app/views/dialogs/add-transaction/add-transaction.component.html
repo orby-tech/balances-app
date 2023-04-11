@@ -18,8 +18,8 @@
     <mat-form-field appearance="fill">
       <mat-label>To</mat-label>
       <mat-select formControlName="to">
-        <mat-option *ngFor="let bill of bills$ | async" [value]="bill.id">{{
-          bill.title
+        <mat-option *ngFor="let balance of balances$ | async" [value]="balance.id">{{
+          balance.title
         }}</mat-option>
       </mat-select>
     </mat-form-field>
@@ -34,8 +34,8 @@
     <mat-form-field appearance="fill">
       <mat-label>From</mat-label>
       <mat-select formControlName="from">
-        <mat-option *ngFor="let bill of bills$ | async" [value]="bill.id">{{
-          bill.title
+        <mat-option *ngFor="let balance of balances$ | async" [value]="balance.id">{{
+          balance.title
         }}</mat-option>
       </mat-select>
     </mat-form-field>
@@ -54,8 +54,8 @@
       <mat-form-field appearance="fill">
         <mat-label>From</mat-label>
         <mat-select formControlName="from">
-          <mat-option *ngFor="let bill of bills$ | async" [value]="bill.id"
-            >{{ bill.title }}
+          <mat-option *ngFor="let balance of balances$ | async" [value]="balance.id"
+            >{{ balance.title }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -63,8 +63,8 @@
       <mat-form-field appearance="fill">
         <mat-label>To</mat-label>
         <mat-select formControlName="to">
-          <mat-option *ngFor="let bill of bills$ | async" [value]="bill?.id">{{
-            bill.title
+          <mat-option *ngFor="let balance of balances$ | async" [value]="balance?.id">{{
+            balance.title
           }}</mat-option>
         </mat-select>
       </mat-form-field>
@@ -73,21 +73,21 @@
       <mat-form-field appearance="fill">
         <mat-label
           >From value ({{ fromValueInToCurrency$ | async | number : "1.1-1" }}
-          {{ toBillInternationalSimbol$ | async }})</mat-label
+          {{ toBalanceInternationalSimbol$ | async }})</mat-label
         >
         <input matInput formControlName="fromValue" type="number" />
         <mat-icon matSuffix>{{
-          fromBillInternationalSimbol$ | async
+          fromBalanceInternationalSimbol$ | async
         }}</mat-icon>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>
           To value ({{ toValueInFromCurrency$ | async | number : "1.1-1" }}
-          {{ fromBillInternationalSimbol$ | async }})
+          {{ fromBalanceInternationalSimbol$ | async }})
         </mat-label>
         <input matInput formControlName="toValue" type="number" />
-        <mat-icon matSuffix>{{ toBillInternationalSimbol$ | async }}</mat-icon>
+        <mat-icon matSuffix>{{ toBalanceInternationalSimbol$ | async }}</mat-icon>
       </mat-form-field>
     </div>
   </div>

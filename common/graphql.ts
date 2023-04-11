@@ -8,7 +8,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export enum BillType {
+export enum BalanceType {
     CARD = "CARD"
 }
 
@@ -37,15 +37,15 @@ export class AddTagInput {
     title?: Nullable<string>;
 }
 
-export class AddBillInput {
+export class AddBalanceInput {
     title: string;
     host: string;
     value: number;
     currencyId: string;
-    type: BillType;
+    type: BalanceType;
 }
 
-export class DeleteBillInput {
+export class DeleteBalanceInput {
     id: string;
 }
 
@@ -76,7 +76,7 @@ export abstract class IQuery {
 
     abstract settings(): Settings | Promise<Settings>;
 
-    abstract bills(): Nullable<Nullable<Bill>[]> | Promise<Nullable<Nullable<Bill>[]>>;
+    abstract balances(): Nullable<Nullable<Balance>[]> | Promise<Nullable<Nullable<Balance>[]>>;
 
     abstract transactions(page: number): Nullable<Nullable<Transaction>[]> | Promise<Nullable<Nullable<Transaction>[]>>;
 
@@ -94,9 +94,9 @@ export abstract class IMutation {
 
     abstract addTag(addTagInput?: Nullable<AddTagInput>): string | Promise<string>;
 
-    abstract addBill(addBillInput: AddBillInput): Bill | Promise<Bill>;
+    abstract addBalance(addBalanceInput: AddBalanceInput): Balance | Promise<Balance>;
 
-    abstract deleteBill(deleteBillInput: DeleteBillInput): Nullable<string> | Promise<Nullable<string>>;
+    abstract deleteBalance(deleteBalanceInput: DeleteBalanceInput): Nullable<string> | Promise<Nullable<string>>;
 
     abstract addTransaction(addTransactionInput: AddTransactionInput): Nullable<string> | Promise<Nullable<string>>;
 
@@ -114,14 +114,14 @@ export class Settings {
     tags?: Nullable<Nullable<Tag>[]>;
 }
 
-export class Bill {
+export class Balance {
     id: string;
     title: string;
     host: string;
     value: number;
     valueInMain: number;
     currencyId: string;
-    type: BillType;
+    type: BalanceType;
 }
 
 export class CurrenciesRate {

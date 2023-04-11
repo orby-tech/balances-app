@@ -10,7 +10,7 @@ import {
   map,
   startWith,
 } from 'rxjs';
-import { BillsService } from 'src/app/graphql/bills.service';
+import { BalancesService } from 'src/app/graphql/balances.service';
 import { CurrenciesService } from 'src/app/graphql/currencies.service';
 
 @Component({
@@ -22,7 +22,7 @@ export class AddTransactionComponent {
   defaultTransactionType = TransactionType.TRANSFER;
   transactionType = TransactionType;
 
-  bills$ = this.billsService.billsWithValuesInMain$;
+  balances$ = this.balancesService.balancesWithValuesInMain$;
 
   toCurrency$ = new BehaviorSubject<string>('');
 
@@ -50,29 +50,29 @@ export class AddTransactionComponent {
     startWith(this.defaultTransactionType)
   );
 
-  fromBillInternationalSimbol$ = combineLatest([
+  fromBalanceInternationalSimbol$ = combineLatest([
     this.profileForm.valueChanges.pipe(
       map((value) => value.from),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     ),
-    this.bills$,
+    this.balances$,
   ]).pipe(
     map(
-      ([from, bills]) =>
-        bills.find((bill) => bill.id === from)?.internationalSimbol || ''
+      ([from, balances]) =>
+        balances.find((balance) => balance.id === from)?.internationalSimbol || ''
     )
   );
 
-  toBillInternationalSimbol$ = combineLatest([
+  toBalanceInternationalSimbol$ = combineLatest([
     this.profileForm.valueChanges.pipe(
       map((value) => value.to),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     ),
-    this.bills$,
+    this.balances$,
   ]).pipe(
     map(
-      ([to, bills]) =>
-        bills.find((bill) => bill.id === to)?.internationalSimbol || ''
+      ([to, balances]) =>
+        balances.find((balance) => balance.id === to)?.internationalSimbol || ''
     )
   );
 
@@ -80,15 +80,15 @@ export class AddTransactionComponent {
     this.profileForm.valueChanges.pipe(
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     ),
-    this.bills$,
+    this.balances$,
     this.currenciesService.currenciesWithValueRelatedMain$,
   ]).pipe(
-    map(([value, bills, currenciesWithValueRelatedMain]) => {
+    map(([value, balances, currenciesWithValueRelatedMain]) => {
       const toCurrency = currenciesWithValueRelatedMain.find(
-        (c) => c.id === bills.find((bill) => bill.id === value.to)?.currencyId
+        (c) => c.id === balances.find((balance) => balance.id === value.to)?.currencyId
       );
       const fromCurrency = currenciesWithValueRelatedMain.find(
-        (c) => c.id === bills.find((bill) => bill.id === value.from)?.currencyId
+        (c) => c.id === balances.find((balance) => balance.id === value.from)?.currencyId
       );
 
       return { toCurrency, fromCurrency };
@@ -127,10 +127,10 @@ export class AddTransactionComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: AddTransactionInput,
-    private billsService: BillsService,
+    private balancesService: BalancesService,
     private currenciesService: CurrenciesService
   ) {
-    this.billsService.load();
+    this.balancesService.load();
     currenciesService.load();
     this.profileForm.valueChanges
       .pipe(

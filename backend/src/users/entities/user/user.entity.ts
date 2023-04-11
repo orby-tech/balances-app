@@ -79,10 +79,10 @@ export class UserTag {
   tag_id: string;
 }
 
-@Entity({ name: 'bills' })
-export class Bill {
+@Entity({ name: 'balances' })
+export class Balance {
   @PrimaryColumn()
-  bill_id: string;
+  balance_id: string;
 
   @Column()
   title: string;
@@ -124,8 +124,8 @@ export class UserCurrencies {
   currency_id: string;
 }
 
-@Entity({ name: 'user_bills' })
-export class UserBills {
+@Entity({ name: 'user_balances' })
+export class UserBalances {
   @PrimaryColumn()
   id: string;
 
@@ -133,7 +133,7 @@ export class UserBills {
   user_id: string;
 
   @Column()
-  bill_id: string;
+  balance_id: string;
 }
 
 @Entity({ name: 'user_transactions' })
