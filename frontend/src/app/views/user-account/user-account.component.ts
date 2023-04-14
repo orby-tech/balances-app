@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TransactionType } from '@common/graphql';
 import { CurrenciesService } from 'src/app/graphql/currencies.service';
+import { OrganizationsService } from 'src/app/graphql/organizations.service';
 import { SettingsService } from 'src/app/graphql/settings.service';
 import { UserService } from 'src/app/graphql/user.service';
 
@@ -15,6 +16,7 @@ export class UserAccountComponent {
   userMainCurrency$ = this.userService.userMainCurrency$;
   mainCurrency$ = this.settingsService.mainCurrency$;
   currencies$ = this.currenciesService.currencies$;
+  organizations$ = this.organizationsService.organizations$;
 
   newPassword = '';
   newPasswordConfirm = '';
@@ -24,11 +26,13 @@ export class UserAccountComponent {
   constructor(
     private userService: UserService,
     private currenciesService: CurrenciesService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private organizationsService: OrganizationsService
   ) {
     this.userService.load();
     this.settingsService.load();
     this.currenciesService.load();
+    this.organizationsService.load();
 
     this.mainCurrency$.subscribe((currency) => {
       this.selectedValue = currency;
@@ -43,5 +47,9 @@ export class UserAccountComponent {
 
   updatePassword() {
     this.settingsService.setNewPassword({ password: this.newPassword });
+  }
+
+  addOrganization() {
+    this.organizationsService.addOrganization({ name: '123' });
   }
 }

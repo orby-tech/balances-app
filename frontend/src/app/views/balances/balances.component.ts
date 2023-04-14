@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { Chart } from 'chart.js';
-import { combineLatest, map } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
 import { BalancesService } from 'src/app/graphql/balances.service';
 import { CurrenciesService } from 'src/app/graphql/currencies.service';
 import { AddBalanceComponent } from '../dialogs/add-balance/add-balance.component';
@@ -20,6 +21,8 @@ export class BalancesComponent implements OnInit {
 
   chart: Chart<'doughnut', number[], string> | null = null;
 
+  organizationId$ = new BehaviorSubject<string | null>(null);
+
   displayedColumns: string[] = [
     'name',
     'type',
@@ -28,7 +31,18 @@ export class BalancesComponent implements OnInit {
     'valueInMain',
     'delete',
   ];
-  dataSource$ = this.balancesForForm$;
+  dataSource$ = combineLatest([
+    this.balancesForForm$,
+    this.organizationId$,
+  ]).pipe(
+    map(([balancesForForm, organizationId]) => {
+      return balancesForForm.filter(
+        (b) =>
+          b.organization_id === organizationId ||
+          (b.organization_id === 'userBalance' && !organizationId)
+      );
+    })
+  );
 
   datasets$ = this.balances$.pipe(
     map((balances) => {
@@ -45,12 +59,17 @@ export class BalancesComponent implements OnInit {
   constructor(
     private balancesService: BalancesService,
     public dialog: MatDialog,
-    private currenciesService: CurrenciesService
+    private currenciesService: CurrenciesService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     this.balancesService.load();
     this.currenciesService.load();
+
+    this.route.params.subscribe((data) => {
+      this.organizationId$.next(data['id']);
+    });
   }
 
   addBalance() {
@@ -58,9 +77,16 @@ export class BalancesComponent implements OnInit {
       data: { type: 'CARD' },
     });
 
+    console.log(this.organizationId$);
+
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.balancesService.addBalance(result);
+        this.organizationId$.subscribe((organizationId) => {
+          this.balancesService.addBalance({
+            ...result,
+            organizationId,
+          });
+        });
       }
     });
   }

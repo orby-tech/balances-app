@@ -18,62 +18,38 @@
 <mat-drawer-container class="example-container">
   <mat-drawer mode="side" [opened]="menuVisible">
     <nav>
-      <ul>
-        <li>
+      <mat-tree
+        isExpanded="true"
+        [dataSource]="dataSource"
+        [treeControl]="treeControl"
+      >
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
           <a
             mat-button
-            routerLink="/user-account"
-            routerLinkActive="active"
-            ariaCurrentWhenActive="page"
-            >User account</a
+            [routerLink]="node.url"
+            [routerLinkActive]="'active'"
+            [ariaCurrentWhenActive]="'page'"
+            >{{ node.name }}</a
           >
-        </li>
-        <li>
-          <a
-            mat-button
-            routerLink="/common"
-            routerLinkActive="active"
-            ariaCurrentWhenActive="page"
-            >Common</a
+        </mat-tree-node>
+        <mat-tree-node
+          *matTreeNodeDef="let node; when: hasChild"
+          matTreeNodePadding
+        >
+          <button
+            mat-icon-button
+            matTreeNodeToggle
+            [attr.aria-label]="'Toggle ' + node.name"
           >
-        </li>
-        <li>
-          <a
-            mat-button
-            routerLink="/balances"
-            routerLinkActive="active"
-            ariaCurrentWhenActive="page"
-            >Balances
-          </a>
-        </li>
-        <li>
-          <a
-            mat-button
-            routerLink="/currencies"
-            routerLinkActive="active"
-            ariaCurrentWhenActive="page"
-            >Currencies</a
-          >
-        </li>
-        <li>
-          <a
-            mat-button
-            routerLink="/transactions"
-            routerLinkActive="active"
-            ariaCurrentWhenActive="page"
-            >Transactions</a
-          >
-        </li>
-        <li>
-          <a
-            mat-button
-            routerLink="/settings"
-            routerLinkActive="active"
-            ariaCurrentWhenActive="page"
-            >Settings</a
-          >
-        </li>
-      </ul>
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{
+                treeControl.isExpanded(node) ? "expand_more" : "chevron_right"
+              }}
+            </mat-icon>
+          </button>
+          <a mat-button [routerLink]="getUrl(node)">{{ node.name }}</a>
+        </mat-tree-node>
+      </mat-tree>
     </nav>
   </mat-drawer>
   <mat-drawer-content class="content">

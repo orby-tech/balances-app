@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgChartsModule } from 'ng2-charts';
 import { AppService } from './app.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatTreeModule } from '@angular/material/tree';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,9 +25,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NgChartsModule,
     ViewsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatTreeModule,
   ],
-  providers: [MaterialModule],
+  providers: [MaterialModule, MatTreeModule],
   bootstrap: [AppComponent],
 })
 export class AppModule {

@@ -41,6 +41,59 @@ export class init1680003816406 implements MigrationInterface {
 
     queryRunner.createTable(
       new Table({
+        name: 'organizations',
+        columns: [
+          {
+            name: 'organization_id',
+            type: 'uuid',
+            isPrimary: true,
+            isUnique: true,
+          },
+          {
+            name: 'date_created',
+            type: 'timestamp',
+          },
+          {
+            name: 'name',
+            type: 'text',
+          },
+        ],
+      }),
+    );
+
+    queryRunner.query(`
+        CREATE TYPE user_role_in_organization AS ENUM ('OWNER', 'ADMIN', 'WATCHER');
+    `);
+
+    queryRunner.createTable(
+      new Table({
+        name: 'user_organization',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            isUnique: true,
+          },
+          {
+            name: 'user_id',
+            type: 'uuid',
+          },
+          {
+            name: 'organization_id',
+            type: 'uuid',
+          },
+          {
+            name: 'role',
+            type: 'enum',
+            enumName: 'user_role_in_organization',
+          },
+        ],
+      }),
+    );
+
+    queryRunner.createTable(
+      new Table({
         name: 'tags',
         columns: [
           {
@@ -217,6 +270,15 @@ export class init1680003816406 implements MigrationInterface {
           PRIMARY KEY(id)
         );
         `);
+
+    queryRunner.query(`
+    CREATE TABLE organization_balances (
+        id uuid NOT NULL,
+        organization_id uuid NOT NULL REFERENCES organizations(organization_id),
+        balance_id uuid NOT NULL REFERENCES balances(balance_id),
+        PRIMARY KEY(id)
+      );
+      `);
 
     queryRunner.query(`
         Insert into "users" ("user_id", "main_currency", "email", "password_hash") VALUES ('123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001', 'john', '057ba03d6c44104863dc7361fe4578965d1887360f90a0895882e58a6248fc86');

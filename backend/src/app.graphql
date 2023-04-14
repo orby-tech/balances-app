@@ -10,6 +10,7 @@ type Query {
   transactions(page: Int!): [Transaction]
   currencies: [Currency]
   currenciesRate: CurrenciesRate
+  organizations: [Organization]
 }
 
 type Mutation {
@@ -22,10 +23,15 @@ type Mutation {
 
   addTransaction(addTransactionInput: AddTransactionInput!): String
   deleteTransaction(deleteTransactionInput: DeleteTransactionInput!): String
+  addOrganization(addOrganizationInput: AddOrganizationInput!): String
 }
 
 input SetMainCurrencyInput {
   id: ID!
+}
+
+input AddOrganizationInput {
+  name: String!
 }
 
 input SetNewPasswordInput {
@@ -44,6 +50,7 @@ input AddTagInput {
 }
 
 input AddBalanceInput {
+  organizationId: String
   title: String!
   host: String!
   value: Float!
@@ -67,6 +74,7 @@ type Settings {
 }
 
 type Balance {
+  organization_id: String
   id: ID!
   title: String!
   host: String!
@@ -98,6 +106,19 @@ type CurrenciesRateMeta {
 type CurrenciesRateData {
   code: String!
   value: Float!
+}
+
+enum RoleOrganisationType {
+  OWNER
+  ADMIN
+  WATCHER
+}
+
+type Organization {
+  organization_id: String!
+  name: String!
+  role: RoleOrganisationType!
+  users: [User]!
 }
 
 type Transaction {

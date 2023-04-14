@@ -18,8 +18,18 @@ export enum TransactionType {
     TRANSFER = "TRANSFER"
 }
 
+export enum RoleOrganisationType {
+    OWNER = "OWNER",
+    ADMIN = "ADMIN",
+    WATCHER = "WATCHER"
+}
+
 export class SetMainCurrencyInput {
     id: string;
+}
+
+export class AddOrganizationInput {
+    name: string;
 }
 
 export class SetNewPasswordInput {
@@ -38,6 +48,7 @@ export class AddTagInput {
 }
 
 export class AddBalanceInput {
+    organizationId?: Nullable<string>;
     title: string;
     host: string;
     value: number;
@@ -83,6 +94,8 @@ export abstract class IQuery {
     abstract currencies(): Nullable<Nullable<Currency>[]> | Promise<Nullable<Nullable<Currency>[]>>;
 
     abstract currenciesRate(): Nullable<CurrenciesRate> | Promise<Nullable<CurrenciesRate>>;
+
+    abstract organizations(): Nullable<Nullable<Organization>[]> | Promise<Nullable<Nullable<Organization>[]>>;
 }
 
 export abstract class IMutation {
@@ -101,6 +114,8 @@ export abstract class IMutation {
     abstract addTransaction(addTransactionInput: AddTransactionInput): Nullable<string> | Promise<Nullable<string>>;
 
     abstract deleteTransaction(deleteTransactionInput: DeleteTransactionInput): Nullable<string> | Promise<Nullable<string>>;
+
+    abstract addOrganization(addOrganizationInput: AddOrganizationInput): Nullable<string> | Promise<Nullable<string>>;
 }
 
 export class User {
@@ -115,6 +130,7 @@ export class Settings {
 }
 
 export class Balance {
+    organization_id?: Nullable<string>;
     id: string;
     title: string;
     host: string;
@@ -136,6 +152,13 @@ export class CurrenciesRateMeta {
 export class CurrenciesRateData {
     code: string;
     value: number;
+}
+
+export class Organization {
+    organization_id: string;
+    name: string;
+    role: RoleOrganisationType;
+    users: Nullable<User>[];
 }
 
 export class Transaction {

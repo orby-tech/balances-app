@@ -1,4 +1,4 @@
-import { TransactionType } from '@common/graphql';
+import { RoleOrganisationType, TransactionType } from '@common/graphql';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -100,6 +100,18 @@ export class Balance {
   currency_id: string;
 }
 
+@Entity({ name: 'organizations' })
+export class Organization {
+  @PrimaryColumn()
+  organization_id: string;
+
+  @Column()
+  name: string;
+
+  @Column()
+  date_created: Date;
+}
+
 @Entity({ name: 'currencies' })
 export class Currency {
   @PrimaryColumn()
@@ -124,6 +136,21 @@ export class UserCurrencies {
   currency_id: string;
 }
 
+@Entity({ name: 'user_organization' })
+export class UserOrganisation {
+  @PrimaryColumn()
+  id: string;
+
+  @Column()
+  user_id: string;
+
+  @Column()
+  organization_id: string;
+
+  @Column()
+  role: RoleOrganisationType;
+}
+
 @Entity({ name: 'user_balances' })
 export class UserBalances {
   @PrimaryColumn()
@@ -131,6 +158,18 @@ export class UserBalances {
 
   @Column()
   user_id: string;
+
+  @Column()
+  balance_id: string;
+}
+
+@Entity({ name: 'organization_balances' })
+export class OrganizationBalances {
+  @PrimaryColumn()
+  id: string;
+
+  @Column()
+  organization_id: string;
 
   @Column()
   balance_id: string;

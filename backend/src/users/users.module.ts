@@ -3,12 +3,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   Balance,
   Currency,
+  Organization,
+  OrganizationBalances,
   Tag,
   Transactions,
   TransactionTags,
   User,
   UserBalances,
   UserCurrencies,
+  UserOrganisation,
   UserTag,
   UserTransactions,
 } from './entities/user/user.entity';
@@ -29,6 +32,9 @@ import { UsersResolver } from './users.resolver';
       Transactions,
       UserTransactions,
       TransactionTags,
+      Organization,
+      UserOrganisation,
+      OrganizationBalances
     ]),
   ],
   providers: [UsersService, UsersResolver],

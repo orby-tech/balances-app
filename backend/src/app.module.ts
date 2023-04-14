@@ -15,6 +15,7 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { OrganizationsModule } from './organizations/organizations.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     BalancesModule,
     TransactionsModule,
     UsersModule,
+    OrganizationsModule,
   ],
   controllers: [AppController],
   providers: [

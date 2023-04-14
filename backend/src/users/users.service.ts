@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   AddBalanceInput,
   AddTransactionInput,
+  RoleOrganisationType,
   SignUpInput,
   Transaction,
 } from '@common/graphql';
@@ -11,12 +12,15 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   Balance,
   Currency,
+  Organization,
+  OrganizationBalances,
   Tag,
   Transactions,
   TransactionTags,
   User,
   UserBalances,
   UserCurrencies,
+  UserOrganisation,
   UserTag,
   UserTransactions,
 } from './entities/user/user.entity';
@@ -39,6 +43,12 @@ export class UsersService {
     private readonly balanceRepository: Repository<Balance>,
     @InjectRepository(UserBalances)
     private readonly userBalanceRepository: Repository<UserBalances>,
+    @InjectRepository(OrganizationBalances)
+    private readonly organizationBalanceRepository: Repository<OrganizationBalances>,
+    @InjectRepository(UserOrganisation)
+    private readonly userOrganisationRepository: Repository<UserOrganisation>,
+    @InjectRepository(Organization)
+    private readonly organisationRepository: Repository<Organization>,
 
     @InjectRepository(Transactions)
     private readonly transactionRepository: Repository<Transactions>,
@@ -120,35 +130,145 @@ export class UsersService {
       currency_id: balance.currencyId,
     });
 
-    await this.userBalanceRepository.insert({
-      id: uuidv4(),
-      user_id: userId,
-      balance_id: balanceId,
-    });
+    if (balance.organizationId) {
+      await this.organizationBalanceRepository.insert({
+        id: uuidv4(),
+        organization_id: balance.organizationId,
+        balance_id: balanceId,
+      });
+    } else {
+      await this.userBalanceRepository.insert({
+        id: uuidv4(),
+        user_id: userId,
+        balance_id: balanceId,
+      });
+    }
 
     return this.balanceRepository.findOne({
       where: { balance_id: balanceId },
     });
   }
 
-  async getBalancesById(userId: string): Promise<Balance[]> {
+  async getBalancesById(
+    userId: string,
+  ): Promise<(Balance & { organization_id: string })[]> {
     const userBalances = await this.userBalanceRepository.find({
       where: { user_id: userId },
     });
     if (!userBalances.length) {
       return [];
     }
-    return this.balanceRepository.find({
-      where: userBalances.map((userBalance) => ({
-        balance_id: userBalance.balance_id,
-      })),
+
+    const organizations = await this.userOrganisationRepository.find({
+      where: { user_id: userId },
     });
+
+    const organizationsBalances = (
+      await Promise.all(
+        organizations.map(async (o) => {
+          return (
+            await this.organizationBalanceRepository.find({
+              where: { organization_id: o.organization_id },
+            })
+          ).map((ob) => {
+            return {
+              ...ob,
+              organization_id: o.organization_id,
+            };
+          });
+        }),
+      )
+    ).flat();
+
+    const _organizationsBalances = (
+      await Promise.all(
+        organizationsBalances.map(async (ob) => {
+          return (
+            await this.balanceRepository.find({
+              where: { balance_id: ob.balance_id },
+            })
+          ).map((balance) => {
+            return {
+              ...balance,
+              organization_id: ob.organization_id,
+            };
+          });
+        }),
+      )
+    ).flat();
+
+    return [
+      ...(
+        await this.balanceRepository.find({
+          where: userBalances.map((userBalance) => ({
+            balance_id: userBalance.balance_id,
+          })),
+        })
+      ).map((balance) => {
+        return {
+          ...balance,
+          organization_id: 'userBalance',
+        };
+      }),
+      ..._organizationsBalances,
+    ];
   }
 
   async deleteBalanceById(userId: string, balanceId: string): Promise<void> {
     await this.userBalanceRepository.delete({ balance_id: balanceId });
     await this.balanceRepository.delete({ balance_id: balanceId });
     return;
+  }
+
+  async getOrganizationsById(
+    userId: string,
+  ): Promise<
+    (Organization & { role: UserOrganisation['role']; users: User[] })[]
+  > {
+    const userOrganisations = await this.userOrganisationRepository.find({
+      where: { user_id: userId },
+    });
+    if (!userOrganisations.length) {
+      return [];
+    }
+    return Promise.all(
+      (
+        await this.organisationRepository.find({
+          where: userOrganisations.map((UserOrganisation) => ({
+            organization_id: UserOrganisation.organization_id,
+          })),
+        })
+      ).map(async (x) => {
+        return {
+          ...x,
+          role: userOrganisations.find(
+            (u) => u.organization_id === x.organization_id,
+          ).role,
+          users: await this.userRepository.find({
+            where: (
+              await this.userOrganisationRepository.find({
+                where: { organization_id: x.organization_id },
+              })
+            ).map((uO) => ({ user_id: uO.user_id })),
+          }),
+        };
+      }),
+    );
+  }
+
+  async addOrganization(id: string, name: string) {
+    const organizationId = uuidv4();
+    await this.organisationRepository.save({
+      organization_id: organizationId,
+      name: name,
+      date_created: new Date(), // TODO: problem with time zones
+    });
+    await this.userOrganisationRepository.save({
+      id: uuidv4(),
+      organization_id: organizationId,
+      user_id: id,
+      role: RoleOrganisationType.OWNER,
+    });
   }
 
   async setTransactionById(

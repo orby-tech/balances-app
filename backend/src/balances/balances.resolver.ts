@@ -12,6 +12,7 @@ export class BalancesResolver {
     const user = await this.usersService.getBalancesById(userId);
 
     return user.map((balance) => ({
+      organization_id: balance.organization_id,
       id: balance.balance_id,
       title: balance.title,
       host: balance.host,
@@ -23,9 +24,9 @@ export class BalancesResolver {
   }
 
   @Mutation((returns) => Balance, { name: 'addBalance' })
-  async addBalance(@Args('addBalanceInput') user: AddBalanceInput, @UserId() userId) {
+  async addBalance(@Args('addBalanceInput') addBalancesInput: AddBalanceInput, @UserId() userId) {
     return {
-      id: (await this.usersService.setBalanceById(userId, user))?.balance_id,
+      id: (await this.usersService.setBalanceById(userId, addBalancesInput))?.balance_id,
     };
   }
 

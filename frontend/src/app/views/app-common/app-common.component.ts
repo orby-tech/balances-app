@@ -1,8 +1,6 @@
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
-import { BehaviorSubject, combineLatest, map } from 'rxjs';
+import { Component } from '@angular/core';
+import { combineLatest, map } from 'rxjs';
 import { CommonService } from 'src/app/graphql/common.service';
-import Chart from 'chart.js/auto';
-import { CurrenciesService } from 'src/app/graphql/currencies.service';
 
 @Component({
   selector: 'app-app-common',
@@ -36,23 +34,21 @@ export class AppCommonComponent {
     )
   );
 
-  datasets$ = combineLatest([
-    this.balancesWithValuesInMain$,
-  ]).pipe(
+  datasets$ = combineLatest([this.balancesWithValuesInMain$]).pipe(
     map(([balancesWithValuesInMain]) => {
       const datasets = [
         {
           label: 'Balances',
-          data: [...balancesWithValuesInMain.map((balance) => balance.valueInMain)],
+          data: [
+            ...balancesWithValuesInMain.map((balance) => balance.valueInMain),
+          ],
         },
       ];
       return datasets;
     })
   );
 
-  constructor(
-    private commonService: CommonService,
-  ) {
+  constructor(private commonService: CommonService) {
     commonService.load();
   }
 }

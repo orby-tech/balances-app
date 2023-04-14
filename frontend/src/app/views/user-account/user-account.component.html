@@ -52,8 +52,12 @@
 
   <mat-card class="cart">
     <mat-card-title>Organizations</mat-card-title>
+    <div *ngIf="organizations$ | async; let organizations">
+      <p *ngFor="let organization of organizations">{{ organization.name }}</p>
+    </div>
     <p>No organizations found</p>
-    <button mat-raised-button color="primary" disabled>Add organization</button>
+
+    <button mat-raised-button color="primary" (click)="addOrganization()">Add organization</button>
   </mat-card>
 </div>
 

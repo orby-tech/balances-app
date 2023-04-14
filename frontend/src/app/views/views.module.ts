@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { BalancesComponent } from './balances/balances.component';
 import { CurrenciesComponent } from './currencies/currencies.component';
 import { TransactionsComponent } from './transactions/transactions.component';
-import { SettingsComponent } from './settings/settings.component';
 import { MaterialModule } from '../material/material.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -17,6 +16,7 @@ import { UserAccountComponent } from './user-account/user-account.component';
 import { LoginComponent } from './dialogs/login/login.component';
 import { ComponentsModule } from './user-account/components/components.module';
 import { SignUpComponent } from './dialogs/sign-up/sign-up.component';
+import { MatTreeModule } from '@angular/material/tree';
 
 @NgModule({
   declarations: [
@@ -24,7 +24,6 @@ import { SignUpComponent } from './dialogs/sign-up/sign-up.component';
     BalancesComponent,
     CurrenciesComponent,
     TransactionsComponent,
-    SettingsComponent,
     AddBalanceComponent,
     AddTransactionComponent,
     UserAccountComponent,
@@ -40,6 +39,7 @@ import { SignUpComponent } from './dialogs/sign-up/sign-up.component';
     FormsModule,
     MatFormFieldModule,
     NgChartsModule,
+    MatTreeModule,
 
     MatInputModule,
     ReactiveFormsModule,

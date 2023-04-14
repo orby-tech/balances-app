@@ -1,6 +1,4 @@
 import { AfterViewInit, Component } from '@angular/core';
-import { Chart } from 'chart.js';
-import { map } from 'rxjs';
 import { CurrenciesService } from 'src/app/graphql/currencies.service';
 
 @Component({

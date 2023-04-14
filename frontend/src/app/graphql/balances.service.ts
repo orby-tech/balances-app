@@ -33,6 +33,7 @@ export class BalancesService {
         query: gql`
           {
             balances {
+              organization_id
               id
               type
               title
