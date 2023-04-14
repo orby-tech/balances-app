@@ -105,7 +105,7 @@ export class AppComponent {
             children: [
               {
                 name: 'Common',
-                url: ['/common?organization_id=organization.organization_id'],
+                url: `/common/${organization.organization_id}`,
               },
               {
                 name: 'Balances',

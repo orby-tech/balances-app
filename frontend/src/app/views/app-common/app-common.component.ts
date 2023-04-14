@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { combineLatest, map } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { CommonService } from 'src/app/graphql/common.service';
 
 @Component({
@@ -7,22 +8,47 @@ import { CommonService } from 'src/app/graphql/common.service';
   templateUrl: './app-common.component.html',
   styleUrls: ['./app-common.component.scss'],
 })
-export class AppCommonComponent {
+export class AppCommonComponent implements OnInit {
   displayedColumns: string[] = ['name', 'value'];
 
   balances$ = this.commonService.balances$;
+  organizationId$ = new BehaviorSubject<string | null>(null);
 
-  balancesWithValuesInMain$ = this.commonService.balancesWithValuesInMain$;
-
-  dataSourceMain$ = this.balancesWithValuesInMain$.pipe(
-    map((balances) =>
-      balances.map((balance) => ({
-        name: balance.title,
-        value: balance.valueInMain,
-        internationalSimbol: balance.internationalSimbolOfMain,
-      }))
-    )
+  balancesWithValuesInMain$ = combineLatest([
+    this.commonService.balancesWithValuesInMain$,
+    this.organizationId$,
+  ]).pipe(
+    map(([balancesForForm, organizationId]) => {
+      return balancesForForm.filter(
+        (b) =>
+          b.organization_id === organizationId ||
+          (b.organization_id === 'userBalance' && !organizationId)
+      );
+    })
   );
+
+  dataSourceMain$ = combineLatest([
+    this.balancesWithValuesInMain$,
+    this.organizationId$,
+  ])
+    .pipe(
+      map(([balancesForForm, organizationId]) => {
+        return balancesForForm.filter(
+          (b) =>
+            b.organization_id === organizationId ||
+            (b.organization_id === 'userBalance' && !organizationId)
+        );
+      })
+    )
+    .pipe(
+      map((balances) =>
+        balances.map((balance) => ({
+          name: balance.title,
+          value: balance.valueInMain,
+          internationalSimbol: balance.internationalSimbolOfMain,
+        }))
+      )
+    );
 
   dataSourceInNative$ = this.balancesWithValuesInMain$.pipe(
     map((balances) =>
@@ -48,7 +74,15 @@ export class AppCommonComponent {
     })
   );
 
-  constructor(private commonService: CommonService) {
+  constructor(
+    private commonService: CommonService,
+    private route: ActivatedRoute
+  ) {
     commonService.load();
+  }
+  ngOnInit() {
+    this.route.params.subscribe((data) => {
+      this.organizationId$.next(data['id']);
+    });
   }
 }

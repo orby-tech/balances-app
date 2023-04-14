@@ -73,6 +73,7 @@ export class CommonService {
         query: gql`
           {
             balances {
+              organization_id
               title
               value
               currencyId

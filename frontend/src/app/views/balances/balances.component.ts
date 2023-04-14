@@ -13,15 +13,23 @@ import { AddBalanceComponent } from '../dialogs/add-balance/add-balance.componen
   styleUrls: ['./balances.component.scss'],
 })
 export class BalancesComponent implements OnInit {
-  balances$ = this.balancesService.balances$;
-
-  balancesWithValuesInMain$ = this.balancesService.balancesWithValuesInMain$;
+  organizationId$ = new BehaviorSubject<string | null>(null);
+  balancesWithValuesInMain$ = combineLatest([
+    this.balancesService.balancesWithValuesInMain$,
+    this.organizationId$,
+  ]).pipe(
+    map(([balancesForForm, organizationId]) => {
+      return balancesForForm.filter(
+        (b) =>
+          b.organization_id === organizationId ||
+          (b.organization_id === 'userBalance' && !organizationId)
+      );
+    })
+  );
 
   balancesForForm$ = this.balancesWithValuesInMain$;
 
   chart: Chart<'doughnut', number[], string> | null = null;
-
-  organizationId$ = new BehaviorSubject<string | null>(null);
 
   displayedColumns: string[] = [
     'name',
@@ -44,7 +52,7 @@ export class BalancesComponent implements OnInit {
     })
   );
 
-  datasets$ = this.balances$.pipe(
+  datasets$ = this.balancesWithValuesInMain$.pipe(
     map((balances) => {
       const datasets = [
         {
