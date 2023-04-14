@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   AddBalanceInput,
   AddTransactionInput,
+  DeleteTransactionInput,
   RoleOrganisationType,
   SignUpInput,
   Transaction,
@@ -14,6 +15,7 @@ import {
   Currency,
   Organization,
   OrganizationBalances,
+  OrganizationTransactions,
   Tag,
   Transactions,
   TransactionTags,
@@ -54,6 +56,10 @@ export class UsersService {
     private readonly transactionRepository: Repository<Transactions>,
     @InjectRepository(UserTransactions)
     private readonly userTransactionsRepository: Repository<UserTransactions>,
+
+    @InjectRepository(OrganizationTransactions)
+    private readonly organizationTransactionsRepository: Repository<OrganizationTransactions>,
+
     @InjectRepository(TransactionTags)
     private readonly transactionTagsRepository: Repository<TransactionTags>,
   ) {}
@@ -279,17 +285,25 @@ export class UsersService {
     await this.transactionRepository.insert({
       ...transaction,
       transaction_id: transactionId,
-      from_value: transaction.fromValue.toString(),
-      to_value: transaction.toValue.toString(),
+      from_value: transaction.fromValue?.toString(),
+      to_value: transaction.toValue?.toString(),
       from_currency: transaction.fromCurrency,
       to_currency: transaction.toCurrency,
     });
 
-    await this.userTransactionsRepository.insert({
-      id: uuidv4(),
-      transaction_id: transactionId,
-      user_id: id,
-    });
+    if (transaction.organizationId) {
+      await this.organizationTransactionsRepository.insert({
+        id: uuidv4(),
+        transaction_id: transactionId,
+        organization_id: transaction.organizationId,
+      });
+    } else {
+      await this.userTransactionsRepository.insert({
+        id: uuidv4(),
+        transaction_id: transactionId,
+        user_id: id,
+      });
+    }
 
     if (transaction.from) {
       const oldValue = await this.balanceRepository.findOne({
@@ -320,24 +334,44 @@ export class UsersService {
 
   async deleteTransactionById(
     userId: string,
-    transactionId: string,
+    transaction: DeleteTransactionInput,
   ): Promise<void> {
     await this.transactionTagsRepository.delete({
-      transaction_id: transactionId,
+      transaction_id: transaction.id,
     });
-    await this.userTransactionsRepository.delete({
-      transaction_id: transactionId,
-    });
+    if (transaction.organizationId) {
+      await this.organizationTransactionsRepository.delete({
+        transaction_id: transaction.id,
+      });
+    } else {
+      await this.userTransactionsRepository.delete({
+        transaction_id: transaction.id,
+      });
+    }
     await this.transactionRepository.delete({
-      transaction_id: transactionId,
+      transaction_id: transaction.id,
     });
     return;
   }
 
-  async getTransactionsById(userId: string): Promise<Transaction[]> {
-    const transactions = await this.userTransactionsRepository.find({
-      where: { user_id: userId },
-    });
+  async getTransactionsById(
+    userId: string,
+    page: string,
+    organizationId: string,
+  ): Promise<Transaction[]> {
+    let transactions: OrganizationTransactions[];
+    if (organizationId) {
+      transactions = await this.organizationTransactionsRepository.find({
+        where: { organization_id: organizationId },
+      });
+    } else {
+      const transactions = await this.userTransactionsRepository.find({
+        where: { user_id: userId },
+      });
+    }
+    if (!transactions.length) {
+      return [];
+    }
     return Promise.all(
       (
         await this.transactionRepository.find({

@@ -247,6 +247,15 @@ export class init1680003816406 implements MigrationInterface {
         `);
 
     queryRunner.query(`
+        CREATE TABLE organization_transactions (
+            id uuid NOT NULL,
+            organization_id uuid NOT NULL REFERENCES organizations(organization_id),
+            transaction_id uuid NOT NULL REFERENCES transactions(transaction_id),
+            PRIMARY KEY(organization_id, transaction_id)
+          );
+          `);
+
+    queryRunner.query(`
         CREATE TABLE transaction_tags (
             transaction_id uuid NOT NULL REFERENCES "transactions"(transaction_id),
             tag_id uuid NOT NULL REFERENCES tags(tag_id),

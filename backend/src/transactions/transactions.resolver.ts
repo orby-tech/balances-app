@@ -13,8 +13,12 @@ export class TransactionsResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query()
-  async transactions(@UserId() userId): Promise<Transaction[]> {
-    const transactions = await this.usersService.getTransactionsById(userId);
+  async transactions(
+    @UserId() userId,
+    @Args('page') page: string,
+    @Args('organizationId') organizationId: string,
+  ): Promise<Transaction[]> {
+    const transactions = await this.usersService.getTransactionsById(userId, page, organizationId);
     return transactions;
   }
 
@@ -32,7 +36,7 @@ export class TransactionsResolver {
     @Args('deleteTransactionInput') transaction: DeleteTransactionInput,
     @UserId() userId,
   ) {
-    await this.usersService.deleteTransactionById(userId, transaction.id);
+    await this.usersService.deleteTransactionById(userId, transaction);
     return '';
   }
 }

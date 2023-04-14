@@ -7,7 +7,7 @@ type Query {
   user: User!
   settings: Settings!
   balances: [Balance]
-  transactions(page: Int!): [Transaction]
+  transactions(page: Int!, organizationId: String): [Transaction]
   currencies: [Currency]
   currenciesRate: CurrenciesRate
   organizations: [Organization]
@@ -140,6 +140,7 @@ type Transaction {
 }
 
 input AddTransactionInput {
+  organizationId: String
   type: TransactionType!
 
   from: ID
@@ -161,6 +162,7 @@ input TagInput {
 }
 
 input DeleteTransactionInput {
+  organizationId: String
   id: String!
 }
 

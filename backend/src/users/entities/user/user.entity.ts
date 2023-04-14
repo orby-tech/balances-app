@@ -187,6 +187,18 @@ export class UserTransactions {
   transaction_id: string;
 }
 
+@Entity({ name: 'organization_transactions' })
+export class OrganizationTransactions {
+  @PrimaryColumn()
+  id: string;
+
+  @Column()
+  organization_id: string;
+
+  @Column()
+  transaction_id: string;
+}
+
 @Entity({ name: 'transaction_tags' })
 export class TransactionTags {
   @PrimaryColumn()

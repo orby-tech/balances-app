@@ -80,6 +80,7 @@ export class AppCommonComponent implements OnInit {
   ) {
     commonService.load();
   }
+  
   ngOnInit() {
     this.route.params.subscribe((data) => {
       this.organizationId$.next(data['id']);

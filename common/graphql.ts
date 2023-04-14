@@ -61,6 +61,7 @@ export class DeleteBalanceInput {
 }
 
 export class AddTransactionInput {
+    organizationId?: Nullable<string>;
     type: TransactionType;
     from?: Nullable<string>;
     fromValue?: Nullable<number>;
@@ -79,6 +80,7 @@ export class TagInput {
 }
 
 export class DeleteTransactionInput {
+    organizationId?: Nullable<string>;
     id: string;
 }
 
@@ -89,7 +91,7 @@ export abstract class IQuery {
 
     abstract balances(): Nullable<Nullable<Balance>[]> | Promise<Nullable<Nullable<Balance>[]>>;
 
-    abstract transactions(page: number): Nullable<Nullable<Transaction>[]> | Promise<Nullable<Nullable<Transaction>[]>>;
+    abstract transactions(page: number, organizationId?: Nullable<string>): Nullable<Nullable<Transaction>[]> | Promise<Nullable<Nullable<Transaction>[]>>;
 
     abstract currencies(): Nullable<Nullable<Currency>[]> | Promise<Nullable<Nullable<Currency>[]>>;
 

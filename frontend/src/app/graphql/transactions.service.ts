@@ -33,8 +33,12 @@ export const getTransactionsWithValuesInMain = (
         currencies,
       ]) => {
         return transactions.map((transaction) => {
-          const tobalance = balances.find((balance) => balance?.id === transaction.to);
-          const frombalance = balances.find((balance) => balance?.id === transaction.from);
+          const tobalance = balances.find(
+            (balance) => balance?.id === transaction.to
+          );
+          const frombalance = balances.find(
+            (balance) => balance?.id === transaction.from
+          );
 
           const toCurrency = currencies.find(
             (c) => c.id === tobalance?.currencyId
@@ -78,8 +82,9 @@ export const getTransactionsWithValuesInMain = (
             internationalSimbolOfMain: mainCurrency?.internationalSimbol || '',
             toTitle: tobalance?.title,
             fromTitle: frombalance?.title,
-            toCurrencyTitle: currencies.find((c) => c.id === tobalance?.currencyId)
-              ?.title,
+            toCurrencyTitle: currencies.find(
+              (c) => c.id === tobalance?.currencyId
+            )?.title,
             fromCurrencyTitle: currencies.find(
               (c) => c.id === frombalance?.currencyId
             )?.title,
@@ -108,12 +113,16 @@ export class TransactionsService {
     this.currencies$
   );
 
+  organizationId: string | null = null;
+
   constructor(private apollo: Apollo) {}
-  load() {
+
+  load(organizationId: string | null) {
+    this.organizationId = organizationId;
     this.apollo
       .watchQuery({
         query: gql`
-          {
+          query MyQuery($organizationId: String) {
             balances {
               id
               type
@@ -123,7 +132,7 @@ export class TransactionsService {
               valueInMain
               currencyId
             }
-            transactions(page: 0) {
+            transactions(page: 0, organizationId: $organizationId) {
               id
               provider
               type
@@ -159,6 +168,9 @@ export class TransactionsService {
             }
           }
         `,
+        variables: {
+          organizationId: organizationId
+        }
       })
       .valueChanges.subscribe((result: any) => {
         this.transactions$.next(result?.data?.transactions || []);
@@ -182,7 +194,7 @@ export class TransactionsService {
         },
       })
       .subscribe((x) => {
-        this.load();
+        this.load(this.organizationId);
       });
   }
 
@@ -201,7 +213,7 @@ export class TransactionsService {
         },
       })
       .subscribe((x) => {
-        this.load();
+        this.load(this.organizationId);
       });
   }
 }
