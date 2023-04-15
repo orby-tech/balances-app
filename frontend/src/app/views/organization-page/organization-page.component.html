@@ -1,0 +1,19 @@
+<ng-container *ngIf="organization$ | async; let organization">
+  <mat-card>
+    <mat-card-title> Company: {{ organization.name }} </mat-card-title>
+
+    <mat-card-content>
+      <mat-card-subtitle> You in the company: </mat-card-subtitle>
+      <div>Role: {{ organization.role }}</div>
+    </mat-card-content>
+
+    <mat-card-content>
+      <mat-card-subtitle> Users: </mat-card-subtitle>
+      <mat-list role="list">
+        <mat-list-item *ngFor="let user of organization.users" role="listitem">
+          {{ user?.email }}
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+</ng-container>

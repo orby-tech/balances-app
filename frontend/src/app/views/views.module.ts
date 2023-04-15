@@ -17,6 +17,7 @@ import { LoginComponent } from './dialogs/login/login.component';
 import { ComponentsModule } from './user-account/components/components.module';
 import { SignUpComponent } from './dialogs/sign-up/sign-up.component';
 import { MatTreeModule } from '@angular/material/tree';
+import { OrganizationPageComponent } from './organization-page/organization-page.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { MatTreeModule } from '@angular/material/tree';
     UserAccountComponent,
     LoginComponent,
     SignUpComponent,
+    OrganizationPageComponent,
   ],
   imports: [
     CommonModule,
