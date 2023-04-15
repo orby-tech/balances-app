@@ -359,13 +359,13 @@ export class UsersService {
     page: string,
     organizationId: string,
   ): Promise<Transaction[]> {
-    let transactions: OrganizationTransactions[];
+    let transactions: (OrganizationTransactions | UserTransactions)[];
     if (organizationId) {
       transactions = await this.organizationTransactionsRepository.find({
         where: { organization_id: organizationId },
       });
     } else {
-      const transactions = await this.userTransactionsRepository.find({
+      transactions = await this.userTransactionsRepository.find({
         where: { user_id: userId },
       });
     }
