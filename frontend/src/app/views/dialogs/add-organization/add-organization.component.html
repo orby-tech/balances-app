@@ -1,0 +1,23 @@
+<div mat-dialog-title class="title-container"><h2>Add organization</h2></div>
+
+<div mat-dialog-content class="content">
+  <mat-form-field appearance="fill">
+    <input
+      matInput
+      type="text"
+      placeholder="Organization name"
+      [(ngModel)]="organizationName"
+    />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="null">No Thanks</button>
+
+  <button
+    mat-raised-button
+    [disabled]="!organizationName"
+    [mat-dialog-close]="{ name: organizationName }"
+  >
+    Submit
+  </button>
+</div>

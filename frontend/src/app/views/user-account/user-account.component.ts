@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { TransactionType } from '@common/graphql';
 import { CurrenciesService } from 'src/app/graphql/currencies.service';
 import { OrganizationsService } from 'src/app/graphql/organizations.service';
 import { SettingsService } from 'src/app/graphql/settings.service';
 import { UserService } from 'src/app/graphql/user.service';
+import { AddOrganizationComponent } from '../dialogs/add-organization/add-organization.component';
 
 @Component({
   selector: 'app-user-account',
@@ -27,7 +29,8 @@ export class UserAccountComponent {
     private userService: UserService,
     private currenciesService: CurrenciesService,
     private settingsService: SettingsService,
-    private organizationsService: OrganizationsService
+    private organizationsService: OrganizationsService,
+    private dialog: MatDialog
   ) {
     this.userService.load();
     this.settingsService.load();
@@ -50,6 +53,15 @@ export class UserAccountComponent {
   }
 
   addOrganization() {
-    this.organizationsService.addOrganization({ name: 'Family' });
+
+
+    const dialogRef = this.dialog.open(AddOrganizationComponent, {
+      data: {},
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+    this.organizationsService.addOrganization({ name: result.name});
+
+    });
   }
 }
