@@ -293,7 +293,7 @@ export class UsersService {
       await this.balanceRepository.update(
         { balance_id: transaction.from },
         {
-          value: +oldValue.value - +transaction.toValue,
+          value: +oldValue.value - +transaction.fromValue,
         },
       );
     }
