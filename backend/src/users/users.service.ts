@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   AddBalanceInput,
   AddTransactionInput,
+  BalanceType,
   DeleteTransactionInput,
   RoleOrganisationType,
   SignUpInput,
@@ -86,14 +87,68 @@ export class UsersService {
 
   async createUser(password: SignUpInput): Promise<void> {
     const defaultCurrency = '00000000-0000-0000-0000-000000000000';
+
+    const userId = uuidv4();
     const result = await this.userRepository.insert({
-      user_id: uuidv4(),
+      user_id: userId,
       email: password.email,
       main_currency: defaultCurrency,
       username: password.username,
       password_hash: sha256(password.password),
       date_created: new Date(), // TODO: problem with time zones
     });
+
+    const balance = await this.setBalanceById(userId, {
+      title: 'Example Title',
+      host: 'Example Host',
+      type: BalanceType.CARD,
+      currencyId: defaultCurrency,
+      value: 0,
+    });
+
+    await this.setTransactionById(userId, {
+      type: TransactionType.RECEIVE,
+      to: balance.balance_id,
+      toValue: 10,
+      toCurrency: defaultCurrency,
+      provider: 'Example Provider',
+    });
+
+    await this.setTransactionById(userId, {
+      type: TransactionType.SEND,
+      from: balance.balance_id,
+      fromValue: 10,
+      fromCurrency: defaultCurrency,
+      provider: 'Example Provider',
+    });
+
+    const organizationId = await this.addOrganization(userId, 'Family');
+
+    const organizationBalance = await this.setBalanceById(userId, {
+      organizationId,
+      title: 'Example Title',
+      host: 'Example Host',
+      type: BalanceType.CARD,
+      currencyId: defaultCurrency,
+      value: 0,
+    });
+
+    await this.setTransactionById(userId, {
+      type: TransactionType.RECEIVE,
+      to: organizationBalance.balance_id,
+      toValue: 10,
+      toCurrency: defaultCurrency,
+      provider: 'Example Provider',
+    });
+
+    await this.setTransactionById(userId, {
+      type: TransactionType.SEND,
+      from: organizationBalance.balance_id,
+      fromValue: 10,
+      fromCurrency: defaultCurrency,
+      provider: 'Example Provider',
+    });
+
     return result.raw;
   }
 
@@ -269,6 +324,8 @@ export class UsersService {
       user_id: id,
       role: RoleOrganisationType.OWNER,
     });
+
+    return organizationId;
   }
 
   async setTransactionById(
