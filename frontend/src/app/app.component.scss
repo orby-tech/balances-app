@@ -5,10 +5,22 @@ header {
 
   align-items: center;
 
+  .header--menu-info-block {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    h1 {
+      display: contents;
+      color: #bf00bf;
+    }
+  }
+
   .header--user-info-block {
     display: flex;
     flex-direction: row;
     gap: 10px;
+    align-items: center;
   }
 }
 
@@ -37,4 +49,8 @@ a {
 
 .content {
   padding: 15px;
+}
+
+mat-tree-node {
+  justify-content: space-between;
 }

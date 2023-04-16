@@ -1,12 +1,15 @@
 <header>
-  <button
-    mat-icon-button
-    color="primary"
-    aria-label="Example icon button with a menu icon"
-    (click)="menuVisible = !menuVisible"
-  >
-    <mat-icon>menu</mat-icon>
-  </button>
+  <div class="header--menu-info-block">
+    <button
+      mat-icon-button
+      color="primary"
+      aria-label="Example icon button with a menu icon"
+      (click)="menuVisible = !menuVisible"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
+    <h1>balances</h1>
+  </div>
   <div class="header--user-info-block">
     <a mat-button routerLink="/user-account">
       {{ (user$ | async)?.email }}
