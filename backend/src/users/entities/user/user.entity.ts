@@ -46,6 +46,9 @@ export class Transactions {
   transaction_id: string;
 
   @Column()
+  balance_id: string;
+
+  @Column()
   type: TransactionType;
 
   @Column()
@@ -173,30 +176,6 @@ export class OrganizationBalances {
 
   @Column()
   balance_id: string;
-}
-
-@Entity({ name: 'user_transactions' })
-export class UserTransactions {
-  @PrimaryColumn()
-  id: string;
-
-  @Column()
-  user_id: string;
-
-  @Column()
-  transaction_id: string;
-}
-
-@Entity({ name: 'organization_transactions' })
-export class OrganizationTransactions {
-  @PrimaryColumn()
-  id: string;
-
-  @Column()
-  organization_id: string;
-
-  @Column()
-  transaction_id: string;
 }
 
 @Entity({ name: 'transaction_tags' })

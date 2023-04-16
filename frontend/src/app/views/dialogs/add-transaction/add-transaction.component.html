@@ -18,9 +18,11 @@
     <mat-form-field appearance="fill">
       <mat-label>To</mat-label>
       <mat-select formControlName="to">
-        <mat-option *ngFor="let balance of balances$ | async" [value]="balance.id">{{
-          balance.title
-        }}</mat-option>
+        <mat-option
+          *ngFor="let balance of balances$ | async"
+          [value]="balance.id"
+          >{{ balance.title }}</mat-option
+        >
       </mat-select>
     </mat-form-field>
 
@@ -34,9 +36,11 @@
     <mat-form-field appearance="fill">
       <mat-label>From</mat-label>
       <mat-select formControlName="from">
-        <mat-option *ngFor="let balance of balances$ | async" [value]="balance.id">{{
-          balance.title
-        }}</mat-option>
+        <mat-option
+          *ngFor="let balance of balances$ | async"
+          [value]="balance.id"
+          >{{ balance.title }}</mat-option
+        >
       </mat-select>
     </mat-form-field>
 
@@ -54,7 +58,9 @@
       <mat-form-field appearance="fill">
         <mat-label>From</mat-label>
         <mat-select formControlName="from">
-          <mat-option *ngFor="let balance of balances$ | async" [value]="balance.id"
+          <mat-option
+            *ngFor="let balance of balances$ | async"
+            [value]="balance.id"
             >{{ balance.title }}
           </mat-option>
         </mat-select>
@@ -63,9 +69,11 @@
       <mat-form-field appearance="fill">
         <mat-label>To</mat-label>
         <mat-select formControlName="to">
-          <mat-option *ngFor="let balance of balances$ | async" [value]="balance?.id">{{
-            balance.title
-          }}</mat-option>
+          <mat-option
+            *ngFor="let balance of balances$ | async"
+            [value]="balance?.id"
+            >{{ balance.title }}</mat-option
+          >
         </mat-select>
       </mat-form-field>
     </div>
@@ -87,7 +95,9 @@
           {{ fromBalanceInternationalSimbol$ | async }})
         </mat-label>
         <input matInput formControlName="toValue" type="number" />
-        <mat-icon matSuffix>{{ toBalanceInternationalSimbol$ | async }}</mat-icon>
+        <mat-icon matSuffix>{{
+          toBalanceInternationalSimbol$ | async
+        }}</mat-icon>
       </mat-form-field>
     </div>
   </div>

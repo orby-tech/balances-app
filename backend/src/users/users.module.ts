@@ -5,7 +5,6 @@ import {
   Currency,
   Organization,
   OrganizationBalances,
-  OrganizationTransactions,
   Tag,
   Transactions,
   TransactionTags,
@@ -14,7 +13,6 @@ import {
   UserCurrencies,
   UserOrganisation,
   UserTag,
-  UserTransactions,
 } from './entities/user/user.entity';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
@@ -31,8 +29,6 @@ import { UsersResolver } from './users.resolver';
       Balance,
       UserBalances,
       Transactions,
-      UserTransactions,
-      OrganizationTransactions,
       TransactionTags,
       Organization,
       UserOrganisation,

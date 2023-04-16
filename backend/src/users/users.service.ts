@@ -7,6 +7,7 @@ import {
   RoleOrganisationType,
   SignUpInput,
   Transaction,
+  TransactionType,
 } from '@common/graphql';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
@@ -15,7 +16,6 @@ import {
   Currency,
   Organization,
   OrganizationBalances,
-  OrganizationTransactions,
   Tag,
   Transactions,
   TransactionTags,
@@ -24,7 +24,6 @@ import {
   UserCurrencies,
   UserOrganisation,
   UserTag,
-  UserTransactions,
 } from './entities/user/user.entity';
 import { sha256 } from 'js-sha256';
 
@@ -54,11 +53,6 @@ export class UsersService {
 
     @InjectRepository(Transactions)
     private readonly transactionRepository: Repository<Transactions>,
-    @InjectRepository(UserTransactions)
-    private readonly userTransactionsRepository: Repository<UserTransactions>,
-
-    @InjectRepository(OrganizationTransactions)
-    private readonly organizationTransactionsRepository: Repository<OrganizationTransactions>,
 
     @InjectRepository(TransactionTags)
     private readonly transactionTagsRepository: Repository<TransactionTags>,
@@ -281,31 +275,18 @@ export class UsersService {
     id: string,
     transaction: AddTransactionInput,
   ): Promise<void> {
-    const transactionId = uuidv4();
-    await this.transactionRepository.insert({
-      ...transaction,
-      transaction_id: transactionId,
-      from_value: transaction.fromValue?.toString(),
-      to_value: transaction.toValue?.toString(),
-      from_currency: transaction.fromCurrency,
-      to_currency: transaction.toCurrency,
-    });
-
-    if (transaction.organizationId) {
-      await this.organizationTransactionsRepository.insert({
-        id: uuidv4(),
-        transaction_id: transactionId,
-        organization_id: transaction.organizationId,
-      });
-    } else {
-      await this.userTransactionsRepository.insert({
-        id: uuidv4(),
-        transaction_id: transactionId,
-        user_id: id,
-      });
-    }
-
     if (transaction.from) {
+      const transactionId = uuidv4();
+      await this.transactionRepository.insert({
+        type: TransactionType.SEND,
+        transaction_id: transactionId,
+        provider: transaction.provider,
+        balance_id: transaction.from,
+        from: transaction.from,
+        from_value: transaction.fromValue?.toString(),
+        from_currency: transaction.fromCurrency,
+      });
+
       const oldValue = await this.balanceRepository.findOne({
         where: { balance_id: transaction.from },
       });
@@ -318,6 +299,17 @@ export class UsersService {
     }
 
     if (transaction.to) {
+      const transactionId = uuidv4();
+      await this.transactionRepository.insert({
+        type: TransactionType.RECEIVE,
+        transaction_id: transactionId,
+        provider: transaction.provider,
+        balance_id: transaction.to,
+        to: transaction.to,
+        to_value: transaction.toValue?.toString(),
+        to_currency: transaction.toCurrency,
+      });
+
       const oldValue = await this.balanceRepository.findOne({
         where: { balance_id: transaction.to },
       });
@@ -339,15 +331,7 @@ export class UsersService {
     await this.transactionTagsRepository.delete({
       transaction_id: transaction.id,
     });
-    if (transaction.organizationId) {
-      await this.organizationTransactionsRepository.delete({
-        transaction_id: transaction.id,
-      });
-    } else {
-      await this.userTransactionsRepository.delete({
-        transaction_id: transaction.id,
-      });
-    }
+
     await this.transactionRepository.delete({
       transaction_id: transaction.id,
     });
@@ -359,24 +343,25 @@ export class UsersService {
     page: string,
     organizationId: string,
   ): Promise<Transaction[]> {
-    let transactions: (OrganizationTransactions | UserTransactions)[];
+    let transactions: (OrganizationBalances | UserBalances)[];
     if (organizationId) {
-      transactions = await this.organizationTransactionsRepository.find({
+      transactions = await this.organizationBalanceRepository.find({
         where: { organization_id: organizationId },
       });
     } else {
-      transactions = await this.userTransactionsRepository.find({
+      transactions = await this.userBalanceRepository.find({
         where: { user_id: userId },
       });
     }
     if (!transactions.length) {
       return [];
     }
+
     return Promise.all(
       (
         await this.transactionRepository.find({
           where: transactions.map((tag) => ({
-            transaction_id: tag.transaction_id,
+            balance_id: tag.balance_id,
           })),
         })
       ).map(async (t) => {

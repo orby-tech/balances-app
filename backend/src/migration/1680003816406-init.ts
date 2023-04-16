@@ -15,12 +15,10 @@ export class init1680003816406 implements MigrationInterface {
           {
             name: 'date_created',
             type: 'timestamp',
-            isNullable: true,
           },
           {
             name: 'email',
             type: 'text',
-            isNullable: true,
           },
           {
             name: 'password_hash',
@@ -29,7 +27,6 @@ export class init1680003816406 implements MigrationInterface {
           {
             name: 'username',
             type: 'text',
-            isNullable: true,
           },
           {
             name: 'main_currency',
@@ -186,9 +183,13 @@ export class init1680003816406 implements MigrationInterface {
             isUnique: true,
           },
           {
+            name: 'balance_id',
+            type: 'uuid',
+          },
+          {
             name: 'type',
             type: 'text',
-            enum: ['RECEIVE', 'SEND', 'TRANSFER'],
+            enum: ['RECEIVE', 'SEND'],
           },
           {
             name: 'from',
@@ -238,24 +239,6 @@ export class init1680003816406 implements MigrationInterface {
       `);
 
     queryRunner.query(`
-      CREATE TABLE user_transactions (
-          id uuid NOT NULL,
-          user_id uuid NOT NULL REFERENCES users(user_id),
-          transaction_id uuid NOT NULL REFERENCES transactions(transaction_id),
-          PRIMARY KEY(user_id, transaction_id)
-        );
-        `);
-
-    queryRunner.query(`
-        CREATE TABLE organization_transactions (
-            id uuid NOT NULL,
-            organization_id uuid NOT NULL REFERENCES organizations(organization_id),
-            transaction_id uuid NOT NULL REFERENCES transactions(transaction_id),
-            PRIMARY KEY(organization_id, transaction_id)
-          );
-          `);
-
-    queryRunner.query(`
         CREATE TABLE transaction_tags (
             transaction_id uuid NOT NULL REFERENCES "transactions"(transaction_id),
             tag_id uuid NOT NULL REFERENCES tags(tag_id),
@@ -290,23 +273,76 @@ export class init1680003816406 implements MigrationInterface {
       `);
 
     queryRunner.query(`
-        Insert into "users" ("user_id", "main_currency", "email", "password_hash") VALUES ('123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174001', 'john', '057ba03d6c44104863dc7361fe4578965d1887360f90a0895882e58a6248fc86');
+        Insert into "users" (
+          "user_id",
+          "main_currency",
+          "email",
+          "username",
+          "password_hash",
+          "date_created"
+          ) VALUES (
+            '123e4567-e89b-12d3-a456-426614174000',
+            '123e4567-e89b-12d3-a456-426614174001',
+            'user@user.com',
+            'user',
+            '057ba03d6c44104863dc7361fe4578965d1887360f90a0895882e58a6248fc86',
+            (date '2017-01-01')::timestamp
+            );
        
-        Insert into "tags" ("tag_id", "transaction_name", "title") VALUES ('123e4567-e89b-12d3-a456-426614174002', 'transaction_name_', 'title');
+        Insert into "tags" (
+          "tag_id",
+          "transaction_name",
+          "title") VALUES (
+          '123e4567-e89b-12d3-a456-426614174002',
+          'transaction_name_',
+          'title'
+          );
         Insert into "user_tags" ("user_id", "tag_id") VALUES ('123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174002');
         
-        
-        Insert into "balances" ("balance_id", "title", "host", "type", "value", "currency_id") VALUES ('123e4567-e89b-12d3-a456-426614174004', 'title_', 'short_title_', 'CARD', '10', '123e4567-e89b-12d3-a456-426614174003');
-        Insert into "user_balances" ("id", "user_id", "balance_id") VALUES ('123e4567-e89b-12d3-a456-426614175000', '123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174004');
+        Insert into "currencies" ("currency_id", "title", "international_short_name", "international_simbol") VALUES ('00000000-0000-0000-0000-000000000000', 'US Dollar', 'USD', '$');
+        Insert into "currencies" ("currency_id", "title", "international_short_name", "international_simbol") VALUES ('00000000-0000-0000-0000-000000000001', 'Russian Ruble', 'RUB', '₽');
+            
+        Insert into "balances" (
+          "balance_id", 
+          "title", 
+          "host", 
+          "type", 
+          "value", 
+          "currency_id"
+          ) VALUES (
+          '123e4567-e89b-12d3-a456-426614174004', 
+          'title_', 
+          'short_title_', 
+          'CARD', 
+          '10', 
+          '00000000-0000-0000-0000-000000000000'
+          );
 
-        Insert into transactions ("transaction_id", "type", "provider") VALUES ('123e4567-e89b-12d3-a456-426614174005', 'TRANSFER', 'provider_');
-        Insert into "user_transactions" ("id", "user_id", "transaction_id") VALUES ('123e4567-e89b-12d3-a456-426614175000', '123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174005');
+        Insert into "user_balances" (
+          "id", 
+          "user_id", 
+          "balance_id"
+          ) VALUES (
+          '123e4567-e89b-12d3-a456-426614175000', 
+          '123e4567-e89b-12d3-a456-426614174000', 
+          '123e4567-e89b-12d3-a456-426614174004'
+          );
+
+        Insert into transactions (
+          "balance_id", 
+          "transaction_id", 
+          "type", 
+          "provider") VALUES (
+          '123e4567-e89b-12d3-a456-426614174004',
+          '123e4567-e89b-12d3-a456-426614174005', 
+          'TRANSFER', 
+          'provider_'
+          );
+
         Insert into "transaction_tags" ("tag_id", "transaction_id") VALUES ('123e4567-e89b-12d3-a456-426614174002', '123e4567-e89b-12d3-a456-426614174005');
 
 
-        Insert into "currencies" ("currency_id", "title", "international_short_name", "international_simbol") VALUES ('00000000-0000-0000-0000-000000000000', 'US Dollar', 'USD', '$');
-        Insert into "currencies" ("currency_id", "title", "international_short_name", "international_simbol") VALUES ('00000000-0000-0000-0000-000000000001', 'Russian Ruble', 'RUB', '₽');
-        Insert into "user_currencies" ("user_id", "currency_id") VALUES ('123e4567-e89b-12d3-a456-426614174000', '00000000-0000-0000-0000-000000000000');
+ Insert into "user_currencies" ("user_id", "currency_id") VALUES ('123e4567-e89b-12d3-a456-426614174000', '00000000-0000-0000-0000-000000000000');
 
         `);
   }
