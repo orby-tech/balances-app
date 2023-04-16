@@ -272,7 +272,15 @@ export class init1680003816406 implements MigrationInterface {
       );
       `);
 
+
+      
     queryRunner.query(`
+
+        
+        Insert into "currencies" ("currency_id", "title", "international_short_name", "international_simbol") VALUES ('00000000-0000-0000-0000-000000000000', 'US Dollar', 'USD', '$');
+        Insert into "currencies" ("currency_id", "title", "international_short_name", "international_simbol") VALUES ('00000000-0000-0000-0000-000000000001', 'Russian Ruble', 'RUB', '₽');
+
+
         Insert into "users" (
           "user_id",
           "main_currency",
@@ -282,7 +290,7 @@ export class init1680003816406 implements MigrationInterface {
           "date_created"
           ) VALUES (
             '123e4567-e89b-12d3-a456-426614174000',
-            '123e4567-e89b-12d3-a456-426614174001',
+            '00000000-0000-0000-0000-000000000000',
             'user@user.com',
             'user',
             '057ba03d6c44104863dc7361fe4578965d1887360f90a0895882e58a6248fc86',
@@ -298,10 +306,7 @@ export class init1680003816406 implements MigrationInterface {
           'title'
           );
         Insert into "user_tags" ("user_id", "tag_id") VALUES ('123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174002');
-        
-        Insert into "currencies" ("currency_id", "title", "international_short_name", "international_simbol") VALUES ('00000000-0000-0000-0000-000000000000', 'US Dollar', 'USD', '$');
-        Insert into "currencies" ("currency_id", "title", "international_short_name", "international_simbol") VALUES ('00000000-0000-0000-0000-000000000001', 'Russian Ruble', 'RUB', '₽');
-            
+                
         Insert into "balances" (
           "balance_id", 
           "title", 
@@ -314,7 +319,7 @@ export class init1680003816406 implements MigrationInterface {
           'title_', 
           'short_title_', 
           'CARD', 
-          '10', 
+          '0', 
           '00000000-0000-0000-0000-000000000000'
           );
 
@@ -332,17 +337,38 @@ export class init1680003816406 implements MigrationInterface {
           "balance_id", 
           "transaction_id", 
           "type", 
-          "provider") VALUES (
+          "provider",
+          "to",
+          "to_value"
+          ) VALUES (
           '123e4567-e89b-12d3-a456-426614174004',
           '123e4567-e89b-12d3-a456-426614174005', 
-          'TRANSFER', 
-          'provider_'
+          'RECEIVE', 
+          'provider_',
+          '123e4567-e89b-12d3-a456-426614174004',
+          '10'
           );
+
+          Insert into transactions (
+            "balance_id", 
+            "transaction_id", 
+            "type", 
+            "provider",
+            "from",
+            "from_value"
+            ) VALUES (
+            '123e4567-e89b-12d3-a456-426614174004',
+            '123e4567-e89b-12d3-a456-426614174006', 
+            'SEND', 
+            'provider_',
+            '123e4567-e89b-12d3-a456-426614174004',
+            '10'
+            );
 
         Insert into "transaction_tags" ("tag_id", "transaction_id") VALUES ('123e4567-e89b-12d3-a456-426614174002', '123e4567-e89b-12d3-a456-426614174005');
 
 
- Insert into "user_currencies" ("user_id", "currency_id") VALUES ('123e4567-e89b-12d3-a456-426614174000', '00000000-0000-0000-0000-000000000000');
+        Insert into "user_currencies" ("user_id", "currency_id") VALUES ('123e4567-e89b-12d3-a456-426614174000', '00000000-0000-0000-0000-000000000000');
 
         `);
   }
