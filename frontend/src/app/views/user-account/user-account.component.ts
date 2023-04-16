@@ -50,6 +50,6 @@ export class UserAccountComponent {
   }
 
   addOrganization() {
-    this.organizationsService.addOrganization({ name: '123' });
+    this.organizationsService.addOrganization({ name: 'Family' });
   }
 }

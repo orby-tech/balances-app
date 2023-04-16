@@ -27,6 +27,21 @@ export class AppCommonComponent implements OnInit {
     })
   );
 
+  internationalSimbolOfMain$ = this.balancesWithValuesInMain$.pipe(
+    map((balancesWithValuesInMain) => {
+
+      return balancesWithValuesInMain[0]?.internationalSimbolOfMain;
+    })
+  );
+
+  summedUpValueinMain$ = this.balancesWithValuesInMain$.pipe(
+    map((balancesWithValuesInMain) => {
+      return balancesWithValuesInMain
+        .map((b) => b.valueInMain)
+        .reduce((a, b) => a + b, 0);
+    })
+  );
+
   dataSourceMain$ = combineLatest([
     this.balancesWithValuesInMain$,
     this.organizationId$,
@@ -80,7 +95,7 @@ export class AppCommonComponent implements OnInit {
   ) {
     commonService.load();
   }
-  
+
   ngOnInit() {
     this.route.params.subscribe((data) => {
       this.organizationId$.next(data['id']);

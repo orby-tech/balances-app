@@ -6,17 +6,25 @@
 
 .circle-column {
   flex: 2;
+  max-width: 300px;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .common-container,
 .column {
   display: flex;
+  gap: 15px;
+}
+.circle-common--common-value {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .column {
-    display: flex;
-    align-items: stretch;
+  display: flex;
+  align-items: stretch;
 }
-  
