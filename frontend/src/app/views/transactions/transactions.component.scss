@@ -1,0 +1,50 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+mat-nav-list {
+  width: 100%;
+  max-width: 600px;
+  min-width: 30opx;
+}
+
+.main-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  .support-info {
+    display: flex;
+    align-items: center;
+    color: gray;
+    flex: 1;
+  }
+
+  .value-info {
+    min-width: 100px;
+    flex: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: blueviolet;
+    font-size: medium;
+  }
+}
+
+.support-line {
+  display: flex;
+  align-items: center;
+
+  .fee-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    color: gray;
+    min-width: 100px;
+    flex: 1;
+  }
+}
