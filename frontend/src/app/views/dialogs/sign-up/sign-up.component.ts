@@ -1,5 +1,6 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SettingsService } from 'src/app/graphql/settings.service';
 
 @Component({
@@ -14,6 +15,7 @@ export class SignUpComponent {
 
   constructor(
     private dialogRef: DialogRef,
+    @Inject(MAT_DIALOG_DATA) public data: {},
     private settingService: SettingsService
   ) {}
 
@@ -25,7 +27,14 @@ export class SignUpComponent {
         username: this.username,
       })
       .subscribe((x) => {
-        this.dialogRef.close();
+        console.log(x);
+        this.dialogRef.close(
+          {
+            password: this.password,
+            email: this.email,
+          },
+          {}
+        );
       });
   }
 }

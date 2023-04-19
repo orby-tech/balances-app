@@ -85,7 +85,7 @@ export class UsersService {
     );
   }
 
-  async createUser(password: SignUpInput): Promise<void> {
+  async createUser(password: SignUpInput): Promise<string> {
     const defaultCurrency = '00000000-0000-0000-0000-000000000000';
 
     const userId = uuidv4();
@@ -149,7 +149,7 @@ export class UsersService {
       provider: 'Example Provider',
     });
 
-    return result.raw;
+    return 'ok';
   }
 
   async setMainCurrency(id: string, currencyId: string): Promise<void> {
