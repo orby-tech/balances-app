@@ -25,6 +25,7 @@ export class AddTransactionComponent {
   balances$ = this.balancesService.balancesWithValuesInMain$;
 
   toCurrency$ = new BehaviorSubject<string>('');
+  allTags$ = new BehaviorSubject<string[]>([]);
 
   toValueWasSetted$ = new BehaviorSubject<boolean>(false);
   fromValueWasSetted$ = new BehaviorSubject<boolean>(false);
@@ -59,7 +60,8 @@ export class AddTransactionComponent {
   ]).pipe(
     map(
       ([from, balances]) =>
-        balances.find((balance) => balance.id === from)?.internationalSimbol || ''
+        balances.find((balance) => balance.id === from)?.internationalSimbol ||
+        ''
     )
   );
 
@@ -85,10 +87,14 @@ export class AddTransactionComponent {
   ]).pipe(
     map(([value, balances, currenciesWithValueRelatedMain]) => {
       const toCurrency = currenciesWithValueRelatedMain.find(
-        (c) => c.id === balances.find((balance) => balance.id === value.to)?.currencyId
+        (c) =>
+          c.id ===
+          balances.find((balance) => balance.id === value.to)?.currencyId
       );
       const fromCurrency = currenciesWithValueRelatedMain.find(
-        (c) => c.id === balances.find((balance) => balance.id === value.from)?.currencyId
+        (c) =>
+          c.id ===
+          balances.find((balance) => balance.id === value.from)?.currencyId
       );
 
       return { toCurrency, fromCurrency };
@@ -210,8 +216,22 @@ export class AddTransactionComponent {
       }
     });
 
-    this.profileForm.valueChanges.subscribe((value: any) => {
-      this.data = { ...value };
-    });
+    combineLatest([this.profileForm.valueChanges, this.allTags$]).subscribe(
+      ([value, tags]: [any, string[]]) => {
+        this.data = {
+          ...value,
+          tags: tags.map((t) => ({
+            title: t,
+            id: '',
+            transactionName: value.type,
+          })),
+        };
+      }
+    );
+  }
+
+  setAllTags(allTags: string[]): void {
+    console.log(allTags);
+    this.allTags$.next(allTags);
   }
 }

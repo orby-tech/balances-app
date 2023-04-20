@@ -45,7 +45,7 @@ input SignUpInput {
 }
 
 input AddTagInput {
-  transactionType: String
+  transactionType: TransactionType
   title: String
 }
 
@@ -156,9 +156,9 @@ input AddTransactionInput {
 }
 
 input TagInput {
-  transactionName: String!
+  transactionName: TransactionType!
   title: String!
-  id: ID!
+  id: ID
 }
 
 input DeleteTransactionInput {

@@ -43,7 +43,7 @@ export class SignUpInput {
 }
 
 export class AddTagInput {
-    transactionType?: Nullable<string>;
+    transactionType?: Nullable<TransactionType>;
     title?: Nullable<string>;
 }
 
@@ -74,9 +74,9 @@ export class AddTransactionInput {
 }
 
 export class TagInput {
-    transactionName: string;
+    transactionName: TransactionType;
     title: string;
-    id: string;
+    id?: Nullable<string>;
 }
 
 export class DeleteTransactionInput {

@@ -22,7 +22,7 @@ export class SettingsResolver {
       tags: (await this.usersService.getTagsById(userId)).map((tag) => ({
         title: tag.title,
         id: tag.tag_id,
-        transactionName: tag.transaction_name,
+        transactionName: tag.transaction_type,
       })),
     };
   }

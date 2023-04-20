@@ -13,7 +13,7 @@ export class Tag {
   tag_id: string;
 
   @Column()
-  transaction_name: string;
+  transaction_type: TransactionType;
 
   @Column()
   title: string;
@@ -76,6 +76,9 @@ export class Transactions {
 @Entity({ name: 'user_tags' })
 export class UserTag {
   @PrimaryColumn()
+  id: string;
+
+  @Column()
   user_id: string;
 
   @Column()
@@ -181,6 +184,9 @@ export class OrganizationBalances {
 @Entity({ name: 'transaction_tags' })
 export class TransactionTags {
   @PrimaryColumn()
+  id: string;
+
+  @Column()
   transaction_id: string;
 
   @Column()

@@ -23,7 +23,7 @@ export class TransactionsResolver {
   }
 
   @Mutation((returns) => Transaction, { name: 'addTransaction' })
-  async addBalance(
+  async addTransaction(
     @Args('addTransactionInput') transaction: AddTransactionInput,
     @UserId() userId,
   ) {
@@ -32,7 +32,7 @@ export class TransactionsResolver {
   }
 
   @Mutation((returns) => Balance, { name: 'deleteTransaction' })
-  async deleteBalance(
+  async deleteTransaction(
     @Args('deleteTransactionInput') transaction: DeleteTransactionInput,
     @UserId() userId,
   ) {

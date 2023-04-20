@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -13,6 +13,8 @@ import { TransactionType } from '@common/graphql';
 })
 export class TagsComponent {
   @Input() type: TransactionType;
+  @Output() setAllTags = new EventEmitter<string[]>();
+
   transactionType = TransactionType;
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -27,6 +29,8 @@ export class TagsComponent {
 
   set allTags(allTags: string[]) {
     this._allTags = [...new Set(allTags.reverse())].reverse();
+
+    this.setAllTags.emit(this._allTags)
   }
   get allTags() {
     return this._allTags;

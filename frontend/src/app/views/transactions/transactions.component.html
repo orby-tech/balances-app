@@ -79,6 +79,18 @@
         <mat-icon>delete</mat-icon>
       </button>
     </div>
+
+    <div matListItemLine class="support-line" *ngIf="element.tags?.length">
+      <div class="tags-info">
+        Tags:
+        <mat-chip aria-label="Fish selection">
+          <mat-chip *ngFor="let tag of element.tags">{{
+            tag?.title
+          }}</mat-chip>
+        </mat-chip>
+      </div>
+    </div>
+
     <div matListItemLine>
       <mat-divider></mat-divider>
     </div>

@@ -47,4 +47,9 @@ mat-nav-list {
     min-width: 100px;
     flex: 1;
   }
+  .tags-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
 }

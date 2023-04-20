@@ -101,6 +101,9 @@
       </mat-form-field>
     </div>
   </div>
+
+  <app-tags [type]="data.type" (setAllTags)="setAllTags($event)"></app-tags>
+
 </form>
 
 <div mat-dialog-actions>

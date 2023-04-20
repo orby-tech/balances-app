@@ -329,7 +329,7 @@ export class UsersService {
   }
 
   async setTransactionById(
-    id: string,
+    userId: string,
     transaction: AddTransactionInput,
   ): Promise<void> {
     if (transaction.from) {
@@ -353,6 +353,8 @@ export class UsersService {
           value: +oldValue.value - +transaction.fromValue,
         },
       );
+
+      await this.fillTagsForNewTransaction(transaction, userId, transactionId);
     }
 
     if (transaction.to) {
@@ -376,9 +378,40 @@ export class UsersService {
           value: +oldValue.value + +transaction.toValue,
         },
       );
+
+      await this.fillTagsForNewTransaction(transaction, userId, transactionId);
     }
 
     return;
+  }
+
+  async fillTagsForNewTransaction(
+    transaction: AddTransactionInput,
+    userId: string,
+    transactionId: string,
+  ): Promise<void[]> {
+    return Promise.all(
+      transaction.tags.map(async (tag) => {
+        const tagId = tag.title.toLocaleLowerCase().replaceAll(' ', '_**_');
+        await this.tagRepository.save({
+          tag_id: tagId,
+          title: tag.title,
+          transaction_type: tag.transactionName,
+        });
+
+        await this.userTagRepository.save({
+          id: uuidv4(),
+          tag_id: tagId,
+          user_id: userId,
+        });
+        console.log(tagId, transactionId);
+        await this.transactionTagsRepository.save({
+          id: uuidv4(),
+          tag_id: tagId,
+          transaction_id: transactionId,
+        });
+      }),
+    );
   }
 
   async deleteTransactionById(
@@ -434,7 +467,7 @@ export class UsersService {
               })
             : []
         ).map((f) => ({
-          transactionName: f.transaction_name,
+          transactionName: f.transaction_type,
           title: f.title,
           id: f.tag_id,
         }));

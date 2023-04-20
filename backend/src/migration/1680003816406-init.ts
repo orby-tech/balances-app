@@ -95,12 +95,12 @@ export class init1680003816406 implements MigrationInterface {
         columns: [
           {
             name: 'tag_id',
-            type: 'uuid',
+            type: 'text',
             isPrimary: true,
             isUnique: true,
           },
           {
-            name: 'transaction_name',
+            name: 'transaction_type',
             type: 'text',
           },
           {
@@ -232,17 +232,17 @@ export class init1680003816406 implements MigrationInterface {
 
     queryRunner.query(`
     CREATE TABLE user_tags (
+        id uuid NOT NULL PRIMARY KEY,
         user_id uuid NOT NULL REFERENCES users(user_id),
-        tag_id uuid NOT NULL REFERENCES tags(tag_id),
-        PRIMARY KEY(user_id, tag_id)
+        tag_id text NOT NULL REFERENCES tags(tag_id)
       );
       `);
 
     queryRunner.query(`
         CREATE TABLE transaction_tags (
+            id uuid NOT NULL PRIMARY KEY,
             transaction_id uuid NOT NULL REFERENCES "transactions"(transaction_id),
-            tag_id uuid NOT NULL REFERENCES tags(tag_id),
-            PRIMARY KEY(transaction_id, tag_id)
+            tag_id text NOT NULL REFERENCES tags(tag_id)
           );
           `);
 
@@ -272,8 +272,6 @@ export class init1680003816406 implements MigrationInterface {
       );
       `);
 
-
-      
     queryRunner.query(`
 
         
@@ -299,13 +297,13 @@ export class init1680003816406 implements MigrationInterface {
        
         Insert into "tags" (
           "tag_id",
-          "transaction_name",
+          "transaction_type",
           "title") VALUES (
           '123e4567-e89b-12d3-a456-426614174002',
           'transaction_name_',
           'title'
           );
-        Insert into "user_tags" ("user_id", "tag_id") VALUES ('123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174002');
+        Insert into "user_tags" ("id", "user_id", "tag_id") VALUES ('123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174000', '123e4567-e89b-12d3-a456-426614174002');
                 
         Insert into "balances" (
           "balance_id", 
@@ -365,7 +363,7 @@ export class init1680003816406 implements MigrationInterface {
             '10'
             );
 
-        Insert into "transaction_tags" ("tag_id", "transaction_id") VALUES ('123e4567-e89b-12d3-a456-426614174002', '123e4567-e89b-12d3-a456-426614174005');
+        Insert into "transaction_tags" ("id", "tag_id", "transaction_id") VALUES ('123e4567-e89b-12d3-a456-426614174002', '123e4567-e89b-12d3-a456-426614174002', '123e4567-e89b-12d3-a456-426614174005');
 
 
         Insert into "user_currencies" ("user_id", "currency_id") VALUES ('123e4567-e89b-12d3-a456-426614174000', '00000000-0000-0000-0000-000000000000');
