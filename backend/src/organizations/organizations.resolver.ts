@@ -21,7 +21,7 @@ export class OrganizationsResolver {
       organization_id: o.organization_id,
       name: o.name,
       role: o.role,
-      users: o.users.map((u) => ({ ...u, mainCurrency: u.main_currency })),
+      users: o.users.map((u) => ({ email: u.email, role: u.role })),
     }));
   }
 
@@ -30,8 +30,7 @@ export class OrganizationsResolver {
     @Args('addOrganizationInput') user: AddOrganizationInput,
     @UserId() userId,
   ) {
-    await this.usersService.addOrganization(userId, user.name)
-    return 'ok'
+    await this.usersService.addOrganization(userId, user.name);
+    return 'ok';
   }
-  
 }

@@ -21,6 +21,7 @@ export class OrganizationsService {
               role
               users {
                 email
+                role
               }
             }
           }

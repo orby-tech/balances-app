@@ -118,7 +118,12 @@ type Organization {
   organization_id: String!
   name: String!
   role: RoleOrganisationType!
-  users: [User]!
+  users: [OrganizationUser]!
+}
+
+type OrganizationUser {
+  email: String!
+  role: RoleOrganisationType!
 }
 
 type Transaction {

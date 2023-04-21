@@ -275,10 +275,11 @@ export class UsersService {
     return;
   }
 
-  async getOrganizationsById(
-    userId: string,
-  ): Promise<
-    (Organization & { role: UserOrganisation['role']; users: User[] })[]
+  async getOrganizationsById(userId: string): Promise<
+    (Organization & {
+      role: UserOrganisation['role'];
+      users: { email: string; role: RoleOrganisationType }[];
+    })[]
   > {
     const userOrganisations = await this.userOrganisationRepository.find({
       where: { user_id: userId },
@@ -294,18 +295,32 @@ export class UsersService {
           })),
         })
       ).map(async (x) => {
+        const usersInThisOrganisation =
+          await this.userOrganisationRepository.find({
+            where: { organization_id: x.organization_id },
+          });
+
+        const users = (
+          await this.userRepository.find({
+            where: usersInThisOrganisation.map((uO) => ({
+              user_id: uO.user_id,
+            })),
+          })
+        ).map((user) => {
+          return {
+            email: user.email,
+            role: usersInThisOrganisation.find(
+              (uO) => uO.user_id === user.user_id,
+            )?.role,
+          };
+        });
+
         return {
           ...x,
           role: userOrganisations.find(
             (u) => u.organization_id === x.organization_id,
           ).role,
-          users: await this.userRepository.find({
-            where: (
-              await this.userOrganisationRepository.find({
-                where: { organization_id: x.organization_id },
-              })
-            ).map((uO) => ({ user_id: uO.user_id })),
-          }),
+          users,
         };
       }),
     );

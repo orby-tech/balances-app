@@ -160,7 +160,12 @@ export class Organization {
     organization_id: string;
     name: string;
     role: RoleOrganisationType;
-    users: Nullable<User>[];
+    users: Nullable<OrganizationUser>[];
+}
+
+export class OrganizationUser {
+    email: string;
+    role: RoleOrganisationType;
 }
 
 export class Transaction {
