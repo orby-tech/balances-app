@@ -27,7 +27,6 @@ export class SignUpComponent {
         username: this.username,
       })
       .subscribe((x) => {
-        console.log(x);
         this.dialogRef.close(
           {
             password: this.password,

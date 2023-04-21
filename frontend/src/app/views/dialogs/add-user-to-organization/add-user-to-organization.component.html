@@ -1,0 +1,19 @@
+<div mat-dialog-title class="title-container"><h2>Add organization</h2></div>
+
+<div mat-dialog-content class="content">
+  <mat-form-field appearance="fill">
+    <input
+      matInput
+      type="text"
+      placeholder="Username to invite"
+      [(ngModel)]="userLogin"
+    />
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="null">No Thanks</button>
+  <button mat-button [mat-dialog-close]="{userLogin}" cdkFocusInitial>
+    Invite
+  </button>
+</div>

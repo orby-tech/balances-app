@@ -53,15 +53,12 @@ export class UserAccountComponent {
   }
 
   addOrganization() {
-
-
     const dialogRef = this.dialog.open(AddOrganizationComponent, {
       data: {},
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-    this.organizationsService.addOrganization({ name: result.name});
-
+      this.organizationsService.addOrganization({ name: result.name });
     });
   }
 }

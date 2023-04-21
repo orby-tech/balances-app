@@ -112,6 +112,7 @@ export class UsersService {
       toValue: 10,
       toCurrency: defaultCurrency,
       provider: 'Example Provider',
+      tags: [],
     });
 
     await this.setTransactionById(userId, {
@@ -120,6 +121,7 @@ export class UsersService {
       fromValue: 10,
       fromCurrency: defaultCurrency,
       provider: 'Example Provider',
+      tags: [],
     });
 
     const organizationId = await this.addOrganization(userId, 'Family');
@@ -139,6 +141,7 @@ export class UsersService {
       toValue: 10,
       toCurrency: defaultCurrency,
       provider: 'Example Provider',
+      tags: [],
     });
 
     await this.setTransactionById(userId, {
@@ -147,6 +150,7 @@ export class UsersService {
       fromValue: 10,
       fromCurrency: defaultCurrency,
       provider: 'Example Provider',
+      tags: [],
     });
 
     return 'ok';
@@ -343,6 +347,28 @@ export class UsersService {
     return organizationId;
   }
 
+  async addUserToOrganization(
+    userId: string,
+    name: string,
+    organizationId: string,
+  ) {
+    const user = (
+      await this.userRepository.find({ where: { username: name } })
+    )[0];
+    if (!user) {
+      return 'No user found';
+    }
+
+    await this.userOrganisationRepository.save({
+      id: uuidv4(),
+      organization_id: organizationId,
+      user_id: user.user_id,
+      role: RoleOrganisationType.ADMIN,
+    });
+
+    return 'ok';
+  }
+
   async setTransactionById(
     userId: string,
     transaction: AddTransactionInput,
@@ -419,7 +445,6 @@ export class UsersService {
           tag_id: tagId,
           user_id: userId,
         });
-        console.log(tagId, transactionId);
         await this.transactionTagsRepository.save({
           id: uuidv4(),
           tag_id: tagId,

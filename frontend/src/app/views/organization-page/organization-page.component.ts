@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { OrganizationsService } from 'src/app/graphql/organizations.service';
+import { AddUserToOrganizationComponent } from '../dialogs/add-user-to-organization/add-user-to-organization.component';
 
 @Component({
   selector: 'app-organization-page',
@@ -24,11 +26,28 @@ export class OrganizationPageComponent {
 
   constructor(
     private organizationsService: OrganizationsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public dialog: MatDialog
   ) {
     this.organizationsService.load();
     this.route.params.subscribe((data) => {
       this.organizationId$.next(data['id']);
+    });
+  }
+
+  invite() {
+    const dialogRef = this.dialog.open(AddUserToOrganizationComponent, {});
+    const organizationId = this.organizationId$.getValue();
+    if (!organizationId) {
+      return;
+    }
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.organizationsService.addUserToOrganization({
+          name: result.userLogin,
+          organizationId,
+        });
+      }
     });
   }
 }

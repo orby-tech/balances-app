@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AddOrganizationInput, Organization } from '@common/graphql';
+import { AddOrganizationInput, AddUserToOrganizationInput, Organization } from '@common/graphql';
 import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, first } from 'rxjs';
 
@@ -43,6 +43,23 @@ export class OrganizationsService {
         `,
         variables: {
           addOrganizationInput: organization,
+        },
+      })
+      .subscribe((x) => {
+        this.load();
+      });
+  }
+
+  addUserToOrganization(organization: AddUserToOrganizationInput) {
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation addUserToOrganization($addUserToOrganizationInput: AddUserToOrganizationInput!) {
+            addUserToOrganization(addUserToOrganizationInput: $addUserToOrganizationInput) 
+          }
+        `,
+        variables: {
+          addUserToOrganizationInput: organization,
         },
       })
       .subscribe((x) => {

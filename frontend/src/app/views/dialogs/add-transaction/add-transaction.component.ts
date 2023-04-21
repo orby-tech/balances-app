@@ -231,7 +231,6 @@ export class AddTransactionComponent {
   }
 
   setAllTags(allTags: string[]): void {
-    console.log(allTags);
     this.allTags$.next(allTags);
   }
 }

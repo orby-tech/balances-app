@@ -19,6 +19,7 @@ import { SignUpComponent } from './dialogs/sign-up/sign-up.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { OrganizationPageComponent } from './organization-page/organization-page.component';
 import { AddOrganizationComponent } from './dialogs/add-organization/add-organization.component';
+import { AddUserToOrganizationComponent } from './dialogs/add-user-to-organization/add-user-to-organization.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { AddOrganizationComponent } from './dialogs/add-organization/add-organiz
     SignUpComponent,
     OrganizationPageComponent,
     AddOrganizationComponent,
+    AddUserToOrganizationComponent,
   ],
   imports: [
     CommonModule,

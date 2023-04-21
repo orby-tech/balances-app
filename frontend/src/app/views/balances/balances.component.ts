@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Chart } from 'chart.js';
-import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { BalancesService } from 'src/app/graphql/balances.service';
 import { CurrenciesService } from 'src/app/graphql/currencies.service';
 import { AddBalanceComponent } from '../dialogs/add-balance/add-balance.component';
@@ -84,8 +84,6 @@ export class BalancesComponent implements OnInit {
     const dialogRef = this.dialog.open(AddBalanceComponent, {
       data: { type: 'CARD' },
     });
-
-    console.log(this.organizationId$);
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {

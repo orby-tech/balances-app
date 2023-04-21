@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -63,7 +63,6 @@ export class LoginComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(result)
       if (!result) {
         return;
       }

@@ -1,8 +1,6 @@
 import {
-  AddBalanceInput,
   AddOrganizationInput,
-  Balance,
-  BalanceType,
+  AddUserToOrganizationInput,
   Organization,
 } from '@common/graphql';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
@@ -32,5 +30,17 @@ export class OrganizationsResolver {
   ) {
     await this.usersService.addOrganization(userId, user.name);
     return 'ok';
+  }
+
+  @Mutation((returns) => String, { name: 'addUserToOrganization' })
+  async addUserToOrganization(
+    @Args('addUserToOrganizationInput') user: AddUserToOrganizationInput,
+    @UserId() userId,
+  ) {
+    return await this.usersService.addUserToOrganization(
+      userId,
+      user.name,
+      user.organizationId,
+    );
   }
 }

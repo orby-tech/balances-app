@@ -32,6 +32,11 @@ export class AddOrganizationInput {
     name: string;
 }
 
+export class AddUserToOrganizationInput {
+    name: string;
+    organizationId: string;
+}
+
 export class SetNewPasswordInput {
     password: string;
 }
@@ -70,7 +75,7 @@ export class AddTransactionInput {
     toValue?: Nullable<number>;
     toCurrency?: Nullable<string>;
     provider?: Nullable<string>;
-    tags?: Nullable<Nullable<TagInput>[]>;
+    tags: Nullable<TagInput>[];
 }
 
 export class TagInput {
@@ -118,6 +123,8 @@ export abstract class IMutation {
     abstract deleteTransaction(deleteTransactionInput: DeleteTransactionInput): Nullable<string> | Promise<Nullable<string>>;
 
     abstract addOrganization(addOrganizationInput: AddOrganizationInput): Nullable<string> | Promise<Nullable<string>>;
+
+    abstract addUserToOrganization(addUserToOrganizationInput: AddUserToOrganizationInput): Nullable<string> | Promise<Nullable<string>>;
 }
 
 export class User {
