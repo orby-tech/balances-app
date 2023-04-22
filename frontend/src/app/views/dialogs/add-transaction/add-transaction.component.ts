@@ -9,6 +9,7 @@ import {
   distinctUntilChanged,
   map,
   startWith,
+  tap,
 } from 'rxjs';
 import { BalancesService } from 'src/app/graphql/balances.service';
 import { CurrenciesService } from 'src/app/graphql/currencies.service';
@@ -27,23 +28,20 @@ export class AddTransactionComponent {
   toCurrency$ = new BehaviorSubject<string>('');
   allTags$ = new BehaviorSubject<string[]>([]);
 
-  toValueWasSetted$ = new BehaviorSubject<boolean>(false);
-  fromValueWasSetted$ = new BehaviorSubject<boolean>(false);
+  toValueLastSetted$ = new BehaviorSubject<number | null>(null);
+  fromValueLastSetted$ = new BehaviorSubject<number | null>(null);
 
-  profileForm = new FormGroup(
-    {
-      type: new FormControl<TransactionType>(this.defaultTransactionType),
-      to: new FormControl(''),
-      toValue: new FormControl<number | null>({ value: 0, disabled: true }),
-      from: new FormControl(''),
-      fromValue: new FormControl<number | null>({
-        value: 0,
-        disabled: true,
-      }),
-      provider: new FormControl('123'),
-    },
-    { updateOn: 'blur' }
-  );
+  profileForm = new FormGroup({
+    type: new FormControl<TransactionType>(this.defaultTransactionType),
+    to: new FormControl(''),
+    toValue: new FormControl<number | null>({ value: 0, disabled: true }),
+    from: new FormControl(''),
+    fromValue: new FormControl<number | null>({
+      value: 0,
+      disabled: true,
+    }),
+    provider: new FormControl('123'),
+  });
 
   type$ = this.profileForm.valueChanges.pipe(
     map((data) => data.type),
@@ -158,63 +156,106 @@ export class AddTransactionComponent {
         }
       });
 
+    const fromValueAbleToAutocomlite$ = combineLatest([
+      this.profileForm.valueChanges.pipe(map((value) => value.fromValue)),
+      this.fromValueLastSetted$,
+    ]).pipe(
+      map(([fromValue, fromValueLastSetted]) => {
+        console.log(fromValue, fromValueLastSetted);
+        return (fromValue || 0) == (fromValueLastSetted || 0);
+      }),
+      distinctUntilChanged(),
+      tap((x) => console.log(x))
+    );
+
     combineLatest([
       this.profileForm.valueChanges.pipe(
         map((value) => value.toValue),
         distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
-        debounceTime(500)
+        debounceTime(100)
       ),
       this.toAndFromCurrencies$,
       this.type$.pipe(map((type) => type === TransactionType.TRANSFER)),
-    ]).subscribe(([toValue, { toCurrency, fromCurrency }, editingOn]) => {
-      if (!editingOn) {
-        return;
-      }
+      fromValueAbleToAutocomlite$,
+    ])
+      .pipe(debounceTime(100))
+      .subscribe(
+        ([
+          toValue,
+          { toCurrency, fromCurrency },
+          editingOn,
+          fromValueAbleToAutocomlite,
+        ]) => {
+          if (!editingOn) {
+            return;
+          }
 
-      if (!toValue) {
-        return;
-      }
-      this.toValueWasSetted$.next(!!toValue);
-      const fromValueWasSetted = this.fromValueWasSetted$.getValue();
-      if (!fromValueWasSetted) {
-        const newFromValue =
-          ((toValue || 0) / (toCurrency?.valueRelatedMain || 0)) *
-          (fromCurrency?.valueRelatedMain || 0);
+          if (!toValue) {
+            return;
+          }
 
-        this.profileForm.patchValue({ fromValue: newFromValue });
-        this.profileForm.updateValueAndValidity();
-      }
-    });
+          if (fromValueAbleToAutocomlite) {
+            const newFromValue =
+              ((toValue || 0) / (toCurrency?.valueRelatedMain || 0)) *
+              (fromCurrency?.valueRelatedMain || 0);
+
+            this.profileForm.patchValue({ fromValue: newFromValue });
+            this.fromValueLastSetted$.next(newFromValue);
+            this.profileForm.updateValueAndValidity();
+          }
+        }
+      );
+
+    const toValueAbleToAutocomlite$ = combineLatest([
+      this.profileForm.valueChanges.pipe(map((value) => value.toValue)),
+      this.toValueLastSetted$,
+    ]).pipe(
+      map(([toValue, toValueLastSetted]) => {
+        console.log(toValue, toValueLastSetted);
+        return (toValue || 0) == (toValueLastSetted || 0);
+      }),
+      distinctUntilChanged(),
+      tap((x) => console.log(x))
+    );
 
     combineLatest([
       this.profileForm.valueChanges.pipe(
         map((value) => value.fromValue),
         distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
-        debounceTime(500)
+        debounceTime(100)
       ),
       this.toAndFromCurrencies$,
       this.type$.pipe(map((type) => type === TransactionType.TRANSFER)),
-    ]).subscribe(([fromValue, { toCurrency, fromCurrency }, editingOn]) => {
-      if (!editingOn) {
-        return;
-      }
+      toValueAbleToAutocomlite$,
+    ])
+      .pipe(debounceTime(100))
+      .subscribe(
+        ([
+          fromValue,
+          { toCurrency, fromCurrency },
+          editingOn,
+          toValueAbleToAutocomlite,
+        ]) => {
+          if (!editingOn) {
+            return;
+          }
 
-      if (!fromValue) {
-        return;
-      }
-      this.fromValueWasSetted$.next(!!fromValue);
-      const toValueWasSetted = this.toValueWasSetted$.getValue();
-      if (!toValueWasSetted) {
-        const newToValue =
-          ((fromValue || 0) * (toCurrency?.valueRelatedMain || 0)) /
-          (fromCurrency?.valueRelatedMain || 0);
+          if (!fromValue) {
+            return;
+          }
+          if (toValueAbleToAutocomlite) {
+            const newToValue =
+              ((fromValue || 0) * (toCurrency?.valueRelatedMain || 0)) /
+              (fromCurrency?.valueRelatedMain || 0);
 
-        this.profileForm.patchValue({
-          toValue: newToValue,
-        });
-        this.profileForm.updateValueAndValidity;
-      }
-    });
+            this.profileForm.patchValue({
+              toValue: newToValue,
+            });
+            this.toValueLastSetted$.next(newToValue);
+            this.profileForm.updateValueAndValidity();
+          }
+        }
+      );
 
     combineLatest([this.profileForm.valueChanges, this.allTags$]).subscribe(
       ([value, tags]: [any, string[]]) => {
