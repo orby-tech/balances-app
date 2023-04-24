@@ -1,6 +1,24 @@
 <ng-container *ngIf="organization$ | async; let organization">
   <mat-card>
-    <mat-card-title> Company: {{ organization.name }} </mat-card-title>
+    <mat-card-title class="company-title">
+      Company: {{ organization.name }}
+      <div
+        [matTooltip]="
+          organization.role === RoleOrganisationType.OWNER
+            ? 'OWNER can not leave organization'
+            : 'You can leave organization'
+        "
+      >
+        <button
+          mat-raised-button
+          color="warn"
+          [disabled]="organization.role === RoleOrganisationType.OWNER"
+          (click)="leaveOrganization()"
+        >
+          Leave organization
+        </button>
+      </div>
+    </mat-card-title>
 
     <mat-card-content>
       <mat-card-subtitle> You in the company: </mat-card-subtitle>
@@ -11,10 +29,35 @@
       <mat-card-subtitle> Users: </mat-card-subtitle>
       <mat-list role="list">
         <mat-list-item *ngFor="let user of organization.users" role="listitem">
-          {{ user?.email }} {{user?.role}}
+          <div class="users-list">
+            <div>{{ user?.email }} {{ user?.role }}</div>
+            <div
+              [matTooltip]="
+                user?.role === RoleOrganisationType.OWNER
+                  ? 'OWNER can not leave organization'
+                  : organization.role === RoleOrganisationType.WATCHER
+                  ? 'You can not kick out the user'
+                  : 'You can kick out the user'
+              "
+            >
+              <button
+                mat-button
+                color="warn"
+                [disabled]="
+                  organization.role === RoleOrganisationType.WATCHER ||
+                  user?.role === RoleOrganisationType.OWNER
+                "
+                (click)="kickOutUser(user?.email)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
         </mat-list-item>
       </mat-list>
-      <button mat-raised-button (click)="invite()">Invite user to your organization</button>
+      <button mat-raised-button (click)="invite()">
+        Invite user to your organization
+      </button>
     </mat-card-content>
   </mat-card>
 </ng-container>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AddOrganizationInput, AddUserToOrganizationInput, Organization } from '@common/graphql';
+import { AddOrganizationInput, AddUserToOrganizationInput, KickOutUserFromOrganizationInput, LeaveOrganizationInput, Organization } from '@common/graphql';
 import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, first } from 'rxjs';
 
@@ -60,6 +60,40 @@ export class OrganizationsService {
         `,
         variables: {
           addUserToOrganizationInput: organization,
+        },
+      })
+      .subscribe((x) => {
+        this.load();
+      });
+  }
+
+  leaveOrganization(organization: LeaveOrganizationInput) {
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation leaveOrganization($leaveOrganizationInput: LeaveOrganizationInput!) {
+            leaveOrganization(leaveOrganizationInput: $leaveOrganizationInput) 
+          }
+        `,
+        variables: {
+          leaveOrganizationInput: organization,
+        },
+      })
+      .subscribe((x) => {
+        this.load();
+      });
+  }
+
+  kickOutUserFromOrganization(organization: KickOutUserFromOrganizationInput) {
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation kickOutUserFromOrganization($kickOutUserFromOrganizationInput: KickOutUserFromOrganizationInput!) {
+            kickOutUserFromOrganization(kickOutUserFromOrganizationInput: $kickOutUserFromOrganizationInput) 
+          }
+        `,
+        variables: {
+          kickOutUserFromOrganizationInput: organization,
         },
       })
       .subscribe((x) => {

@@ -32,6 +32,15 @@ export class AddOrganizationInput {
     name: string;
 }
 
+export class LeaveOrganizationInput {
+    organizationId: string;
+}
+
+export class KickOutUserFromOrganizationInput {
+    username: string;
+    organizationId: string;
+}
+
 export class AddUserToOrganizationInput {
     name: string;
     organizationId: string;
@@ -123,6 +132,10 @@ export abstract class IMutation {
     abstract deleteTransaction(deleteTransactionInput: DeleteTransactionInput): Nullable<string> | Promise<Nullable<string>>;
 
     abstract addOrganization(addOrganizationInput: AddOrganizationInput): Nullable<string> | Promise<Nullable<string>>;
+
+    abstract leaveOrganization(leaveOrganizationInput: LeaveOrganizationInput): Nullable<string> | Promise<Nullable<string>>;
+
+    abstract kickOutUserFromOrganization(kickOutUserFromOrganizationInput: KickOutUserFromOrganizationInput): Nullable<string> | Promise<Nullable<string>>;
 
     abstract addUserToOrganization(addUserToOrganizationInput: AddUserToOrganizationInput): Nullable<string> | Promise<Nullable<string>>;
 }

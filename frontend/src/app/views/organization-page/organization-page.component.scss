@@ -4,4 +4,16 @@
     display: flex;
     gap: 15px;
   }
+
+  .company-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .users-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }

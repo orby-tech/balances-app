@@ -1,6 +1,8 @@
 import {
   AddOrganizationInput,
   AddUserToOrganizationInput,
+  KickOutUserFromOrganizationInput,
+  LeaveOrganizationInput,
   Organization,
 } from '@common/graphql';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
@@ -42,5 +44,23 @@ export class OrganizationsResolver {
       user.name,
       user.organizationId,
     );
+  }
+
+  @Mutation((returns) => String, { name: 'leaveOrganization' })
+  async leaveOrganization(
+    @Args('leaveOrganizationInput') user: LeaveOrganizationInput,
+    @UserId() userId,
+  ) {
+    await this.usersService.leaveOrganization(userId, user.organizationId);
+    return 'ok';
+  }
+
+  @Mutation((returns) => String, { name: 'kickOutUserFromOrganization' })
+  async kickOutUserFromOrganization(
+    @Args('kickOutUserFromOrganizationInput') user: KickOutUserFromOrganizationInput,
+    @UserId() userId,
+  ) {
+    await this.usersService.kickOutUserFromOrganization(userId, user.organizationId, user.username);
+    return 'ok';
   }
 }

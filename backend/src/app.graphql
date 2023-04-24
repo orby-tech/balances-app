@@ -24,7 +24,14 @@ type Mutation {
   addTransaction(addTransactionInput: AddTransactionInput!): String
   deleteTransaction(deleteTransactionInput: DeleteTransactionInput!): String
   addOrganization(addOrganizationInput: AddOrganizationInput!): String
-  addUserToOrganization(addUserToOrganizationInput: AddUserToOrganizationInput!): String
+  leaveOrganization(leaveOrganizationInput: LeaveOrganizationInput!): String
+  kickOutUserFromOrganization(
+    kickOutUserFromOrganizationInput: KickOutUserFromOrganizationInput!
+  ): String
+
+  addUserToOrganization(
+    addUserToOrganizationInput: AddUserToOrganizationInput!
+  ): String
 }
 
 input SetMainCurrencyInput {
@@ -35,10 +42,18 @@ input AddOrganizationInput {
   name: String!
 }
 
+input LeaveOrganizationInput {
+  organizationId: String!
+}
+
+input KickOutUserFromOrganizationInput {
+  username: String!
+  organizationId: String!
+}
+
 input AddUserToOrganizationInput {
   name: String!
   organizationId: String!
-
 }
 
 input SetNewPasswordInput {

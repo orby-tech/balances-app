@@ -369,6 +369,27 @@ export class UsersService {
     return 'ok';
   }
 
+  async leaveOrganization(userId: string, organizationId: string) {
+    this.userOrganisationRepository.delete({
+      user_id: userId,
+      organization_id: organizationId
+    })
+  }
+
+  async kickOutUserFromOrganization(userId: string, organizationId: string, usernameToKickOut: string) {
+    const user = (
+      await this.userRepository.find({ where: { username: usernameToKickOut } })
+    )[0];
+    if (!user) {
+      return 'No user found';
+    }
+
+    this.userOrganisationRepository.delete({
+      user_id: user.user_id,
+      organization_id: organizationId
+    })
+  }
+
   async setTransactionById(
     userId: string,
     transaction: AddTransactionInput,
