@@ -9,12 +9,16 @@ import { CurrenciesService } from 'src/app/graphql/currencies.service';
 export class CurrenciesComponent implements AfterViewInit {
   correncies$ = this.currenciesService.currenciesWithValueRelatedMain$;
 
-  displayedColumns: string[] = ['title', 'internationalSimbol', 'internationalShortName', 'valueRelatedMain'];
+  displayedColumns: string[] = [
+    'title',
+    'internationalSimbol',
+    'internationalShortName',
+    'summedUp',
+    'valueRelatedMain',
+  ];
   chart: any | null = null;
 
-  dataSource$ = this.correncies$
-
-  
+  dataSource$ = this.correncies$;
 
   constructor(private currenciesService: CurrenciesService) {
     currenciesService.load();
