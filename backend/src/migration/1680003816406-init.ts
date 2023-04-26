@@ -203,6 +203,11 @@ export class init1680003816406 implements MigrationInterface {
             isNullable: true,
           },
           {
+            name: 'from_fee',
+            type: 'float',
+            isNullable: true,
+          },
+          {
             name: 'from_currency',
             type: 'uuid',
             isNullable: true,
@@ -214,6 +219,11 @@ export class init1680003816406 implements MigrationInterface {
           },
           {
             name: 'to_value',
+            type: 'float',
+            isNullable: true,
+          },
+          {
+            name: 'to_fee',
             type: 'float',
             isNullable: true,
           },

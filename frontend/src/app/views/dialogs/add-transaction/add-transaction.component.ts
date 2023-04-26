@@ -35,11 +35,14 @@ export class AddTransactionComponent {
     type: new FormControl<TransactionType>(this.defaultTransactionType),
     to: new FormControl(''),
     toValue: new FormControl<number | null>({ value: 0, disabled: true }),
+    toFee: new FormControl<number | null>({ value: 0, disabled: true }),
     from: new FormControl(''),
     fromValue: new FormControl<number | null>({
       value: 0,
       disabled: true,
     }),
+    fromFee: new FormControl<number | null>({ value: 0, disabled: true }),
+
     provider: new FormControl('123'),
   });
 
@@ -144,15 +147,23 @@ export class AddTransactionComponent {
         if (value.type === TransactionType.TRANSFER && value.from && value.to) {
           this.profileForm.controls['fromValue'].enable();
           this.profileForm.controls['toValue'].enable();
+          this.profileForm.controls['toFee'].enable();
+          this.profileForm.controls['fromFee'].enable();
         } else if (value.type === TransactionType.RECEIVE && value.to) {
           this.profileForm.controls['fromValue'].enable();
           this.profileForm.controls['toValue'].enable();
+          this.profileForm.controls['toFee'].enable();
+          this.profileForm.controls['fromFee'].enable();
         } else if (value.type === TransactionType.SEND && value.from) {
           this.profileForm.controls['fromValue'].enable();
           this.profileForm.controls['toValue'].enable();
+          this.profileForm.controls['toFee'].enable();
+          this.profileForm.controls['fromFee'].enable();
         } else {
           this.profileForm.controls['fromValue'].disable();
           this.profileForm.controls['toValue'].disable();
+          this.profileForm.controls['toFee'].disable();
+          this.profileForm.controls['fromFee'].disable();
         }
       });
 

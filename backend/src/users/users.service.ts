@@ -372,11 +372,15 @@ export class UsersService {
   async leaveOrganization(userId: string, organizationId: string) {
     this.userOrganisationRepository.delete({
       user_id: userId,
-      organization_id: organizationId
-    })
+      organization_id: organizationId,
+    });
   }
 
-  async kickOutUserFromOrganization(userId: string, organizationId: string, usernameToKickOut: string) {
+  async kickOutUserFromOrganization(
+    userId: string,
+    organizationId: string,
+    usernameToKickOut: string,
+  ) {
     const user = (
       await this.userRepository.find({ where: { username: usernameToKickOut } })
     )[0];
@@ -386,8 +390,8 @@ export class UsersService {
 
     this.userOrganisationRepository.delete({
       user_id: user.user_id,
-      organization_id: organizationId
-    })
+      organization_id: organizationId,
+    });
   }
 
   async setTransactionById(
@@ -402,8 +406,9 @@ export class UsersService {
         provider: transaction.provider,
         balance_id: transaction.from,
         from: transaction.from,
-        from_value: transaction.fromValue?.toString(),
+        from_value: transaction.fromValue,
         from_currency: transaction.fromCurrency,
+        from_fee: transaction.fromFee,
       });
 
       const oldValue = await this.balanceRepository.findOne({
@@ -427,8 +432,9 @@ export class UsersService {
         provider: transaction.provider,
         balance_id: transaction.to,
         to: transaction.to,
-        to_value: transaction.toValue?.toString(),
+        to_value: transaction.toValue,
         to_currency: transaction.toCurrency,
+        to_fee: transaction.toFee,
       });
 
       const oldValue = await this.balanceRepository.findOne({
@@ -541,7 +547,8 @@ export class UsersService {
           fromValue: t.from_value,
           toCurrency: t.to_currency,
           fromCurrency: t.from_currency,
-          fee: '0',
+          toFee: t.to_fee,
+          fromFee: t.from_fee,
           feeInPercents: '0',
           tags: tags,
         };

@@ -55,19 +55,25 @@ export class Transactions {
   from: string;
 
   @Column()
-  from_value: string;
+  from_value: number;
 
   @Column()
   from_currency: string;
 
   @Column()
+  from_fee: number;
+
+  @Column()
   to: string;
 
   @Column()
-  to_value: string;
+  to_value: number;
 
   @Column()
   to_currency: string;
+
+  @Column()
+  to_fee: number;
 
   @Column()
   provider: string;

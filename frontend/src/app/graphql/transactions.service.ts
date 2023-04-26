@@ -147,8 +147,10 @@ export class TransactionsService {
               from
               fromValue
               fromCurrency
-              fee
-              feeInPercents
+              toFee
+              fromFee
+              toFeeInPercents
+              fromFeeInPercents
             }
             currencies {
               id

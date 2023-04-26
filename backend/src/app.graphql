@@ -153,16 +153,19 @@ type Transaction {
   id: ID!
 
   from: ID
-  fromValue: String
+  fromValue: Float
   fromCurrency: String
+  fromFee: Float
+  fromFeeInPercents: Float
 
   to: ID
-  toValue: String
+  toValue: Float
   toCurrency: String
+  toFee: Float
+  toFeeInPercents: Float
 
   provider: String
-  fee: String
-  feeInPercents: String
+
   tags: [Tag]
 }
 
@@ -173,10 +176,14 @@ input AddTransactionInput {
   from: ID
   fromValue: Float
   fromCurrency: String
+  fromFee: Float
+  fromFeeInPercents: Float
 
   to: ID
   toValue: Float
   toCurrency: String
+  toFee: Float
+  toFeeInPercents: Float
 
   provider: String
   tags: [TagInput]!

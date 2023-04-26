@@ -70,10 +70,18 @@
     <div matListItemLine class="support-line">
       <div class="fee-info">
         <div>
-          Fee: {{ element.fee }} {{ element.internationalSimbolOfMain }}
+          Fee: {{ element?.type === "SEND" ? element.fromFee : element.toFee }}
+          {{ element.internationalSimbolOfMain }}
         </div>
 
-        <div>Related fee: {{ element.feeInPercents }}%</div>
+        <div>
+          Related fee:
+          {{
+            element?.type === "SEND"
+              ? element.fromFeeInPercents
+              : element.toFeeInPercents
+          }}%
+        </div>
       </div>
       <button mat-button (click)="deleteTransaction(element.id)">
         <mat-icon>delete</mat-icon>
@@ -84,9 +92,7 @@
       <div class="tags-info">
         Tags:
         <mat-chip aria-label="Fish selection">
-          <mat-chip *ngFor="let tag of element.tags">{{
-            tag?.title
-          }}</mat-chip>
+          <mat-chip *ngFor="let tag of element.tags">{{ tag?.title }}</mat-chip>
         </mat-chip>
       </div>
     </div>

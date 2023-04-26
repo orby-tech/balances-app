@@ -80,9 +80,13 @@ export class AddTransactionInput {
     from?: Nullable<string>;
     fromValue?: Nullable<number>;
     fromCurrency?: Nullable<string>;
+    fromFee?: Nullable<number>;
+    fromFeeInPercents?: Nullable<number>;
     to?: Nullable<string>;
     toValue?: Nullable<number>;
     toCurrency?: Nullable<string>;
+    toFee?: Nullable<number>;
+    toFeeInPercents?: Nullable<number>;
     provider?: Nullable<string>;
     tags: Nullable<TagInput>[];
 }
@@ -192,14 +196,16 @@ export class Transaction {
     type: TransactionType;
     id: string;
     from?: Nullable<string>;
-    fromValue?: Nullable<string>;
+    fromValue?: Nullable<number>;
     fromCurrency?: Nullable<string>;
+    fromFee?: Nullable<number>;
+    fromFeeInPercents?: Nullable<number>;
     to?: Nullable<string>;
-    toValue?: Nullable<string>;
+    toValue?: Nullable<number>;
     toCurrency?: Nullable<string>;
+    toFee?: Nullable<number>;
+    toFeeInPercents?: Nullable<number>;
     provider?: Nullable<string>;
-    fee?: Nullable<string>;
-    feeInPercents?: Nullable<string>;
     tags?: Nullable<Nullable<Tag>[]>;
 }
 

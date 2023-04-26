@@ -30,6 +30,11 @@
       <mat-label>To value</mat-label>
       <input matInput formControlName="toValue" type="number" />
     </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>To Fee</mat-label>
+      <input matInput formControlName="toFee" type="number" />
+    </mat-form-field>
   </ng-container>
 
   <ng-container *ngIf="(type$ | async) === transactionType.SEND">
@@ -47,6 +52,11 @@
     <mat-form-field appearance="fill">
       <mat-label>From value</mat-label>
       <input matInput formControlName="fromValue" type="number" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>From Fee</mat-label>
+      <input matInput formControlName="fromFee" type="number" />
     </mat-form-field>
   </ng-container>
 
@@ -100,10 +110,31 @@
         }}</mat-icon>
       </mat-form-field>
     </div>
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label
+          >From Fee ( {{ toBalanceInternationalSimbol$ | async }})</mat-label
+        >
+        <input matInput formControlName="fromFee" type="number" />
+        <mat-icon matSuffix>{{
+          fromBalanceInternationalSimbol$ | async
+        }}</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>
+          To fee
+          {{ fromBalanceInternationalSimbol$ | async }})
+        </mat-label>
+        <input matInput formControlName="toFee" type="number" />
+        <mat-icon matSuffix>{{
+          toBalanceInternationalSimbol$ | async
+        }}</mat-icon>
+      </mat-form-field>
+    </div>
   </div>
 
   <app-tags [type]="data.type" (setAllTags)="setAllTags($event)"></app-tags>
-
 </form>
 
 <div mat-dialog-actions>
