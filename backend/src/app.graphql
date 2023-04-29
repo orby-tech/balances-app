@@ -156,6 +156,11 @@ type OrganizationUser {
   role: RoleOrganisationType!
 }
 
+enum TransactionStatus {
+  ACTIVE
+  ARCHIVED
+}
+
 type Transaction {
   type: TransactionType!
   id: ID!
@@ -175,6 +180,7 @@ type Transaction {
   provider: String
 
   tags: [Tag]!
+  status: TransactionStatus!
 }
 
 type Chain {

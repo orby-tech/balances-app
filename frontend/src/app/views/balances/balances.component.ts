@@ -30,7 +30,7 @@ export class BalancesComponent implements OnInit {
     })
   );
 
-  _statusFilter : StatusFilter = BalanceStatus.ARCHIVED;
+  _statusFilter : StatusFilter = BalanceStatus.ACTIVE;
   statusFilter$ = new BehaviorSubject<StatusFilter>(this._statusFilter);
   get statusFilter() { 
     return this._statusFilter;

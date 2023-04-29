@@ -2,6 +2,7 @@ import {
   AddTransactionInput,
   DeleteTransactionInput,
   Transaction,
+  TransactionStatus,
   TransactionType,
 } from '@common/graphql';
 import { Global, Injectable } from '@nestjs/common';
@@ -141,15 +142,31 @@ export class TransactionsService {
 
   async deleteTransactionById(
     userId: string,
-    transaction: DeleteTransactionInput,
+    deleteTransactionInput: DeleteTransactionInput,
   ): Promise<void> {
-    await this.transactionTagsRepository.delete({
-      transaction_id: transaction.id,
+    const _transaction = await this.transactionRepository.findOne({
+      where: {
+        transaction_id: deleteTransactionInput.id,
+      },
     });
+    if (!_transaction) {
+      return;
+    }
 
-    await this.transactionRepository.delete({
-      transaction_id: transaction.id,
-    });
+    if (_transaction.status === TransactionStatus.ACTIVE) {
+      await this.transactionRepository.update(
+        { transaction_id: deleteTransactionInput.id },
+        { status: TransactionStatus.ARCHIVED },
+      );
+    } else {
+      await this.transactionTagsRepository.delete({
+        transaction_id: deleteTransactionInput.id,
+      });
+
+      await this.transactionRepository.delete({
+        transaction_id: deleteTransactionInput.id,
+      });
+    }
     return;
   }
 
@@ -210,6 +227,7 @@ export class TransactionsService {
           feeInPercents: '0',
           tags: tags,
           chains: await this.getChainsBySubjectId(organizationId || userId),
+          status: t.status as TransactionStatus,
         };
       }),
     );

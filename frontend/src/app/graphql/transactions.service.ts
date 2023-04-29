@@ -167,6 +167,7 @@ export class TransactionsService {
               fromFee
               toFeeInPercents
               fromFeeInPercents
+              status
             }
             chains {
               transactionId

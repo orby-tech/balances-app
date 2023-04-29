@@ -1,11 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map, combineLatest } from 'rxjs';
 import { BalancesService } from 'src/app/graphql/balances.service';
 import { CurrenciesService } from 'src/app/graphql/currencies.service';
 import { TransactionsService } from 'src/app/graphql/transactions.service';
 import { AddTransactionComponent } from '../dialogs/add-transaction/add-transaction.component';
+import { TransactionStatus } from '@common/graphql';
+
+type StatusFilter =
+  | 'all'
+  | TransactionStatus.ACTIVE
+  | TransactionStatus.ARCHIVED;
 
 @Component({
   selector: 'app-transactions',
@@ -15,7 +21,7 @@ import { AddTransactionComponent } from '../dialogs/add-transaction/add-transact
 export class TransactionsComponent implements OnInit {
   transactions$ = this.transactionsService.transactions$;
 
-  transactionsToFrom$ = this.transactionsService.filledTransactionsWithChains$;
+  transactionsToForm$ = this.transactionsService.filledTransactionsWithChains$;
   organizationId$ = new BehaviorSubject<string | null>(null);
 
   displayedColumns: string[] = [
@@ -32,8 +38,27 @@ export class TransactionsComponent implements OnInit {
     'delete',
   ];
   chart: any | null = null;
+  TransactionStatus= TransactionStatus
+  _statusFilter: StatusFilter = TransactionStatus.ACTIVE;
+  statusFilter$ = new BehaviorSubject<StatusFilter>(this._statusFilter);
+  get statusFilter() {
+    return this._statusFilter;
+  }
+  set statusFilter(value) {
+    this._statusFilter = value;
+    this.statusFilter$.next(value);
+  }
 
-  dataSource$ = this.transactionsToFrom$;
+  dataSource$ = combineLatest([
+    this.transactionsToForm$,
+    this.statusFilter$,
+  ]).pipe(
+    map(([transactionsToForm, statusFilter]) => {
+      return transactionsToForm.filter(
+        (t) => t.status === statusFilter || statusFilter === 'all'
+      );
+    })
+  );
 
   constructor(
     private transactionsService: TransactionsService,

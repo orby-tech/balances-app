@@ -29,6 +29,11 @@ export enum RoleOrganisationType {
     WATCHER = "WATCHER"
 }
 
+export enum TransactionStatus {
+    ACTIVE = "ACTIVE",
+    ARCHIVED = "ARCHIVED"
+}
+
 export class SetMainCurrencyInput {
     id: string;
 }
@@ -215,6 +220,7 @@ export class Transaction {
     toFeeInPercents?: Nullable<number>;
     provider?: Nullable<string>;
     tags: Nullable<Tag>[];
+    status: TransactionStatus;
 }
 
 export class Chain {

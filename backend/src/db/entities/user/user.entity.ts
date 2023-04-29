@@ -40,6 +40,13 @@ export class User {
   password_hash: string;
 }
 
+export type TransactionStatus = 'ARCHIVED' | 'ACTIVE';
+
+export const TransactionStatus = {
+  ARCHIVED: 'ARCHIVED' as TransactionStatus,
+  ACTIVE: 'ACTIVE' as TransactionStatus,
+};
+
 @Entity({ name: 'transactions' })
 export class Transactions {
   @PrimaryColumn()
@@ -77,6 +84,9 @@ export class Transactions {
 
   @Column()
   provider: string;
+
+  @Column()
+  status: TransactionStatus;
 }
 
 @Entity({ name: 'user_tags' })
@@ -91,12 +101,12 @@ export class UserTag {
   tag_id: string;
 }
 
-export type BalanceStatus = 'ARCHIVED' | 'ACTIVE'
+export type BalanceStatus = 'ARCHIVED' | 'ACTIVE';
 
 export const BalanceStatus = {
   ARCHIVED: 'ARCHIVED' as BalanceStatus,
   ACTIVE: 'ACTIVE' as BalanceStatus,
-}
+};
 
 @Entity({ name: 'balances' })
 export class Balance {
@@ -119,7 +129,7 @@ export class Balance {
   currency_id: string;
 
   @Column()
-  status: BalanceStatus
+  status: BalanceStatus;
 }
 
 @Entity({ name: 'organizations' })

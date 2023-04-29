@@ -276,6 +276,10 @@ export class init1680003816406 implements MigrationInterface {
             name: 'provider',
             type: 'text',
           },
+          {
+            name: 'status',
+            type: 'text',
+          },
         ],
       }),
     );
@@ -389,14 +393,16 @@ export class init1680003816406 implements MigrationInterface {
           "type", 
           "provider",
           "to",
-          "to_value"
+          "to_value",
+          "status"
           ) VALUES (
           '123e4567-e89b-12d3-a456-426614174004',
           '123e4567-e89b-12d3-a456-426614174005', 
           'RECEIVE', 
           'provider_',
           '123e4567-e89b-12d3-a456-426614174004',
-          '10'
+          '10',
+          'ACTIVE'
           );
 
           Insert into transactions (
@@ -405,14 +411,16 @@ export class init1680003816406 implements MigrationInterface {
             "type", 
             "provider",
             "from",
-            "from_value"
+            "from_value",
+            "status"
             ) VALUES (
             '123e4567-e89b-12d3-a456-426614174004',
             '123e4567-e89b-12d3-a456-426614174006', 
             'SEND', 
             'provider_',
             '123e4567-e89b-12d3-a456-426614174004',
-            '10'
+            '10',
+            'ACtIVE'
             );
 
         Insert into chains (
