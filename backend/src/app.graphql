@@ -97,6 +97,11 @@ type Settings {
   tags: [Tag]
 }
 
+enum BalanceStatus {
+  ACTIVE
+  ARCHIVED
+}
+
 type Balance {
   organization_id: String
   id: ID!
@@ -106,6 +111,7 @@ type Balance {
   valueInMain: Float!
   currencyId: String!
   type: BalanceType!
+  status: BalanceStatus!
 }
 
 enum BalanceType {

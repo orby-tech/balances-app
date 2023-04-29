@@ -91,6 +91,13 @@ export class UserTag {
   tag_id: string;
 }
 
+export type BalanceStatus = 'ARCHIVED' | 'ACTIVE'
+
+export const BalanceStatus = {
+  ARCHIVED: 'ARCHIVED' as BalanceStatus,
+  ACTIVE: 'ACTIVE' as BalanceStatus,
+}
+
 @Entity({ name: 'balances' })
 export class Balance {
   @PrimaryColumn()
@@ -110,6 +117,9 @@ export class Balance {
 
   @Column()
   currency_id: string;
+
+  @Column()
+  status: BalanceStatus
 }
 
 @Entity({ name: 'organizations' })
@@ -198,7 +208,6 @@ export class TransactionTags {
   @Column()
   tag_id: string;
 }
-
 
 @Entity({ name: 'chains' })
 export class Chain {

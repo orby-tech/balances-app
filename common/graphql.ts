@@ -8,6 +8,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export enum BalanceStatus {
+    ACTIVE = "ACTIVE",
+    ARCHIVED = "ARCHIVED"
+}
+
 export enum BalanceType {
     CARD = "CARD"
 }
@@ -166,6 +171,7 @@ export class Balance {
     valueInMain: number;
     currencyId: string;
     type: BalanceType;
+    status: BalanceStatus;
 }
 
 export class CurrenciesRate {

@@ -16,8 +16,6 @@ import {
   Organization,
   Chain,
 } from 'src/db/entities/user/user.entity';
-import { UsersController } from 'src/users/users.controller';
-import { UsersResolver } from 'src/users/users.resolver';
 import { UsersService } from './users.service';
 import { TransactionsService } from './transactions.service';
 

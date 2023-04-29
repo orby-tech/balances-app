@@ -41,6 +41,7 @@ export class BalancesService {
               value
               valueInMain
               currencyId
+              status
             }
             currencies {
               id

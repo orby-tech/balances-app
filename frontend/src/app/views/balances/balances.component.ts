@@ -6,6 +6,9 @@ import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { BalancesService } from 'src/app/graphql/balances.service';
 import { CurrenciesService } from 'src/app/graphql/currencies.service';
 import { AddBalanceComponent } from '../dialogs/add-balance/add-balance.component';
+import { BalanceStatus } from '@common/graphql';
+
+type StatusFilter = 'all' | BalanceStatus.ACTIVE | BalanceStatus.ARCHIVED;
 
 @Component({
   selector: 'app-balances',
@@ -27,6 +30,16 @@ export class BalancesComponent implements OnInit {
     })
   );
 
+  _statusFilter : StatusFilter = BalanceStatus.ARCHIVED;
+  statusFilter$ = new BehaviorSubject<StatusFilter>(this._statusFilter);
+  get statusFilter() { 
+    return this._statusFilter;
+  }
+  set statusFilter(value) {
+    this._statusFilter = value;
+    this.statusFilter$.next(value);
+  }
+
   balancesForForm$ = this.balancesWithValuesInMain$;
 
   chart: Chart<'doughnut', number[], string> | null = null;
@@ -42,13 +55,19 @@ export class BalancesComponent implements OnInit {
   dataSource$ = combineLatest([
     this.balancesForForm$,
     this.organizationId$,
+    this.statusFilter$
   ]).pipe(
-    map(([balancesForForm, organizationId]) => {
+    map(([balancesForForm, organizationId, statusFilter]) => {
       return balancesForForm.filter(
         (b) =>
           b.organization_id === organizationId ||
           (b.organization_id === 'userBalance' && !organizationId)
-      );
+      ).filter(b=> {
+        if (statusFilter === 'all') {
+          return true;
+        }
+        return b.status === statusFilter;
+      });
     })
   );
 

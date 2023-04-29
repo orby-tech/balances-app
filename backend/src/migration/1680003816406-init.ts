@@ -204,6 +204,10 @@ export class init1680003816406 implements MigrationInterface {
             type: 'text',
             enum: ['card'],
           },
+          {
+            name: 'status',
+            type: 'text',
+          },
         ],
       }),
     );
@@ -357,14 +361,16 @@ export class init1680003816406 implements MigrationInterface {
           "host", 
           "type", 
           "value", 
-          "currency_id"
+          "currency_id",
+          "status"
           ) VALUES (
           '123e4567-e89b-12d3-a456-426614174004', 
           'title_', 
           'short_title_', 
           'CARD', 
           '0', 
-          '00000000-0000-0000-0000-000000000000'
+          '00000000-0000-0000-0000-000000000000',
+          'ACTIVE'
           );
 
         Insert into "user_balances" (

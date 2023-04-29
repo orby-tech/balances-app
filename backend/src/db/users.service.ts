@@ -14,6 +14,7 @@ import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import {
   Balance,
+  BalanceStatus,
   Currency,
   Organization,
   OrganizationBalances,
@@ -190,6 +191,7 @@ export class UsersService {
       ...balance,
       balance_id: balanceId,
       currency_id: balance.currencyId,
+      status: BalanceStatus.ACTIVE,
     });
 
     if (balance.organizationId) {
@@ -277,8 +279,23 @@ export class UsersService {
   }
 
   async deleteBalanceById(userId: string, balanceId: string): Promise<void> {
-    await this.userBalanceRepository.delete({ balance_id: balanceId });
-    await this.balanceRepository.delete({ balance_id: balanceId });
+    const balance = await this.balanceRepository.findOne({
+      where: { balance_id: balanceId },
+    });
+
+    if (!balance) {
+      return;
+    }
+
+    if (balance.status === BalanceStatus.ARCHIVED) {
+      await this.userBalanceRepository.delete({ balance_id: balanceId });
+      await this.balanceRepository.delete({ balance_id: balanceId });
+    } else {
+      await this.balanceRepository.update(
+        { balance_id: balanceId },
+        { status: BalanceStatus.ARCHIVED },
+      );
+    }
     return;
   }
 

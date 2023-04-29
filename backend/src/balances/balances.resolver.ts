@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { AddBalanceInput, Balance, BalanceType, DeleteBalanceInput } from '@common/graphql';
+import { AddBalanceInput, Balance, BalanceStatus, BalanceType, DeleteBalanceInput } from '@common/graphql';
 import { UsersService } from 'src/db/users.service';
 import { UserId } from 'src/decorators/user-id.decorator';
 
@@ -20,6 +20,7 @@ export class BalancesResolver {
       value: balance.value,
       valueInMain: balance.value * 10,
       currencyId: balance.currency_id,
+      status: balance.status as BalanceStatus,
     }));
   }
 
