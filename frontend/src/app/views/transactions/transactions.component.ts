@@ -15,7 +15,7 @@ import { AddTransactionComponent } from '../dialogs/add-transaction/add-transact
 export class TransactionsComponent implements OnInit {
   transactions$ = this.transactionsService.transactions$;
 
-  transactionsToFrom$ = this.transactionsService.filledTransactions$;
+  transactionsToFrom$ = this.transactionsService.filledTransactionsWithChains$;
   organizationId$ = new BehaviorSubject<string | null>(null);
 
   displayedColumns: string[] = [

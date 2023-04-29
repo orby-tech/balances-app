@@ -3,102 +3,109 @@
 </button>
 
 <mat-nav-list *ngIf="dataSource$ | async; let dataSource">
-  <mat-list-item
-    *ngFor="let element of dataSource"
-    [matTooltip]="element?.type === 'SEND' ? 'Send' : 'Receive'"
-  >
-    <div matListItemLine class="main-line">
-      <ng-container *ngIf="element?.type === 'SEND'; else receive">
-        <div class="support-info">
-          {{ element.fromTitle }}
-          <mat-icon> arrow_back </mat-icon>
-          {{ element.provider }}
-        </div>
+  <div *ngFor="let element of dataSource" class="row">
+    <div
+      *ngIf="element.chainId"
+      class="chain-gap"
+      [matTooltip]="'Transactions in chian'"
+    ></div>
+    <mat-list-item
+      [matTooltip]="element?.type === 'SEND' ? 'Send' : 'Receive'"
+      [class.chain-transaction]="element.chainId"
+    >
+      <div matListItemLine class="main-line">
+        <ng-container *ngIf="element?.type === 'SEND'; else receive">
+          <div class="support-info">
+            {{ element.fromTitle }}
+            <mat-icon> arrow_back </mat-icon>
+            {{ element.provider }}
+          </div>
 
-        <div class="value-info">
-          {{
-            element.fromValue
-              ? (element.fromValue | number : "1.1-1") +
-                element.internationalSimbolOfMain
-              : null
-          }}
-          <p
-            *ngIf="
-              element.fromValueInMain &&
-              element.fromValue &&
-              element.fromValueInMain !== +element.fromValue
-            "
-          >
-            ({{
-              (element.fromValueInMain | number : "1.1-1") +
-                element.internationalSimbolOfMain
-            }})
-          </p>
-        </div>
-      </ng-container>
-      <ng-template #receive>
-        <div class="support-info">
-          {{ element.toTitle }}
-          <mat-icon> arrow_forward </mat-icon>
-          {{ element.provider }}
-        </div>
-
-        <div class="value-info">
-          {{
-            element.toValue
-              ? (element.toValue | number : "1.1-1") +
-                element.internationalSimbolOfMain
-              : null
-          }}
-          <p
-            *ngIf="
-              element.fromValueInMain &&
-              element.fromValue &&
-              element.fromValueInMain !== +element.fromValue
-            "
-          >
-            ({{
-              element.toValueInMain
-                ? (element.toValueInMain | number : "1.1-1") +
+          <div class="value-info">
+            {{
+              element.fromValue
+                ? (element.fromValue | number : "1.1-1") +
                   element.internationalSimbolOfMain
                 : null
-            }})
-          </p>
-        </div>
-      </ng-template>
-    </div>
-    <div matListItemLine class="support-line">
-      <div class="fee-info">
-        <div>
-          Fee: {{ element?.type === "SEND" ? element.fromFee : element.toFee }}
-          {{ element.internationalSimbolOfMain }}
-        </div>
+            }}
+            <p
+              *ngIf="
+                element.fromValueInMain &&
+                element.fromValue &&
+                element.fromValueInMain !== +element.fromValue
+              "
+            >
+              ({{
+                (element.fromValueInMain | number : "1.1-1") +
+                  element.internationalSimbolOfMain
+              }})
+            </p>
+          </div>
+        </ng-container>
+        <ng-template #receive>
+          <div class="support-info">
+            {{ element.toTitle }}
+            <mat-icon> arrow_forward </mat-icon>
+            {{ element.provider }}
+          </div>
 
-        <div>
-          Related fee:
-          {{
-            element?.type === "SEND"
-              ? element.fromFeeInPercents
-              : element.toFeeInPercents
-          }}%
+          <div class="value-info">
+            {{
+              element.toValue
+                ? (element.toValue | number : "1.1-1") +
+                  element.internationalSimbolOfMain
+                : null
+            }}
+            <p
+              *ngIf="
+                element.fromValueInMain &&
+                element.fromValue &&
+                element.fromValueInMain !== +element.fromValue
+              "
+            >
+              ({{
+                element.toValueInMain
+                  ? (element.toValueInMain | number : "1.1-1") +
+                    element.internationalSimbolOfMain
+                  : null
+              }})
+            </p>
+          </div>
+        </ng-template>
+      </div>
+      <div matListItemLine class="support-line">
+        <div class="fee-info">
+          <div>
+            Fee:
+            {{ element?.type === "SEND" ? element.fromFee : element.toFee }}
+            {{ element.internationalSimbolOfMain }}
+          </div>
+
+          <div>
+            Related fee:
+            {{
+              element?.type === "SEND"
+                ? element.fromFeeInPercents
+                : element.toFeeInPercents
+            }}%
+          </div>
+        </div>
+        <button mat-button (click)="deleteTransaction(element.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
+      <div matListItemLine class="support-line" *ngIf="element.tags?.length">
+        <div class="tags-info">
+          Tags:
+          <mat-chip aria-label="Fish selection">
+            <mat-chip *ngFor="let tag of element.tags">{{
+              tag?.title
+            }}</mat-chip>
+          </mat-chip>
         </div>
       </div>
-      <button mat-button (click)="deleteTransaction(element.id)">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </div>
-
-    <div matListItemLine class="support-line" *ngIf="element.tags?.length">
-      <div class="tags-info">
-        Tags:
-        <mat-chip aria-label="Fish selection">
-          <mat-chip *ngFor="let tag of element.tags">{{ tag?.title }}</mat-chip>
-        </mat-chip>
-      </div>
-    </div>
-
-    <div matListItemLine>
-      <mat-divider></mat-divider>
-    </div>
-  </mat-list-item>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+  </div>
 </mat-nav-list>

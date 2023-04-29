@@ -1,7 +1,7 @@
 import { User } from '@common/graphql';
 import { Query, Resolver } from '@nestjs/graphql';
 import { UserId } from 'src/decorators/user-id.decorator';
-import { UsersService } from './users.service';
+import { UsersService } from '../db/users.service';
 
 @Resolver()
 export class UsersResolver {

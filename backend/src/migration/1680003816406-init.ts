@@ -113,6 +113,42 @@ export class init1680003816406 implements MigrationInterface {
 
     queryRunner.createTable(
       new Table({
+        name: 'chains',
+        columns: [
+          {
+            name: 'chain_id',
+            type: 'text',
+            isPrimary: true,
+            isUnique: true,
+          },
+          {
+            name: 'subject_id',
+            type: 'text',
+          },
+        ],
+      }),
+    );
+
+    queryRunner.createTable(
+      new Table({
+        name: 'chain_items',
+        columns: [
+          {
+            name: 'transaction_id',
+            type: 'text',
+            isPrimary: true,
+            isUnique: true,
+          },
+          {
+            name: 'chain_id',
+            type: 'text',
+          },
+        ],
+      }),
+    );
+
+    queryRunner.createTable(
+      new Table({
         name: 'currencies',
         columns: [
           {
@@ -372,6 +408,30 @@ export class init1680003816406 implements MigrationInterface {
             '123e4567-e89b-12d3-a456-426614174004',
             '10'
             );
+
+        Insert into chains (
+          "chain_id", 
+          "subject_id"
+          ) VALUES (
+            'chain',
+            '123e4567-e89b-12d3-a456-426614174000'
+          );
+
+        Insert into chain_items (
+          "chain_id", 
+          "transaction_id"
+        ) VALUES (
+          'chain',
+          '123e4567-e89b-12d3-a456-426614174006'
+        );
+
+        Insert into chain_items (
+          "chain_id", 
+          "transaction_id"
+        ) VALUES (
+          'chain',
+          '123e4567-e89b-12d3-a456-426614174005'
+        );
 
         Insert into "transaction_tags" ("id", "tag_id", "transaction_id") VALUES ('123e4567-e89b-12d3-a456-426614174002', '123e4567-e89b-12d3-a456-426614174002', '123e4567-e89b-12d3-a456-426614174005');
 

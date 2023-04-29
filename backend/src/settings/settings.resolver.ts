@@ -6,7 +6,7 @@ import {
   SignUpInput,
   Transaction,
 } from '@common/graphql';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/db/users.service';
 import { UserId } from 'src/decorators/user-id.decorator';
 import { Public } from 'src/auth/auth.guard';
 

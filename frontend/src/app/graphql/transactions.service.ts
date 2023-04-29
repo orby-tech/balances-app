@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   AddTransactionInput,
   Balance,
+  Chain,
   CurrenciesRateData,
   Currency,
   DeleteTransactionInput,
@@ -99,6 +100,7 @@ export const getTransactionsWithValuesInMain = (
 })
 export class TransactionsService {
   transactions$ = new BehaviorSubject<Transaction[]>([]);
+  chains$ = new BehaviorSubject<Chain[]>([]);
   balances$ = new BehaviorSubject<Balance[]>([]);
   mainCurrency$ = new BehaviorSubject<string>('');
 
@@ -111,6 +113,20 @@ export class TransactionsService {
     this.mainCurrency$,
     this.currenciesRateData$,
     this.currencies$
+  );
+
+  filledTransactionsWithChains$ = combineLatest([
+    this.filledTransactions$,
+    this.chains$,
+  ]).pipe(
+    map(([filledTransactions, chains]) => {
+      return filledTransactions.map((t) => {
+        return {
+          ...t,
+          chainId: chains.find((c) => c.transactionId === t.id)?.chainId,
+        };
+      });
+    })
   );
 
   organizationId: string | null = null;
@@ -152,6 +168,10 @@ export class TransactionsService {
               toFeeInPercents
               fromFeeInPercents
             }
+            chains {
+              transactionId
+              chainId
+            }
             currencies {
               id
               shortTitle
@@ -171,11 +191,12 @@ export class TransactionsService {
           }
         `,
         variables: {
-          organizationId: organizationId
-        }
+          organizationId: organizationId,
+        },
       })
       .valueChanges.subscribe((result: any) => {
         this.transactions$.next(result?.data?.transactions || []);
+        this.chains$.next(result?.data?.chains || []);
         this.balances$.next(result?.data?.balances || []);
         this.currenciesRateData$.next(result?.data?.currenciesRate?.data || []);
         this.currencies$.next(result?.data?.currencies || []);

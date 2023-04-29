@@ -7,7 +7,7 @@ import {
 } from '@common/graphql';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserId } from 'src/decorators/user-id.decorator';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/db/users.service';
 
 @Resolver()
 export class OrganizationsResolver {

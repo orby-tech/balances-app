@@ -1,6 +1,6 @@
 import { Query, Resolver } from '@nestjs/graphql';
 import { CurrenciesRate, Currency } from '@common/graphql';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/db/users.service';
 import { CurrenciesService } from './currencies.service';
 import { UserId } from 'src/decorators/user-id.decorator';
 

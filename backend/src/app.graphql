@@ -8,6 +8,8 @@ type Query {
   settings: Settings!
   balances: [Balance]
   transactions(page: Int!, organizationId: String): [Transaction]
+  chains(organizationId: String): [Chain]!
+
   currencies: [Currency]
   currenciesRate: CurrenciesRate
   organizations: [Organization]
@@ -166,7 +168,12 @@ type Transaction {
 
   provider: String
 
-  tags: [Tag]
+  tags: [Tag]!
+}
+
+type Chain {
+  transactionId: String!
+  chainId: String!
 }
 
 input AddTransactionInput {

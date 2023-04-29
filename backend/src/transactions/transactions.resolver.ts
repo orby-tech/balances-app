@@ -2,15 +2,17 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
   AddTransactionInput,
   Balance,
+  Chain,
   DeleteTransactionInput,
   Transaction,
 } from '@common/graphql';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/db/users.service';
 import { UserId } from 'src/decorators/user-id.decorator';
+import { TransactionsService } from '../db/transactions.service';
 
 @Resolver('Transaction')
 export class TransactionsResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly transactionsService: TransactionsService) {}
 
   @Query()
   async transactions(
@@ -18,7 +20,22 @@ export class TransactionsResolver {
     @Args('page') page: string,
     @Args('organizationId') organizationId: string,
   ): Promise<Transaction[]> {
-    const transactions = await this.usersService.getTransactionsById(userId, page, organizationId);
+    const transactions = await this.transactionsService.getTransactionsById(
+      userId,
+      page,
+      organizationId,
+    );
+    return transactions;
+  }
+
+  @Query()
+  async chains(
+    @UserId() userId,
+    @Args('organizationId') organizationId: string,
+  ): Promise<Chain[]> {
+    const transactions = await this.transactionsService.getChainsBySubjectId(
+      organizationId || userId,
+    );
     return transactions;
   }
 
@@ -27,7 +44,7 @@ export class TransactionsResolver {
     @Args('addTransactionInput') transaction: AddTransactionInput,
     @UserId() userId,
   ) {
-    await this.usersService.setTransactionById(userId, transaction);
+    await this.transactionsService.setTransactionById(userId, transaction);
     return '';
   }
 
@@ -36,7 +53,7 @@ export class TransactionsResolver {
     @Args('deleteTransactionInput') transaction: DeleteTransactionInput,
     @UserId() userId,
   ) {
-    await this.usersService.deleteTransactionById(userId, transaction);
+    await this.transactionsService.deleteTransactionById(userId, transaction);
     return '';
   }
 }

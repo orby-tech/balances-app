@@ -198,3 +198,22 @@ export class TransactionTags {
   @Column()
   tag_id: string;
 }
+
+
+@Entity({ name: 'chains' })
+export class Chain {
+  @PrimaryColumn()
+  chain_id: string;
+
+  @Column()
+  subject_id: string;
+}
+
+@Entity({ name: 'chain_items' })
+export class ChainItem {
+  @PrimaryColumn()
+  transaction_id: string;
+
+  @Column()
+  chain_id: string;
+}

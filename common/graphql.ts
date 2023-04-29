@@ -111,6 +111,8 @@ export abstract class IQuery {
 
     abstract transactions(page: number, organizationId?: Nullable<string>): Nullable<Nullable<Transaction>[]> | Promise<Nullable<Nullable<Transaction>[]>>;
 
+    abstract chains(organizationId?: Nullable<string>): Nullable<Chain>[] | Promise<Nullable<Chain>[]>;
+
     abstract currencies(): Nullable<Nullable<Currency>[]> | Promise<Nullable<Nullable<Currency>[]>>;
 
     abstract currenciesRate(): Nullable<CurrenciesRate> | Promise<Nullable<CurrenciesRate>>;
@@ -206,7 +208,12 @@ export class Transaction {
     toFee?: Nullable<number>;
     toFeeInPercents?: Nullable<number>;
     provider?: Nullable<string>;
-    tags?: Nullable<Nullable<Tag>[]>;
+    tags: Nullable<Tag>[];
+}
+
+export class Chain {
+    transactionId: string;
+    chainId: string;
 }
 
 export class Tag {

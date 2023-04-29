@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AddBalanceInput, Balance, BalanceType, DeleteBalanceInput } from '@common/graphql';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/db/users.service';
 import { UserId } from 'src/decorators/user-id.decorator';
 
 @Resolver((of) => Balance)

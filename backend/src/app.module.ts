@@ -16,9 +16,13 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { OrganizationsModule } from './organizations/organizations.module';
+import { UsersService } from './db/users.service';
+import { DbModule } from './db/db.module';
 
 @Module({
   imports: [
+    UsersModule,
+    TransactionsModule,
     AuthModule,
     SettingsModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -50,17 +54,19 @@ import { OrganizationsModule } from './organizations/organizations.module';
     CurrenciesModule,
     BalancesModule,
     TransactionsModule,
-    UsersModule,
     OrganizationsModule,
+    DbModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
     UsersModule,
+    TransactionsModule,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
+    
   ],
   exports: [UsersModule],
 })

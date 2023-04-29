@@ -172,11 +172,9 @@ export class AddTransactionComponent {
       this.fromValueLastSetted$,
     ]).pipe(
       map(([fromValue, fromValueLastSetted]) => {
-        console.log(fromValue, fromValueLastSetted);
         return (fromValue || 0) == (fromValueLastSetted || 0);
       }),
-      distinctUntilChanged(),
-      tap((x) => console.log(x))
+      distinctUntilChanged()
     );
 
     combineLatest([
@@ -222,11 +220,9 @@ export class AddTransactionComponent {
       this.toValueLastSetted$,
     ]).pipe(
       map(([toValue, toValueLastSetted]) => {
-        console.log(toValue, toValueLastSetted);
         return (toValue || 0) == (toValueLastSetted || 0);
       }),
-      distinctUntilChanged(),
-      tap((x) => console.log(x))
+      distinctUntilChanged()
     );
 
     combineLatest([

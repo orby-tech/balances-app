@@ -11,6 +11,22 @@ mat-nav-list {
   min-width: 30opx;
 }
 
+.row {
+  display: flex;
+  flex-direction: row;
+  border-radius: 5px;
+
+  .chain-gap {
+    background-color: rgba(0, 255, 255, 0.601);
+    width: 20px;
+  }
+
+  .chain-transaction {
+    background-color: rgba(0, 255, 255, 0.183);
+
+  }
+}
+
 .main-line {
   display: flex;
   align-items: center;
