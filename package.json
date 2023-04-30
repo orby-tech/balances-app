@@ -4,7 +4,7 @@
     "frontend": "cd frontend && ng serve",
     "db": "cd db && sudo docker-compose up",
     "build": "cd backend && npm run build && cd ./../frontend && npm run build",
-    "deploy": "npm run build && sh ./deploy.sh",
+    "deploy": "sh ./deploy.sh",
     "graphql:generate": "cd backend && npm run graphql:generate"
   }
 }
