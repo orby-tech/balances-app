@@ -20,6 +20,9 @@ import { MatTreeModule } from '@angular/material/tree';
 import { OrganizationPageComponent } from './organization-page/organization-page.component';
 import { AddOrganizationComponent } from './dialogs/add-organization/add-organization.component';
 import { AddUserToOrganizationComponent } from './dialogs/add-user-to-organization/add-user-to-organization.component';
+import { HomeComponent } from './home/home.component';
+import { AppWrapperComponent } from './app-wrapper/app-wrapper.component';
+import { AppRoutingModule } from '../app-routing.module';
 
 @NgModule({
   declarations: [
@@ -35,6 +38,8 @@ import { AddUserToOrganizationComponent } from './dialogs/add-user-to-organizati
     OrganizationPageComponent,
     AddOrganizationComponent,
     AddUserToOrganizationComponent,
+    HomeComponent,
+    AppWrapperComponent,
   ],
   imports: [
     CommonModule,
@@ -46,7 +51,7 @@ import { AddUserToOrganizationComponent } from './dialogs/add-user-to-organizati
     MatFormFieldModule,
     NgChartsModule,
     MatTreeModule,
-
+    AppRoutingModule,
     MatInputModule,
     ReactiveFormsModule,
   ],

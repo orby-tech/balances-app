@@ -6,8 +6,14 @@ import { CurrenciesComponent } from './views/currencies/currencies.component';
 import { OrganizationPageComponent } from './views/organization-page/organization-page.component';
 import { TransactionsComponent } from './views/transactions/transactions.component';
 import { UserAccountComponent } from './views/user-account/user-account.component';
+import { HomeComponent } from './views/home/home.component';
 
 const routes: Routes = [
+  {
+    title: 'home',
+    path: 'home',
+    component: HomeComponent,
+  },
   {
     title: 'user-account',
     path: 'user-account',
@@ -60,7 +66,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'common',
+    redirectTo: 'home',
   },
 ];
 
