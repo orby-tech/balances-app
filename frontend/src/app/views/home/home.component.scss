@@ -5,10 +5,17 @@
   align-items: center;
   justify-content: center;
   gap: 20px;
+  background-color: rgba(0, 255, 255, 0.093);
+  font-size: 120%;
 
   mat-card {
     padding: 20px;
     width: 450px;
+  }
 
+  mat-card-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
   }
 }
