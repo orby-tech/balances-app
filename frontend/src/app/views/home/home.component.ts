@@ -38,8 +38,10 @@ export class HomeComponent {
         const access_token = x.access_token;
         if (access_token) {
           localStorage.setItem('token', access_token);
+          setTimeout(() => {
+            this.router.navigate(['/common']);
+          }, 1000);
         }
-        this.router.navigate(['/common']);
       });
   }
 

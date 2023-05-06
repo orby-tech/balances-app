@@ -23,6 +23,7 @@ import { AddUserToOrganizationComponent } from './dialogs/add-user-to-organizati
 import { HomeComponent } from './home/home.component';
 import { AppWrapperComponent } from './app-wrapper/app-wrapper.component';
 import { AppRoutingModule } from '../app-routing.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,6 @@ import { AppRoutingModule } from '../app-routing.module';
     CommonModule,
     ComponentsModule,
     MaterialModule,
-    MaterialModule,
     BrowserModule,
     FormsModule,
     MatFormFieldModule,
@@ -54,6 +54,11 @@ import { AppRoutingModule } from '../app-routing.module';
     AppRoutingModule,
     MatInputModule,
     ReactiveFormsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatTreeModule,
+    NgChartsModule,
+    BrowserAnimationsModule,
   ],
 })
 export class ViewsModule {}
