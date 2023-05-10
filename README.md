@@ -26,4 +26,4 @@ You are welcome to contribute!
 
 
 ## License
-\-
+[License](./LICENSE)
