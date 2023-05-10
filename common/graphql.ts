@@ -125,7 +125,7 @@ export abstract class IQuery {
 
     abstract currencies(): Nullable<Nullable<Currency>[]> | Promise<Nullable<Nullable<Currency>[]>>;
 
-    abstract currenciesRate(): Nullable<CurrenciesRate> | Promise<Nullable<CurrenciesRate>>;
+    abstract currenciesRate(): Nullable<CurrenciesRate>[] | Promise<Nullable<CurrenciesRate>[]>;
 
     abstract organizations(): Nullable<Nullable<Organization>[]> | Promise<Nullable<Nullable<Organization>[]>>;
 }
@@ -180,17 +180,9 @@ export class Balance {
 }
 
 export class CurrenciesRate {
-    meta: CurrenciesRateMeta;
-    data: Nullable<CurrenciesRateData>[];
-}
-
-export class CurrenciesRateMeta {
-    last_updated_at: string;
-}
-
-export class CurrenciesRateData {
     code: string;
     value: number;
+    date: string;
 }
 
 export class Organization {
@@ -240,7 +232,6 @@ export class Currency {
     shortTitle: string;
     internationalShortName: string;
     internationalSimbol: string;
-    valueRelatedMain: string;
 }
 
 type Nullable<T> = T | null;

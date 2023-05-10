@@ -11,7 +11,7 @@ type Query {
   chains(organizationId: String): [Chain]!
 
   currencies: [Currency]
-  currenciesRate: CurrenciesRate
+  currenciesRate: [CurrenciesRate]!
   organizations: [Organization]
 }
 
@@ -125,17 +125,9 @@ enum TransactionType {
 }
 
 type CurrenciesRate {
-  meta: CurrenciesRateMeta!
-  data: [CurrenciesRateData]!
-}
-
-type CurrenciesRateMeta {
-  last_updated_at: String!
-}
-
-type CurrenciesRateData {
   code: String!
   value: Float!
+  date: String!
 }
 
 enum RoleOrganisationType {
@@ -231,5 +223,4 @@ type Currency {
   shortTitle: String!
   internationalShortName: String!
   internationalSimbol: String!
-  valueRelatedMain: String!
 }

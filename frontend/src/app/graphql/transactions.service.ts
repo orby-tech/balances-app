@@ -3,7 +3,7 @@ import {
   AddTransactionInput,
   Balance,
   Chain,
-  CurrenciesRateData,
+  CurrenciesRate,
   Currency,
   DeleteTransactionInput,
   Transaction,
@@ -15,14 +15,14 @@ export const getTransactionsWithValuesInMain = (
   transactions$: BehaviorSubject<Transaction[]>,
   balances$: BehaviorSubject<Balance[]>,
   mainCurrency$: BehaviorSubject<string>,
-  currenciesRateData$: BehaviorSubject<CurrenciesRateData[]>,
+  currenciesRate$: BehaviorSubject<CurrenciesRate[]>,
   currencies$: BehaviorSubject<Currency[]>
 ) =>
   combineLatest([
     transactions$,
     balances$,
     mainCurrency$,
-    currenciesRateData$,
+    currenciesRate$,
     currencies$,
   ]).pipe(
     map(
@@ -104,14 +104,14 @@ export class TransactionsService {
   balances$ = new BehaviorSubject<Balance[]>([]);
   mainCurrency$ = new BehaviorSubject<string>('');
 
-  currenciesRateData$ = new BehaviorSubject<CurrenciesRateData[]>([]);
+  currenciesRate$ = new BehaviorSubject<CurrenciesRate[]>([]);
   currencies$ = new BehaviorSubject<Currency[]>([]);
 
   filledTransactions$ = getTransactionsWithValuesInMain(
     this.transactions$,
     this.balances$,
     this.mainCurrency$,
-    this.currenciesRateData$,
+    this.currenciesRate$,
     this.currencies$
   );
 
@@ -181,10 +181,8 @@ export class TransactionsService {
               internationalShortName
             }
             currenciesRate {
-              data {
-                code
-                value
-              }
+              code
+              value
             }
             settings {
               mainCurrency
@@ -199,7 +197,7 @@ export class TransactionsService {
         this.transactions$.next(result?.data?.transactions || []);
         this.chains$.next(result?.data?.chains || []);
         this.balances$.next(result?.data?.balances || []);
-        this.currenciesRateData$.next(result?.data?.currenciesRate?.data || []);
+        this.currenciesRate$.next(result?.data?.currenciesRate || []);
         this.currencies$.next(result?.data?.currencies || []);
         this.mainCurrency$.next(result?.data?.settings?.mainCurrency || '');
       });

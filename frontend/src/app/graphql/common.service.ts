@@ -1,15 +1,15 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
-import { Balance, CurrenciesRateData, Currency } from '@common/graphql';
+import { Balance, CurrenciesRate, Currency } from '@common/graphql';
 
 export const getBalancesWithValuesInMain = (
   balances$: BehaviorSubject<Balance[]>,
   mainCurrency$: BehaviorSubject<string>,
-  currenciesRateData$: BehaviorSubject<CurrenciesRateData[]>,
+  currenciesRate$: BehaviorSubject<CurrenciesRate[]>,
   currencies$: BehaviorSubject<Currency[]>
 ) =>
-  combineLatest([balances$, mainCurrency$, currenciesRateData$, currencies$]).pipe(
+  combineLatest([balances$, mainCurrency$, currenciesRate$, currencies$]).pipe(
     map(([balances, mainCurrencyId, currenciesRateData, currencies]) => {
       return balances.map((balance) => {
         const currency = currencies.find((c) => c.id === balance.currencyId);
@@ -43,12 +43,15 @@ export const getBalancesWithValuesInMain = (
 export class CommonService {
   balances$ = new BehaviorSubject<Balance[]>([]);
   mainCurrency$ = new BehaviorSubject<string>('');
-  currenciesRateData$ = new BehaviorSubject<CurrenciesRateData[]>([]);
+  currenciesRate$ = new BehaviorSubject<CurrenciesRate[]>([]);
   currencies$ = new BehaviorSubject<Currency[]>([]);
 
   dataSourceMain$ = this.balances$.pipe(
     map((balances) =>
-      balances.map((balance) => ({ name: balance.title, value: balance.valueInMain }))
+      balances.map((balance) => ({
+        name: balance.title,
+        value: balance.valueInMain,
+      }))
     )
   );
 
@@ -61,7 +64,7 @@ export class CommonService {
   balancesWithValuesInMain$ = getBalancesWithValuesInMain(
     this.balances$,
     this.mainCurrency$,
-    this.currenciesRateData$,
+    this.currenciesRate$,
     this.currencies$
   );
 
@@ -86,10 +89,8 @@ export class CommonService {
               internationalShortName
             }
             currenciesRate {
-              data {
-                code
-                value
-              }
+              code
+              value
             }
             settings {
               mainCurrency
@@ -99,7 +100,7 @@ export class CommonService {
       })
       .valueChanges.subscribe((result: any) => {
         this.balances$.next(result?.data?.balances || []);
-        this.currenciesRateData$.next(result?.data?.currenciesRate?.data || []);
+        this.currenciesRate$.next(result?.data?.currenciesRate || []);
         this.currencies$.next(result?.data?.currencies || []);
         this.mainCurrency$.next(result?.data?.settings?.mainCurrency || '');
       });

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   AddBalanceInput,
   Balance,
-  CurrenciesRateData,
+  CurrenciesRate,
   Currency,
   DeleteBalanceInput,
 } from '@common/graphql';
@@ -17,15 +17,15 @@ export class BalancesService {
   balances$ = new BehaviorSubject<Balance[]>([]);
   mainCurrency$ = new BehaviorSubject<string>('');
 
-  currenciesRateData$ = new BehaviorSubject<CurrenciesRateData[]>([]);
+  currenciesRate$ = new BehaviorSubject<CurrenciesRate[]>([]);
   currencies$ = new BehaviorSubject<Currency[]>([]);
 
   balancesWithValuesInMain$ = getBalancesWithValuesInMain(
     this.balances$,
     this.mainCurrency$,
-    this.currenciesRateData$,
+    this.currenciesRate$,
     this.currencies$
-  )
+  );
   constructor(private apollo: Apollo) {}
   load() {
     this.apollo
@@ -51,10 +51,8 @@ export class BalancesService {
               internationalShortName
             }
             currenciesRate {
-              data {
-                code
-                value
-              }
+              code
+              value
             }
             settings {
               mainCurrency
@@ -65,7 +63,7 @@ export class BalancesService {
       .pipe(first())
       .subscribe((result: any) => {
         this.balances$.next(result?.data?.balances || []);
-        this.currenciesRateData$.next(result?.data?.currenciesRate?.data || []);
+        this.currenciesRate$.next(result?.data?.currenciesRate || []);
         this.currencies$.next(result?.data?.currencies || []);
         this.mainCurrency$.next(result?.data?.settings?.mainCurrency || '');
       });

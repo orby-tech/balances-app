@@ -16,8 +16,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { OrganizationsModule } from './organizations/organizations.module';
-import { UsersService } from './db/users.service';
 import { DbModule } from './db/db.module';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -66,7 +66,6 @@ import { DbModule } from './db/db.module';
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
-    
   ],
   exports: [UsersModule],
 })

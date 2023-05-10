@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Balance, CurrenciesRateData, Currency } from '@common/graphql';
+import { Balance, CurrenciesRate, Currency } from '@common/graphql';
 import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
 
@@ -9,12 +9,12 @@ import { BehaviorSubject, combineLatest, map } from 'rxjs';
 export class CurrenciesService {
   balances$ = new BehaviorSubject<Balance[]>([]);
   currencies$ = new BehaviorSubject<Currency[]>([]);
-  currenciesRateData$ = new BehaviorSubject<CurrenciesRateData[]>([]);
+  currenciesRate$ = new BehaviorSubject<CurrenciesRate[]>([]);
 
   currenciesWithValueRelatedMain$ = combineLatest([
     this.currencies$,
-    this.currenciesRateData$,
-    this.balances$
+    this.currenciesRate$,
+    this.balances$,
   ]).pipe(
     map(([currencies, currenciesRateData, balances]) => {
       return currencies.map((currency) => ({
@@ -22,7 +22,9 @@ export class CurrenciesService {
         valueRelatedMain: currenciesRateData.find(
           (data) => data.code === currency.internationalShortName
         )?.value,
-        summedUp: balances.filter(b=>b.currencyId === currency.id).reduce((p, c)=> p+c.value,0)
+        summedUp: balances
+          .filter((b) => b.currencyId === currency.id)
+          .reduce((p, c) => p + c.value, 0),
       }));
     })
   );
@@ -43,15 +45,13 @@ export class CurrenciesService {
               id
               shortTitle
               title
-              valueRelatedMain
               internationalSimbol
               internationalShortName
             }
             currenciesRate {
-              data {
-                code
-                value
-              }
+              code
+              value
+              date
             }
           }
         `,
@@ -59,7 +59,7 @@ export class CurrenciesService {
       .valueChanges.subscribe((result: any) => {
         this.balances$.next(result?.data?.balances || []);
         this.currencies$.next(result?.data?.currencies || []);
-        this.currenciesRateData$.next(result?.data?.currenciesRate?.data || []);
+        this.currenciesRate$.next(result?.data?.currenciesRate || []);
       });
   }
 }

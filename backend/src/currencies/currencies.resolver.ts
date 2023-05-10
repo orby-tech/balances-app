@@ -21,12 +21,11 @@ export class CurrenciesResolver {
         currency.international_short_name + currency.international_simbol,
       internationalShortName: currency.international_short_name,
       internationalSimbol: currency.international_simbol,
-      valueRelatedMain: '0',
     }));
   }
 
   @Query((returns) => CurrenciesRate)
-  async currenciesRate(): Promise<CurrenciesRate> {
+  async currenciesRate(): Promise<CurrenciesRate[]> {
     return this.currenciesService.getLatest();
   }
 }
